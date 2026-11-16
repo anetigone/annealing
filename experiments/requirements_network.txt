@@ -1,0 +1,6 @@
+numpy>=2.0
+scipy>=1.11
+Pillow>=10.0
+torch>=2.6
+# Only the manually executed download commands use huggingface_hub/hf.
+huggingface_hub>=1.0

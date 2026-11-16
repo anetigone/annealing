@@ -1,5 +1,7 @@
 # 实验
 
+标准网络整图去模糊入口见 [本地资源准备、下载命令与运行](real_network.md)，配置位于 [configs](configs/)，实现位于 [code/real_network](code/real_network/)。权重、核和图像由用户按文档单独下载，恢复代码只读本地文件。
+
 [独立带噪调参与同门控预算对照](results/budget_control_validation/analysis.md)包含冻结计划、完整输出和复跑命令；入口为 `code/budget_control_validation.py`，汇总绘图为 `code/summarize_budget_control.py`。复跑必须指向新目录。
 
 [就绪差距与带噪选参失效的原因研究](results/budget_control_mechanism/analysis.md)链接原轨迹重放、校准影响、分界积分及其复算命令。

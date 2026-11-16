@@ -56,6 +56,8 @@
 
 本项问题限定为：**尺度历史在标准学习去噪器上，是否造成可重复的有限预算或较长终端细化后的恢复差异？** 精确 MMSE 定理提供机制实例，网络结果检验经验相关性。
 
+本地实现与单独执行的资源下载命令见 [标准网络运行说明](../../real_network.md)。随附配置是开发起点；是否启动与最新工作状态以根目录 status 为准。
+
 首个网络建议用公开的 `drunet_gray.pth`，第二个用非 clip 的 `ffdnet_gray.pth`。两者在同一组固定权重中接收噪声标准差。FFDNet 官方仓库链接的 PyTorch 测试入口实际位于作者的 KAIR，不能假定原仓库根目录有同名 Python 文件。[DRUNet 实现](https://github.com/cszn/DPIR)、[FFDNet 仓库](https://github.com/cszn/FFDNet)、[作者提供的 FFDNet PyTorch 入口](https://github.com/cszn/KAIR/blob/master/main_test_ffdnet.py)。
 
 [DPIR 论文 §3.2](https://arxiv.org/pdf/2008.13751)说明 DRUNet 用 **L1 损失**训练、训练噪声标准差范围为 0–50（8 位强度单位）。所以连“DRUNet 自动近似条件均值”也不能作为已知事实。[FFDNet 论文 §IV-A](https://arxiv.org/pdf/1710.04026)使用平方损失，报告范围为 0–75；训练目标本身也不保证得到精确 MMSE。主实验尺度建议限定在两者共同的正噪声范围内，内部图像与标准差统一除以 255。具体检查点的训练来源和实现版本需在接入时再确认。

@@ -2,6 +2,14 @@
 
 更新：2026-11-16。本文件是研究评估、进展与下一步安排的唯一入口。
 
+## 标准网络代码已准备，实际评估仍暂停（2026-11-16）
+
+先以本地提交 `6cb468c` 保存新增合成实验、原因分析及稿件同步。随后准备 [真实网络资源与运行命令](experiments/real_network.md)、[DRUNet/FFDNet 配置](experiments/configs/)和[实现](experiments/code/real_network/)。实现保持未归一化数据项和未除以 σ² 的 RED 残差，分开计划、逐预算开发选参、冻结评价；提供终端、两端点、共享平台、等比退火、共同终端延长及全部六对方法的输出/误差比较。默认求解器参数只是开发起点，不是已经调优或冻结的真实网络实验。
+
+权重和核优先给出已核对的 Hugging Face 文件版本，灰度 BSD68/Set12 使用作者仓库的确切集合，避免将彩色 CBSD68 转灰混称标准灰度版本。下载只列为文档命令，代码不联网获取权重或数据；本轮没有下载这些资源，也没有安装依赖、训练或启动预训练网络评价。DeepInv 转换版 FFDNet 的 8 通道与原版 5 通道接口分别适配并严格加载。
+
+必要 CPU 检查通过：[合成小流程](experiments/results/real_network_checked/checks.json)覆盖卷积朝向与伴随、RED 单步、调用预算、终端尾部、开发/评价隔离、配对汇总和非有限失败保留。另将原版 DRUNet、原版 FFDNet、DeepInv FFDNet 的参数键/形状及随机初始化 CPU 前向与上游源码核对，均逐位一致；这不替代下载后的预训练权重兼容和真实恢复验证。所有新 Python 文件均少于 400 行。下一步待用户取得本地资源并确定独立开发图像后，再做有限开发侧计时与稳定性预试；当前保持暂停正式评估。
+
 ## 同门控差距与噪声失效的原因已定位（2026-11-16）
 
 [原因研究、误差恒等式与复算](experiments/results/budget_control_mechanism/analysis.md) · [机制图](experiments/results/budget_control_mechanism/mechanism.png)。按本次要求先研究原因，复用原观测和冻结处方，没有增加随机样本、在评价上改选规则或运行网络。
