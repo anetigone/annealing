@@ -17,6 +17,7 @@
 | 初始化、正则和噪声是否改变结论？ | 最小二乘权重≥.5时终端单尺度恢复；噪声提高后门控错误与分类相连 | 初值/λ/增益变化超出原证书的格子仅作诊断；共享的噪声失败不代表噪声适配调参仍失败 | [求解器/噪声](../round_two_solver_noise/analysis.md)、[分组复核](../round_two_failure_review/analysis.md) |
 | 真实照片是否支持相同正向结论？ | 旧四图3072观测的共同终端球认证支持历史消失；开发模型能观察并部分预测分流 | 新两模型均未过独立照片门槛；竞争指标、分流、收益未接成链；长低高可替代中间 | [旧独立验证](../patch_independent_validation/analysis.md)、[视觉开发](../visual_switch_development/analysis.md) |
 | 标准学习网络首轮是否选出非零尺度收益？ | DRUNet 单高斯核、低噪声、单种子的完整 BSD68 已跑通；16/32/64 次 PSNR 为 25.70/26.20/26.67 dB | 三个可调家族均在开发集选中零前缀；测试四行是同一策略，未比较不同历史，不能当作终端历史消失证据 | [DRUNet 首轮](../drunet_fast_run/analysis.md) |
+| 固定非零前缀后是否出现不同历史的恢复收益？ | 保存开发分数选出的非零前缀在 68 图上产生不同输出；64→128 次后平均输出距离减少约 27–39%，平均误差差距也减小 | 平均 MSE 仍略差于终端，少数图距离增加但误差略优；既不证明统一收缩，也未建立长期分流或中间尺度必要性 | [非零历史诊断](../drunet_history_run/analysis.md) |
 
 ## 正负结果怎样共同解释
 
@@ -60,6 +61,8 @@
 本地实现与单独执行的资源下载命令见 [标准网络运行说明](../../real_network.md)。随附配置是开发起点；是否启动与最新工作状态以根目录 status 为准。
 
 [已完成的快速首轮](../drunet_fast_run/analysis.md)仅覆盖 DRUNet、一个高斯核和一档低噪声。其三个预算均选择终端单尺度，未获得非零前缀的平均开发收益；该事实不填补不同历史的长期分离或消失证据。
+
+后续[固定非零历史诊断](../drunet_history_run/analysis.md)复用已存开发分数，比较真实不同的前缀，再做 32/64 次共同终端延长。结果支持所测时段的微小尺度历史差异及均值趋近，未获得平均 MSE 收益；局部距离增长保留为例外，不升级为极限吸引域结论。
 
 首个网络建议用公开的 `drunet_gray.pth`，第二个用非 clip 的 `ffdnet_gray.pth`。两者在同一组固定权重中接收噪声标准差。FFDNet 官方仓库链接的 PyTorch 测试入口实际位于作者的 KAIR，不能假定原仓库根目录有同名 Python 文件。[DRUNet 实现](https://github.com/cszn/DPIR)、[FFDNet 仓库](https://github.com/cszn/FFDNet)、[作者提供的 FFDNet PyTorch 入口](https://github.com/cszn/KAIR/blob/master/main_test_ffdnet.py)。
 
