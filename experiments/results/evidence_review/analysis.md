@@ -64,6 +64,8 @@
 
 后续[固定非零历史诊断](../drunet_history_run/analysis.md)复用已存开发分数，比较真实不同的前缀，再做 32/64 次共同终端延长。结果支持所测时段的微小尺度历史差异及均值趋近，未获得平均 MSE 收益；局部距离增长保留为例外，不升级为极限吸引域结论。
 
+2026-11-17 [原因核查](../drunet_history_run/cause_review/analysis.md)进一步区分证明错误、理论适用缺口和实验设计不足。主风险证明本轮暂未发现断裂；网络尚未验证共同障碍、通道与不同终端区域，公共求解器和短前缀覆盖也不充分。已存误差分解显示主要惩罚为同向偏移，不能单凭均值趋近定性机制边界。小规模开发作用力探查已准备，尚未运行，不增加网络正向证据。
+
 首个网络建议用公开的 `drunet_gray.pth`，第二个用非 clip 的 `ffdnet_gray.pth`。两者在同一组固定权重中接收噪声标准差。FFDNet 官方仓库链接的 PyTorch 测试入口实际位于作者的 KAIR，不能假定原仓库根目录有同名 Python 文件。[DRUNet 实现](https://github.com/cszn/DPIR)、[FFDNet 仓库](https://github.com/cszn/FFDNet)、[作者提供的 FFDNet PyTorch 入口](https://github.com/cszn/KAIR/blob/master/main_test_ffdnet.py)。
 
 [DPIR 论文 §3.2](https://arxiv.org/pdf/2008.13751)说明 DRUNet 用 **L1 损失**训练、训练噪声标准差范围为 0–50（8 位强度单位）。所以连“DRUNet 自动近似条件均值”也不能作为已知事实。[FFDNet 论文 §IV-A](https://arxiv.org/pdf/1710.04026)使用平方损失，报告范围为 0–75；训练目标本身也不保证得到精确 MMSE。主实验尺度建议限定在两者共同的正噪声范围内，内部图像与标准差统一除以 255。具体检查点的训练来源和实现版本需在接入时再确认。

@@ -157,6 +157,31 @@ FFDNet 把配置改为 `experiments/configs/ffdnet_deblur.json`，输出目录�
 
 共同终端追加使用锚点预算已经选择的前缀，**不在 K+L 重新调参**。追加后误差差消失，支持该设置下的有限预算效应；持续输出分离加小场范数仍只是所测时长与容差内的经验结果。DRUNet 的 L1 训练不保证 MMSE，FFDNet 的平方损失也不保证精确 MMSE；网络结果不继承 GMM 势、模板竞争、吸引域或风险证书。
 
+## 原因定位的小规模开发测量
+
+首轮负结果及共同终端均值趋近尚未定位原因。[原因核查](results/drunet_history_run/cause_review/analysis.md)分开记录主定理复核、实际适用条件、实现检查和候选覆盖问题。不要将负结果直接归为机制边界，也不要把 λ 改成 1 就称满足定理。
+
+`probe_cause.py` 仅使用已冻结非零历史计划中的前两张开发图，沿用原 64 次处方再延长到 128 次；不读 BSD68，不重新选参。控制噪声使用同一个标准正态样本，只改幅度为 2.55/255 和 7.65/255，全部历史仍沿用原低噪声选择。默认 2166 次网络前向，按已有 28 ms/次约 61 秒纯推理，另加诊断统计时间。用户同步代码后在远程执行，输出目录换成未使用过的名字：
+
+```bash
+cd /root/autodl-tmp/annealing
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/probe_cause.py \
+  --calibration experiments/results/drunet_history_run/calibration \
+  --out experiments/results/drunet_cause_probe \
+  --image-count 2 --noise-255 2.55 7.65
+```
+
+`forces.csv` 比较同一状态的尺度残差、相对数据项的强度、方向倍增拟合和单步真值误差反事实；真值只作分析，不用于选择规则。`terminal_transport.csv` 把公共尾部的成对距离变化分成数据项、去噪器割线项、步长平方项和浮点余差。`endpoints.csv` 包含相同观测的纯数据更新参考；另报内区/边缘分解，边缘宽度 `min(32, 最短边//4)`，用于检查周期退化与网络填充影响，主误差仍用整图。`denoising_sanity.csv` 检查真实权重对普通 AWGN 的去噪行为。诊断积分器会与原 `red_trajectory` 的 16 步结果逐位核对，调用计入 `completion.json`。
+
+该探查只能定位所用开发图上的作用方向，不是新盲测、完整调参或整个区域的收缩/吸引域证书。代码只读取已有本地资源，不下载文件。仍按用户安排由其同步和运行。
+
+已存结果的代数分解和主定理解析最坏界可在本地重算，无需预训练权重；同样使用新目录：
+
+```powershell
+& H:/anaconda3/envs/py312/python.exe -B experiments/code/real_network/analyze_cause.py --source experiments/results/drunet_history_run --preflight experiments/results/real_network_20261116/preflight/gpu_preflight.json --out experiments/results/drunet_history_run/cause_recheck
+```
+
 ## 必要的小规模实现检查
 
 只用本地生成的合成图像、线性假去噪器和随机初始化网络做 CPU 检查，不需要资源下载，不启动真实数据评价：
