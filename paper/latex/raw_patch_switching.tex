@@ -1,0 +1,69 @@
+\section{A Switching Counterexample on a Development Patch}
+\label{sec:raw_patch_switching}
+
+This experiment uses patch 37 from a spatial development split and a
+separately fitted eight-component isotropic mixture on raw $4\times4$
+patches ($\tau^2\simeq .00442835$). The patch was selected by persistent
+terminal output separation under the initial schedules. The substitute
+schedules were developed on its original observation $y_*$ using distance
+to the intermediate schedule's terminal branch. All policies use
+the same periodic blur, $\lambda=.1$, $\gamma=.25$, $x_0=A^\top y$,
+and 5000 calls, with $\sigma_L=.02$ after the listed prefix.
+
+\begin{table}[tb]
+\centering
+\small
+\begin{tabular}{@{}lcr@{}}
+\toprule
+Prefix & Ball, entry by & Mean error\\
+\midrule
+None & High, 2000 & .08413\\
+$.1\times25$ & Low, 2000 & .07460\\
+$.023\times500$ & Low, 2075 & .07512\\
+$(.022\times120,\ 1\times5)\times8$ & Low, 2775 & .07547\\
+$.022\times1000$ & High, 2025 & --\\
+$1\times1000$ & High, 2875 & --\\
+\bottomrule
+\end{tabular}
+\caption{Prefixes are scale $\times$ calls. High and low denote
+the two terminal balls by their squared error to the truth patch.
+Entry calls are certified on the original observation neighborhood.
+Mean errors use 512 new noise draws and 5000 calls.}
+\label{tab:raw_patch_switching}
+\end{table}
+
+\paragraph{Observation neighborhood.}
+The entry bounds hold for exact trajectories from $x_0=A^\top y$ for
+all $y$ with $\|A^\top(y-y_*)\|_2\le 2\cdot10^{-6}$. At each call,
+pairwise log-odds bounds control the posterior covariance on the
+current state ball. A shifted version of the covariance comparison in
+Section~\ref{sec:terminal_history} bounds the update's Jacobian norm
+there by $q_k$. If the current radius is $R_k$ and the interval image
+of its center has error radius $\epsilon_k$, the next radius is
+bounded by $q_kR_k+\epsilon_k+2\gamma\cdot10^{-6}$. We verify the
+inequalities with 60-digit outward rounding. The two terminal balls
+are disjoint and invariant, with contraction factors below $.997933$
+and $.998941$. Their squared errors differ by at least $.08646$
+throughout the balls.
+
+The two fixed-scale prefixes and the switching prefix all use 1000
+calls. Switching enters the same ball as the intermediate schedule,
+giving a successful policy in $[.02,.022]\cup[.3,\infty)$ on this
+example. With the narrower low-only interval $[.02,.020001]$,
+all switching policies enter the higher-error ball by call 2000
+and remain there.
+
+\paragraph{Independent noise.}
+We froze the four schedules in the first four rows before drawing
+two batches of 256 independent Gaussian noises of standard deviation
+$.01$. The middle and the two substitutes reduce the empirical
+5000-call error by $11.33\%$, $10.70\%$, and $10.29\%$ against
+terminal-only iteration. These estimates are conditional on the
+selected truth and prior. The neighborhood certificate and the
+noise experiment address local reachability and fixed-patch error,
+respectively. The four-photo frozen validation is reported separately
+in Section~\ref{sec:independent_patch}.
+
+The interval runs and noise outputs are recorded in
+\path{experiments/results/raw_patch_neighborhood/} and
+\path{experiments/results/raw_patch_substitute_validation/}.

@@ -1,0 +1,79 @@
+\subsection{Convexity and exact safe scales}
+Write $l(z)=1-\tau^2 z$. The normalized prior contribution is
+$l(z)(m(z)-s)$, with
+\[
+ m(z)=\frac{r e^{-Pz}-a h e^{-Qz}}{1+r e^{-Pz}+h e^{-Qz}}.
+\]
+Multiplying $l(z)(m(z)-s)>u$ by the positive responsibility
+denominator gives
+\[
+ A_u\,r e^{-Pz}> s l+u+[(a+s)l+u]\,h e^{-Qz}.
+\]
+Division by $A_u>0$ proves~\eqref{eq:update_band}. In
+Proposition~\ref{prop:convex_band}, $A_u$ and both ratio numerators
+are positive everywhere by their terminal lower bounds.
+
+For $u\ge0$, the ratio
+$V_j(z)=(j l+u)/[(1-s)l-u]$ for $j=s$ or $a+s$ satisfies
+\[
+ (\log V_j)''=\tau^4
+ \left[\frac{(1-s)^2}{A_u^2}-\frac{j^2}{(j l+u)^2}\right]\ge0 .
+\]
+Multiplication by an exponential of an affine function preserves
+log convexity. For $u\tau^2>0$ the displayed inequality is strict,
+so both terms are strictly convex. Otherwise $U,W$ are positive
+constants and the nonzero exponents give strict convexity.
+
+For $u<0$, the derivatives satisfy
+\[
+ \begin{aligned}
+ U'&=-\frac{|u|\tau^2}{A_u^2},&
+ U''&=-\frac{2(1-s)|u|\tau^4}{A_u^3},\\
+ W'&=(a+1)U',&
+ W''&=(a+1)U'' .
+ \end{aligned}
+\]
+Since $A_u$ decreases with $z$, $|U'|\le d_1$,
+$|U''|\le d_2$, $U\ge U_L$, and $W\ge W_L$.
+The two exponential-weighted second derivatives are bounded below
+by their exponential factors times $P^2U_L-2Pd_1-d_2$ and
+$(Q-P)^2W_L-(a+1)d_2$, respectively. The second bound drops
+the nonnegative term $-2(Q-P)W'$. Condition~\eqref{eq:band_convexity}
+makes both strictly positive. Strict convexity and continuity give
+the level interval and the minimum test, including endpoint roots.
+
+For the candidate barrier, the posterior mean in the horizontal
+coordinate decreases with $t$. Its derivative equals
+\[
+ \partial_t m=-\frac{d}{v}w_2[a(1-w_2)+w_1]\le0 .
+\]
+The horizontal step at $s=\xi$ is therefore largest at $t=-\eta_B$.
+Own-coordinate monotonicity extends an inward bound on the face
+to the entire half-strip, even after a perturbation of size $\delta$.
+The lower-face check also extends by vertical monotonicity.
+A sufficient lower-face check is
+$\gamma[b_2+(1+c_-)\eta_B]\ge\delta$ with $c(v)\ge c_->0$,
+because the vertical posterior mean is nonnegative. For example,
+the step bound $\gamma(1+c_+)\le1$ with $0<\alpha\le1$ and $c(v)\le c_+$
+gives own-coordinate monotonicity via the nonnegative diagonal
+of the posterior covariance. Thus, with the lower-face check,
+the horizontal inequality at the corner is necessary and sufficient
+for invariance for all allowed errors. At a failing scale, choose
+the corner as the state and the largest allowed positive horizontal
+error to exhibit a violation.
+
+\subsection{Critical mass for endpoint improvement}
+\begin{proof}
+The inequalities in~\eqref{eq:critical_regime} give a nonpositive
+terminal prior contribution and a positive terminal denominator $A_u$
+at the high-endpoint target. The high-endpoint level is nonnegative, so
+Proposition~\ref{prop:convex_band} applies. Since $J_u(0)=r$,
+strict improvement is equivalent to $J_u'(0)<0$. Differentiating
+the normalized prior contribution at zero gives
+$D(h)/(1+r+h)^2$, with sign opposite to $J_u'(0)$.
+The polynomial starts negative and has positive quadratic
+coefficient for $\tau>0$. When $\tau=0$ it is increasing affine.
+At the positive root $\partial_hD>0$ and
+$\partial_Q D=h[a+(1+a)r]>0$. Implicit differentiation gives
+$\partial_Q h_{\rm crit}<0$.
+\end{proof}

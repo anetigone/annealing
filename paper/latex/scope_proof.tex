@@ -1,0 +1,68 @@
+\subsection{Proof of Theorem~\ref{thm:ind_noise}}
+The coefficient condition implies $.999\le c(v)\le1.002$ for every $v\ge v_L$.
+We use the margins in Section~\ref{sec:geometry_full} with the separate coordinate tolerances
+in~\eqref{eq:ind_event}. At the barrier's right face, the horizontal
+tolerance increases by at most $.001/4$, so $q_B>.298896-.00025/.999>.29864$.
+The certified bounds $L(.17)<.287729$ and $U(2.5)<.289884$ still suffice.
+The bottom barrier and channel tests have left side at least
+$\gamma[(1+.999)(.01)-.005]>10^{-4}$.
+For channel progress, $b_1-\alpha s\ge \alpha(1-s_E-1/4)>0$.
+The comparison sequence uses this sign and the same $\kappa,\Delta_E$,
+and so the 25-step bound is unchanged. The initial $s$ is between
+$s_-=-.01$ and $s_E=.53$ for class 1, and $|t|\le.005$.
+The certified channel top-face drift divided by $\gamma$ increases
+by at most $.005$, from at most $-.01064024$.
+The overshoot bound increases by at most $\gamma(.00025)$, remaining
+below $.649<s_U$. The right-face test holds since
+$\gamma[(\alpha+.999)(.1)-.00025]>10^{-4}$.
+The classifier thresholds still distinguish the three means.
+Class 0 starts within $.005$ of the origin in each coordinate, and
+the class-2 initial coordinates satisfy $-.00127\le s\le .00025$
+and $1.975\le t\le2.025$, inside $\widetilde G_2$.
+
+The terminal gaps remain at least $.06$ and imply
+$\Lambda_z\le4e^{-.03/v_L}\le4e^{-30}$.
+Every template-to-face distance is at least $.09$, so
+$.005+1.002\cdot3\cdot4e^{-30}+10^{-4}/\gamma<.999\cdot .09$.
+The terminal invariance test holds with the global error budget.
+In the local residual bound the linear factor is at most $1-\gamma(.999)<q$.
+The entry distance to $m_Z(c_L)$ is at most 6, and
+$c_L/(\alpha+c_L)\le1$. Hence on $E$ the residual norm after at least $n$
+terminal calls is at most
+\[
+ 6q^n+12e^{-.03/v_L}+(\sqrt{2}/(\gamma\cdot.999))\delta_L .
+\]
+
+Conditional on $Z$, $e=Bu+A^\top\eta$ has coordinate variances
+$\alpha^2\tau^2+\alpha\nu^2$ and $\tau^2+\nu^2$ and its law is independent of $Z$.
+Gaussian tails and the union bound give~\eqref{eq:ind_tail}.
+On $E$ for $Z=1$, the restricted output satisfies $1-\widehat s\ge .7$.
+Applying the reverse triangle inequality in conditional $L^2$ to
+$(1-\widehat s+u_1)\mathbf{1}_E$ gives~\eqref{eq:ind_lower}.
+
+For the upper bound, the exact coordinate update is a convex combination
+of $x_j$ and $(b_j+c(v)\bar\mu_{v,j}(x))/(\beta_j+c(v))$, with weight
+$\gamma(\beta_j+c(v))\ge .999/4$ on the latter.
+The latter value has absolute value bounded by $3+2|e_j|$, using
+$b_j=\beta_j\mu_{Zj}+e_j$ and the bounded template coordinates.
+The same bound holds at initialization and for $m_Z(c_L)$.
+With update errors, induction adds at most $10^{-4}/(\gamma\cdot.999)$
+to the bound on the iterates. As $\operatorname{Var}(e_j)\le S^2\le1$,
+Gaussian fourth moments give a uniform $L^4$ bound on
+$\|\widehat x-m_Z(c_L)\|$, independent of $\alpha$ and of the budget.
+By Cauchy--Schwarz the contribution to the squared residual on $E^c$
+is at most a constant times $p_E^{1/2}$.
+Finally,
+\[
+ \E\norm{m_Z(c_L)-x^\star}^2
+   =\sum_{\beta\in\{\alpha,1\}}
+     \frac{\beta\nu^2+c_L^2\tau^2}{(\beta+c_L)^2}
+   \le C_0 S^2 .
+\]
+The squared triangle inequality gives~\eqref{eq:ind_upper}.
+Under~\eqref{eq:ind_regime}, $p_E\le4S^4$, the terminal leakage is at most
+$S$ before squaring, and $q^n\le S$. Since $\pi_1>.30$, the stated
+separation follows. At fixed $\alpha>0$, both Gaussian tail conditions
+in~\eqref{eq:ind_regime} hold for sufficiently small $S$. Also $\tau^2/v_L\le S$ for $v_L=S$, which yields the coefficient window
+eventually at $\lambda=1$.
+

@@ -1,0 +1,94 @@
+\section{Main Result: Scale Access and Recovery Risk}\label{sec:extensions}
+The separation holds over a box of template geometries and masses.
+We first give the aligned result. Consider three equal-width
+isotropic Gaussian components with
+\begin{gather}
+ B=\operatorname{diag}(\alpha,1),\quad 0<\alpha\le10^{-3},
+ \quad\gamma=1/4,\nonumber\\
+ \mu_0=(0,0),\quad \mu_1=(1,0),\quad \mu_2=(-a,d),\nonumber\\
+ a\in[.98,1.02],\quad d\in[1.98,2.02],\nonumber\\
+ r=\pi_1/\pi_0\in[1.27,1.31],\quad
+ h=\pi_2/\pi_0\in[1.60,1.96].\label{eq:recovery_box}
+\end{gather}
+Let $\tau$ be the common component width of the truth and the prior,
+and let $\nu$ be the measurement noise standard deviation.
+Choose $v_L,\lambda$ with
+\begin{equation}\label{eq:ind_coeff}
+ 0<\tau^2<v_L\le10^{-3},\quad
+ \lambda\le1.002,\quad c(v_L)\ge.999 .
+\end{equation}
+We compare policies for the same update~\eqref{eq:map} from $x_0=b$.
+Both use $v\ge v_L$ and can access $b$ and their entire history.
+A restricted controller can use only
+\begin{equation}\label{eq:main_bad}
+ [v_L,.17]\cup[2.5,\infty).
+\end{equation}
+The intermediate preset predicts class 2 if $b_2>1$, class 1 if
+$b_2\le1$ and $b_1>\alpha/2$, and class 0 otherwise. It allocates
+$0,25,0$ calls, respectively, in $[.69,.71]$, then uses $v_L$ for
+the rest of the budget. The controller uses the observation alone
+for this allocation.
+
+\begin{theorem}[Risk separation under restricted scale access]\label{thm:ind_noise}
+Suppose each update error is bounded by $10^{-4}$ in $\ell_\infty$.
+On the event
+\begin{equation}\label{eq:ind_event}
+ E=\{|e_1|\le\alpha/4,\ |e_2|\le .005\},
+ \qquad e=b-B\mu_Z ,
+\end{equation}
+every restricted controller keeps $s_k\le.3$ for all $k$ when $Z=1$.
+The intermediate preset enters the correct terminal rectangle on
+$E$ for each class.
+
+Suppose $Z\sim\pi$, $u\sim N(0,\tau^2 I_2)$, and
+$\eta\sim N(0,\nu^2 I_2)$ are mutually independent, with
+$x^\star=\mu_Z+u$ and $y=Ax^\star+\eta$.
+Write $S=(\tau^2+\nu^2)^{1/2}\le1$ and $p_E=\Prob(E^c)$. Then
+\begin{align}
+ p_E &\le
+ 2e^{-1/[32(\tau^2+\nu^2/\alpha)]}
+ +2e^{-.005^2/(2S^2)},\label{eq:ind_tail}\\
+ R_{\rm bad}&\ge
+ \pi_1[.7\sqrt{1-p_E}-\tau]_+^2,\label{eq:ind_lower}\\
+ R_{\rm mid}&\le C\big(S^2+q^{2n}+e^{-.06/v_L}
+             +\delta_L^2+p_E^{1/2}\big),\qquad q=.751.\label{eq:ind_upper}
+\end{align}
+The lower bound is uniform over all finite budgets and restricted
+controllers. The upper bound uses budget $25+n$ and terminal
+error at most $\delta_L\le10^{-4}$ on the terminal rectangles defined in S5.
+The constant $C$ is uniform over the stated ranges.
+\end{theorem}
+
+Fix $A$ and the mixture means and masses in~\eqref{eq:recovery_box}.
+As $\tau,\nu\to0$ independently, take $v_L=S$, $\lambda=1$, and
+$\delta_L=O(S)$. With $L=\log(1/S)$ and $n=\lceil L/\log(1/q)\rceil$,
+\begin{align}\label{eq:fixed_geom}
+ \liminf_{S\to0}\inf_{\substack{K<\infty\\
+             \text{restricted controllers}}} R_K &\ge .147, &
+ R_{\rm mid}&=O(S^2).
+\end{align}
+The infimum may choose a different controller and budget at each noise level.
+All policies at that level share the prior, coefficient, and terminal variance.
+The rate also holds for varying $\alpha$ if
+\begin{align}
+ \tau^2+\nu^2/\alpha &\le (128L)^{-1},\nonumber\\
+ S^2 &\le .005^2/(8L),\label{eq:ind_regime}\\
+ v_L &\le .03/L,\qquad \delta_L=O(S).\nonumber
+\end{align}
+
+\paragraph{Calibrated oracle risk.}
+The known-component Gaussian conditional mean has risk
+\begin{equation}\label{eq:oracle_general}
+ R_{\rm oracle}=
+ \frac{\tau^2\nu^2}{\alpha\tau^2+\nu^2}
+ +\frac{\tau^2\nu^2}{\tau^2+\nu^2}.
+\end{equation}
+For fixed $\alpha>0$ this is of order $\min(\tau^2,\nu^2)$ with
+constants depending on $\alpha$. The general rate in
+\eqref{eq:fixed_geom} describes consistency. Under the additional
+calibration $\tau=\nu=\alpha^2$, $v_L=\alpha^2+\alpha^4$ and
+$\lambda=(1+\alpha^2)(1+\theta\alpha)$ for $|\theta|\le1$, exact
+terminal updates yield $R_{\rm mid}\le R_{\rm oracle}+5\alpha^6$
+for $\alpha\le10^{-5}$ with
+$n=\lceil\log(12/\alpha^3)/\log(4/3)\rceil$. The calculation
+appears in the calibrated specialization in S5.

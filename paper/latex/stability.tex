@@ -1,0 +1,30 @@
+\section{Preset Switching and Perturbation Stability}
+\begin{proposition}[An observation-only preset]\label{prop:preset}
+Compute $\widehat Z(b)$ once and set $h(0)=0$, $h(1)=25$, $h(2)=5$. Use any intermediate variances in $[.69,.71]$ for $h(\widehat Z)$ calls, then use $v_L$ up to $K=25+r$ calls. Under the event in~\eqref{eq:event}, switching occurs in $G_Z$. Under the Gaussian model and budget of Theorem~\ref{thm:main}, this preset attains the same $R_{\rm oracle}+5\alpha^6$ guarantee.
+\end{proposition}
+Theorem~\ref{geo:thm:main} improves this preset to $0/25/0$ using $\widetilde G_2$, including throughout the independent box. The present proposition retains the older entrance sets for comparison with the archived diagnostics.
+
+The proof uses inward margins after first entry into $G_1$ and $G_2$. The preset uses those margins to finish its allocated calls. Entrance feedback can switch earlier and devote more of the budget to terminal refinement. Supplementary Section~\ref{sec:stability_proof} gives the face bounds for both protocols.
+
+At the same $v=.70$, a shared switch can fail even when the preset works. Proposition~\ref{prop:shared_short} encloses a nonempty parameter box on which each common $h\in\{0,\dots,25\}$ leaves one class trapped on the wrong side under all subsequent terminal calls. The class that fails changes between $h=12$ and $h=13$.
+
+\begin{proposition}[Uniform update perturbations]\label{prop:robust}
+Replace $T_v(x_k)$ by $T_v(x_k)+d_k$ with a measurable perturbation based on observations and history. Assume $\norm{d_k}_\infty\le10^{-4}$ globally, and $\norm{d_k}_\infty\le\delta_L\le10^{-4}$ on terminal calls. Keep the observation rule, initialization and scale choices. On~\eqref{eq:event}, the restricted class-1 trajectories still satisfy $s_k\le.3$, and both intermediate-band protocols retain their $0/25/5$ entry bounds. On the Gaussian model, with $K=25+r$, their raw outputs satisfy
+\begin{align}
+\widetilde R-R_{\rm oracle}
+&\le\big[\sqrt{(A_r+4\sqrt{2}\delta_L)^2+T_\alpha}
+             +\alpha^3\big]^2. \label{eq:robust_risk}
+\end{align}
+\end{proposition}
+For a denoiser approximation the update error is $\gamma\lambda(\widetilde D_\sigma-D_\sigma)$, so these bounds apply to the corresponding scaled coordinatewise error. With $r=r_\alpha$, a terminal error $o(\alpha^2)$ preserves the asymptotic oracle ratio, and $O(\alpha^3)$ preserves the $O(\alpha^6)$ excess-risk order. One concrete application allows each denoiser log weight to move by at most $10^{-4}$ at fixed true distribution, templates and variances. The intermediate update error then meets the constant radius, and terminal posterior concentration makes its error exponentially small on the entrance regions. The global bound still controls the exceptional observations. See Supplementary Section~\ref{sec:stability_proof} for the bounds.
+
+\paragraph{Terminal coefficient calibration.}
+For a positive coefficient $c$, the conditional analysis center satisfies
+\begin{align}
+&\E\norm{m_Z(c)-m_Z(1)}^2 \nonumber\\
+&\quad=\alpha^4(c-1)^2
+\left[\frac{\alpha}{(\alpha+c)^2(1+\alpha)}
+      +\frac{1}{2(1+c)^2}\right].
+\label{eq:coefficient_exact}
+\end{align}
+Indeed, in a coordinate with eigenvalue $\beta$ of $B$, the variance of $(b-B\mu_Z)_j$ is $\alpha^4\beta(1+\beta)$. Subtracting the two linear centers and summing over $\beta=\alpha,1$ gives~\eqref{eq:coefficient_exact}. For fixed $c>0$, the center has risk ratio tending to $1+(c-1)^2/[3(c+1)^2]$. Thus the order $\alpha^4$ within a correctly selected component and the oracle ratio involve different calibration requirements. The formula is for the center. Proposition~\ref{prop:robust} uses the original coefficient window to control the actual iterates.

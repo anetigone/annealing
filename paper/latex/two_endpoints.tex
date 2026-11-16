@@ -1,0 +1,40 @@
+\section{When Endpoint Scales Suffice}\label{sec:two_endpoints}
+Consider instead two isotropic Gaussian components of the same width
+in any dimension. Suppose their separation direction is an
+eigenvector of $B$ with eigenvalue $\alpha>0$. Use the affine coordinate
+$s$ along the secant, with means at $0,1$ in this coordinate, and put
+$r=\pi_1/\pi_0$. Let $F_v$ denote the scalar projected update of~\eqref{eq:map}.
+
+\Needspace{5\baselineskip}
+\begin{proposition}[Endpoint dominance for two aligned templates]\label{prop:two_endpoints}
+Suppose $v_L\ge\tau^2$, $v_L>0$, and $\gamma(\alpha+\lambda)\le1$.
+For every $s\le1/2$, every fixed observation, and $v_H\ge v_L$,
+\begin{equation}\label{eq:two_endpoints}
+ \sup_{v\in[v_L,v_H]}F_v(s)=\max\{F_{v_L}(s),F_{v_H}(s)\},
+\end{equation}
+where $v_H=\infty$ denotes the unbounded interval and
+$F_\infty=\lim_{v\to\infty}F_v$.
+For $s_0\le\xi\le1/2$, the endpoints match any strict crossing
+of $\xi$ within $N$ calls. When $v_H=\infty$, the upper endpoint
+can be replaced by a sufficiently large finite variance above
+any prescribed $V\ge v_L$.
+\end{proposition}
+
+For the proof, use inverse variance $z=1/v$. The weight of the
+right template is $w(z)=(1+r^{-1}e^{Dz})^{-1}$ with $D\ge0$
+before the midpoint. Put $z_H=1/v_H$ with $1/\infty=0$.
+If $w(z_H)\ge s$, the product $(1-\tau^2 z)(w(z)-s)$
+is largest at $z_H$, since both factors are nonincreasing where the
+second is nonnegative. If $w(z_H)<s$, then $w(z)\le1/2$
+throughout the interval. There $w'\le0$ and $w''\ge0$,
+so the product is convex and maximized at an endpoint. The projected maps
+are nondecreasing in $s$. Iterating their endpoint maximum dominates
+all other trajectories up to the crossing threshold, and a finite
+strict crossing persists when infinite variances are approximated
+by sufficiently large finite ones.
+
+Consequently, the half-line $s\le\xi\le1/2$ is invariant for the
+given scale interval exactly when both endpoint maps are inward at $\xi$.
+This statement covers strict crossing up to the midpoint in the aligned
+model. The next section gives a criterion for a third template to
+change the local update on that part of the state space.

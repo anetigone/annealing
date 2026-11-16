@@ -1,0 +1,41 @@
+\subsection{Proof of Proposition~\ref{prop:two_endpoints}}
+Let $\ell=\norm{\mu_1-\mu_0}>0$, let $f=(\mu_1-\mu_0)/\ell$, and use
+$s=f^\top(x-\mu_0)/\ell$. Because $Bf=\alpha f$ and the mixture
+covariances are isotropic, the scalar update is closed:
+\begin{align*}
+ F_v(s)&=s+\gamma[b_s-\alpha s+\lambda(1-\tau^2/v)(w_v(s)-s)],\\
+ b_s&=f^\top(b-B\mu_0)/\ell,\\
+ w_v(s)&=\big[1+r^{-1}e^{\ell^2(1/2-s)/v}\big]^{-1}.
+\end{align*}
+Fix $s\le1/2$ and let $z=1/v$ and $D=\ell^2(1/2-s)\ge0$.
+The only scale-dependent term is proportional to
+$g(z)=(1-\tau^2 z)(w(z)-s)$ for
+$z\in[z_H,1/v_L]$, where $z_H=1/v_H$ (zero for $v_H=\infty$)
+and $w(z)=(1+r^{-1}e^{Dz})^{-1}$.
+If $w(z_H)\ge s$, then $g(z_H)\ge0$ and $g(z)\le g(z_H)$.
+While $w(z)-s$ is nonnegative both factors are nonincreasing.
+Afterward the product is nonpositive.
+If $w(z_H)<s$, monotonicity gives $w(z)\le w(z_H)<s\le1/2$, so
+\[
+ w'=-Dw(1-w)\le0,\qquad
+ w''=D^2w(1-w)(1-2w)\ge0.
+\]
+Thus $g''=(1-\tau^2z)w''-2\tau^2 w'\ge0$. The convex function $g$
+has a maximum at an endpoint. For the unbounded interval,
+continuity at $z=0$ gives the same supremum. This proves
+\eqref{eq:two_endpoints}.
+
+Every $F_v$ is nondecreasing in $s$, since $\partial_s w_v\ge0$
+and $1-\gamma(\alpha+c(v))\ge0$. This includes the limit $F_\infty$.
+Hence the two inward boundary inequalities are necessary and sufficient
+for invariance. Necessity for the limiting endpoint follows by continuity.
+For the finite-budget claim, iterate the pointwise maximum of the two endpoint
+maps. Until this trajectory crosses $\xi$, monotonicity and
+\eqref{eq:two_endpoints} make it dominate the trajectory using arbitrary
+scales, by induction. If the latter crosses, the endpoint trajectory crosses
+strictly within the same budget. For finite $v_H$, all these calls are
+admissible. For $v_H=\infty$, its finite sequence of endpoint choices
+can be realized to arbitrary accuracy by replacing all uses of $F_\infty$
+with a sufficiently large finite variance, by continuity of the finite
+composition in inverse variances. This preserves the strict crossing
+and proves the claim for any $V$.

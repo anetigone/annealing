@@ -1,0 +1,27 @@
+\section{A Settled Common Platform as a Contrast}\label{sec:platform}
+The main controller switches when a transient trajectory reaches an observable entrance. A different protocol holds a single variance $v$ common to all observations long enough to approach equilibrium. Its local scale requirement explains why the stopping rule matters.
+
+Assume $|v-v_0|\le10^{-3}$ and hold the platform for at least
+\begin{equation}
+N_{\rm settle}=\left\lceil\frac{\log(20/\alpha)}{\log(25/23)}\right\rceil.
+\end{equation}
+\begin{proposition}[Local necessity for a settled common platform]\label{prop:calibration}
+On~\eqref{eq:event}, if $v-v_0\ge20\alpha$, class 1 enters a terminal incorrect invariant region. If $v_0-v\ge20\alpha$, class 0 does so. In either case template error remains greater than $.5$ after any number of terminal steps. Therefore simultaneous recovery requires $|v-v_0|<20\alpha$ within this protocol.
+\end{proposition}
+The failure premise is nonempty only when $\alpha\le5\cdot10^{-5}$. It does not apply to short transient platforms or state-dependent switching.
+
+\paragraph{Mechanism of the necessity result.}
+On $\mathcal R=[-.1,.75]\times[-.1,.15]$, $H_v=Dg_v$ obeys $.32I\preceq H_v\preceq2.01I$ and $\norm{DT_v}\le.92$. The virtual fixed point $r_*(v)$ has $(r_*(v_0))_1=.5$. The derivative signs $\partial_vg_1>.12$, $\partial_vg_2<-.16$, and $H_{12}>0$ imply
+\begin{equation}
+-\frac{d(r_*)_1}{dv}
+=\frac{H_{22}\partial_vg_1-H_{12}\partial_vg_2}{\det H}>.1.
+\end{equation}
+Actual class-0/1 fixed points differ from the virtual point by at most $1.572\alpha$, and settlement leaves at most $\alpha/10$ error. A $20\alpha$ offset consequently places one class more than $.32\alpha$ across the incorrect side of the terminal separator, inside an incorrect invariant region. Supplementary Section~\ref{sec:platform_proof} supplies the terminal trapping argument; the conclusion is actual permanent failure, not a reversed sufficient condition.
+
+\paragraph{A separate sufficient direction.}
+Proposition~\ref{prop:common} states that $|v_k-v_0|\le\alpha/1000$ for
+\begin{equation}
+H_+(\alpha)=\left\lceil\frac{\log(64/\alpha)}{\log(25/23)}\right\rceil
+\end{equation}
+intermediate calls suffices for correct terminal entry. Its prescribed-window crossing lower and upper bounds are in Proposition~\ref{prop:cross}. This supplies the successful direction alongside the local necessary condition, with different constants and explicitly different holding-time requirements. It does not make every scale inside the necessary window sufficient. Combining $H_+$ with $r_\alpha$ terminal calls gives 317 calls at $\alpha=10^{-5}$, while the observable controller needs the sufficient budget $25+r_\alpha=154$. Both use the same terminal objective. The logarithmic crossing lower bound belongs to the shared-window protocol, not to all controllers in Table~\ref{tab:protocols}.
+

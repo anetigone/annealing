@@ -1,0 +1,110 @@
+\section{Proof Mechanism}
+The proof has four interfaces: a common incorrect invariant region, a uniformly advancing intermediate channel, posterior concentration in terminal regions, and a conditional-mean risk decomposition. Auxiliary inequalities are verified over the full parameter box by the interval procedures described in Supplementary Section~\ref{sec:certificate}.
+
+\subsection{A common incorrect region}
+\begin{lemma}[A common boundary barrier]\label{lem:barrier}
+For class 1 on~\eqref{eq:event}, let $\mathcal W_\alpha=\{s\le.3,\ t\ge-\alpha/500\}$. Every scale in $\bad$ preserves this set. In particular, any observation- and history-dependent switching within $\bad$ preserves it from $x_0=b$.
+\end{lemma}
+\begin{proof}
+Write $x=(s,t)$ and $m_s=w_1-aw_2$. For $Z=1$,
+\begin{align}
+s^+&=[1-\gamma(\alpha+c)]s+\gamma(b_1+cm_s),\\
+t^+&=[1-\gamma(1+c)]t+\gamma(b_2+cdw_2).
+\end{align}
+The coordinate coefficients are nonnegative. On
+$\mathcal W_\alpha$, low scales give $m_s<.025$ and high scales give $m_s<.20$. These are upper bounds on the horizontal template mean; they control the sign of the boundary drift. At $s=.3$ the outward drift is at most
+\begin{equation}
+\gamma\{.702\alpha+c(.20-.3)\}<0.
+\end{equation}
+Since $dw_2\ge0$, the lower $t$ boundary is preserved as well. Positivity of the own-coordinate derivatives extends these boundary bounds to the unbounded region. Initialization lies in $\mathcal W_\alpha$, so every restricted update preserves it, regardless of how a controller selects scales. The lower bound $\sigma\ge\epsilon$ is essential to the coefficient bounds.
+\end{proof}
+
+\subsection{Intermediate progress and entry}
+\begin{lemma}[A progress channel with controlled exit]\label{lem:entry}
+On~\eqref{eq:event}, the observable target equals $Z$. Every successive choice of $v\in[.69,.71]$ keeps class 1 inside a transverse channel until its first crossing of $s=.53$. This crossing occurs within 25 steps, with $s<.65$, and enters $G_1$. Class 2 enters $G_2$ within five steps, while class 0 starts in $G_0$.
+\end{lemma}
+\begin{proof}
+Equation~\eqref{eq:event} immediately implies $\widehat Z=Z$. For the difficult class 1, before reaching $s=.53$, consider
+$[-.01,.53]\times[-.01,.05]$. Responsibility monotonicity gives
+\begin{equation}
+w_2<.05,\quad m_s(.53,.05)-.53>.018.
+\end{equation}
+With $C=\sum_iw_i(\mu_i-\bar\mu)(\mu_i-\bar\mu)^\top$, we have $\partial_sm_s=C_{11}/v<.6$ and $\partial_tm_s=C_{12}/v<0$. Thus
+\begin{equation}
+m_s-s\ge .018+.4(.53-s)=.23-.4s.
+\end{equation}
+The transverse boundaries point inward, and $c\ge.999$. Therefore, until entrance, a scalar comparison with $q_C=1-\gamma(.999)(.4)=.9001$ and $\beta=.23/.4=.575$ gives
+\begin{align}
+s_{k+1}&\ge q_Cs_k+(1-q_C)\beta,\\
+s_h&\ge\beta-(\beta+2\cdot10^{-6})q_C^h.
+\end{align}
+The last expression exceeds $.53$ at $h=25$. The one-step upper envelope gives $s^+<.65$ at the first crossing, so the iterate enters $G_1$ without overshooting its terminal region. The mechanism needs both progress and an exit bound; positive drift alone would not establish entrance.
+
+For class 2 use the invariant rectangle $[-1.1,.01]\times[1.75,2.1]$. At its worst responsibility corner, $w_2>.78$ and $m_s<-.68$. Before reaching $s\le-.5$,
+\begin{equation}
+s_h\le-.68+(.68+.000002)(.75025)^h.
+\end{equation}
+At $h=5$ this is below $-.5$, yielding entry into $G_2$. Class 0 starts in $G_0$. These arguments hold uniformly for any successive variances in the entire band, not merely a sampled collection of scales. Supplementary Section~\ref{sec:certificate} records the numerical margins separately from these geometric conditions.
+\end{proof}
+
+\subsection{Terminal regions and refinement}
+\begin{lemma}[Distance gaps imply raw-output refinement]\label{lem:terminal}
+For the sets
+\begin{align}
+Q_0&=[-.1,.5-\alpha/32]\times[-.1,.15],\\
+Q_1&=[.5+\alpha/32,1.1]\times[-.1,.15],\quad Q_2=G_2.
+\end{align}
+each $G_Z$ lies in $Q_Z$, and the terminal map preserves $Q_Z$ and has a unique stable fixed point there. With $m_Z(c)=(B+cI)^{-1}(b+c\mu_Z)$, after $r$ terminal calls from an entrance point,
+\begin{equation}\label{eq:refine}
+\norm{x_{h+r}-m_Z(c_L)}\le A_r:=6(3/4)^r+12e^{-1/(64\alpha)}.
+\end{equation}
+\end{lemma}
+\begin{proof}
+Squared-distance gaps and $\pi_j/\pi_Z<2$ give
+\begin{equation}\label{eq:leak}
+1-w_Z(x,v_L)\le4e^{-1/(33\alpha)},\qquad x\in Q_Z.
+\end{equation}
+The closest two templates have squared-distance gap at least $\alpha/16$. All remaining gaps exceed $1.89$. Each terminal coordinate update is a convex combination of the current coordinate and
+\begin{equation}
+\mu_{Z,j}+\frac{e_j+c_L(\bar\mu_j-\mu_{Z,j})}{B_{jj}+c_L}.
+\end{equation}
+The latter is within $.09$ of the template coordinate, proving invariance. Also $\norm{C}\le9(1-w_Z)$, so the terminal map is Lipschitz with constant less than $.751$ on each $Q_Z$, and has a unique stable fixed point there.
+
+The exact recursion around $m_Z(c_L)$ has a linear part with norm at most $3/4$ and accumulated soft-responsibility error at most $12e^{-1/(33\alpha)}$. This yields~\eqref{eq:refine}. The conditional estimator $m_Z(c_L)$ is an analysis center, never a substitute for the actual iteration. Thus the bound controls the raw output without computing its terminal fixed point.
+\end{proof}
+
+\subsection{From conditional control to unconditional risk}
+\begin{lemma}[A risk interface for the raw output]\label{lem:risk}
+Under the continuous model of Theorem~\ref{thm:main}, any output of the observable controller with at least $r$ terminal calls on the good event obeys
+\begin{equation}\label{eq:risk_interface}
+R_{\rm coarse}\le R_{\rm oracle}+[\sqrt{A_r^2+T_\alpha}+\alpha^3]^2,
+\end{equation}
+where $T_\alpha=128\sqrt8e^{-1/(4\cdot10^6\alpha^2)}$. Restricted controllers obey the lower bound established below.
+\end{lemma}
+\begin{proof}
+Let $E_\alpha=\{\norm{u}_\infty,\norm{\eta}_\infty\le\alpha/1000\}$. Then
+\begin{equation}
+\Prob(E_\alpha^c)\le8e^{-1/(2\cdot10^6\alpha^2)},
+\end{equation}
+and $E_\alpha$ implies~\eqref{eq:event}. For all observations, coordinatewise convexity of the update bounds the fourth moment uniformly in the call budget. Cauchy--Schwarz gives
+\begin{equation}
+\E[\norm{\widehat x-m_Z(c_L)}^2\mathbf1_{E_\alpha^c}]
+\le T_\alpha:=128\sqrt8e^{-1/(4\cdot10^6\alpha^2)}.
+\end{equation}
+Conditioning on $(y,Z)$ and any independent controller random seed, the conditional mean is $m_Z(1)$ and orthogonality gives exactly
+\begin{equation}
+R(\widehat x)=R_{\rm oracle}+\E\norm{\widehat x-m_Z(1)}^2.
+\end{equation}
+The coefficient mismatch satisfies
+\begin{equation}
+m_Z(c_L)-m_Z(1)=(c_L-1)(B+c_LI)^{-1}[\mu_Z-m_Z(1)],
+\end{equation}
+whose $L^2$ norm is at most $\alpha^3$. Combining these bounds proves~\eqref{eq:risk_interface}.
+For $r=r_\alpha$ and $\alpha\le10^{-5}$, $A_r\le\alpha^3$ and $2T_\alpha\le\alpha^6$, proving~\eqref{eq:risk}. On $Z=1,E_\alpha$, restricted iterates instead have error at least $.7-\alpha/1000$. Consequently
+\begin{equation}
+R_{\rm bad}\ge .30(.7-\alpha/1000)^2
+ [1-8e^{-1/(2\cdot10^6\alpha^2)}]_+,
+\end{equation}
+which proves the limiting lower bound. Random switching does not change either argument: all estimates are pointwise before taking expectations.
+\end{proof}
+Lemmas~\ref{lem:barrier}--\ref{lem:risk} assemble Theorem~\ref{thm:main}: the first applies under arbitrary restricted switching, the second creates terminal entry using only observable decisions, and the last two convert entry into unconditional risk for the unaltered RED output.

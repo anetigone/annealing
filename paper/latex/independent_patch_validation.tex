@@ -1,0 +1,147 @@
+\section{Frozen independent-noise and held-out-photo validation}
+\label{sec:independent_patch}
+This validation follows the original diagnostic and theory
+development. Before evaluating its new observations, we export the
+original china-trained eight-component prior and blur, and freeze
+the restoration and ball-construction rules.
+The saved \path{experiments/results/patch_independent_validation/plan.json}
+records the design.
+We reuse the original 256 flower truth patches with new noise.
+We also take 256 nonoverlapping grayscale $4\times4$ patches from
+each of Set12 images 01, 02 and 10, obtained from the KAIR testset.
+These are the cameraman, house and boat photographs.
+Image indices were chosen before restoration outcomes were available.
+Patch selection uses seed $20261115+i$ for photo index $i=0,1,2,3$,
+except that the original flower patches are retained.
+Each photo receives three independent Gaussian noise realizations
+with seed $20261112+j+1000i$, $j=0,1,2$.
+Noise standard deviation remains $.01$.
+There is no model refitting or schedule selection.
+
+All original protocols retain $\lambda=.1$, $\gamma=.25$,
+terminal $\sigma=.02$ and backprojection initialization.
+The intermediate preset uses $\sigma=.1$ for 25 calls, and the
+low/high comparator alternates $\sigma=.02/.3$ for 25 calls.
+Each then uses terminal refinement.
+We also repeat the coefficient-only and smoothing-only ablations.
+These ablations intentionally alter the update for attribution.
+Reported budgets are 25, 154, 1000 and 5000 calls.
+Within each observation, all methods share the truth, noise,
+initialization and total budget.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Photo & Terminal & Intermediate & Low/high & $\Delta$ (\%)\\
+\midrule
+Flower & .0098413 & .0098278 & .0098044 & $-.138$\\
+Cameraman & .0235398 & .0235585 & .0235378 & $+.079$\\
+House & .0135999 & .0136992 & .0136210 & $+.730$\\
+Boat & .0214076 & .0213269 & .0213542 & $-.377$\\
+\bottomrule
+\end{tabular}
+\caption{Mean squared Euclidean error at 154 calls, averaged over
+256 truth patches and three noise realizations per photo.
+$\Delta$ is the intermediate error change relative to terminal-only.
+Negative means lower error. There are no true component labels for
+the photo patches.}
+\label{tab:independent_photo_risk}
+\end{table}
+
+The intermediate direction is consistent over the three noise
+seeds within each image but differs across images.
+The three new photos' equal-weighted mean errors are
+$.01951577$, $.01952817$ and $.01950431$ for terminal,
+intermediate and low/high, respectively.
+These descriptive results show no consistent intermediate benefit.
+Noise repeats share their truth patches, so the 3072 observations
+are not 3072 independent photographs.
+We report each photo and its seed-level differences separately,
+without a population significance claim.
+Later iteration generally increases error after 154 calls even
+as the outputs of different schedules approach one another.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../../experiments/results/patch_independent_validation/risk_curves.pdf}
+\caption{Frozen-model validation. Each panel averages three noise
+realizations of the same 256 patches from one photo. Recovery error
+and terminal convergence need separate evaluation. Smoothing-only
+retains the terminal coefficient and varies posterior weights.
+Coefficient-only retains terminal posterior weights and varies the
+coefficient. These two curves are attribution controls.}
+\label{fig:independent_photo_risk}
+\vspace{6pt}
+\includegraphics[width=\textwidth]{../../experiments/results/patch_independent_validation/distance_curves.pdf}
+\caption{Intermediate versus terminal output distance and the
+numerically evaluated sample-specific exact-map bound
+$N^{-1}\sum_iq_i^{2(n-154)}d_{i,154}^2$.
+The bound constants are interval verified.
+The observed curves use floating-point iterates, whose per-step
+rounding is not enclosed. They are empirical consistency checks,
+and the centers use later states, so this is not an a priori
+prediction of the 5000-call outputs.}
+\label{fig:independent_distance}
+\end{figure*}
+
+For each observation, a candidate ball uses the terminal 5000-call
+state followed by ten Newton steps as its center.
+The radius is 1.01 times the maximum distance of the three original
+154-call outputs from this center, with floor $10^{-9}$.
+This frozen rule is a post-hoc certificate construction.
+It uses observations, model and states, never truth patches.
+Each ball is checked with the reference-component and pairwise
+whole-ball covariance bounds.
+All 3072 observations satisfy the general sufficient test.
+The original uniform choice $\rho=.45$ passes for
+768, 765, 765 and 764 observations on the four photos.
+For the other ten we propose sample-specific upper bounds by
+rounding the floating-point pairwise bound upward to the next
+$.001$ and adding $.001$.
+This only selects proof constants, and the interval inequalities
+must still verify them.
+
+Using 60-digit outward-rounded interval arithmetic, all 3072
+LDL curvature, center residual, coverage and step checks pass.
+The maximum verified $\rho$ per photo is $.45,.497,.511,.798$,
+giving worst factors below
+$.999429,.999478,.999493,.999791$, respectively.
+The ten exceptions to $\rho=.45$ are therefore not evidence of
+noncontraction.
+All three original protocols have the same dominant prior component
+at 154, 1000 and 5000 calls on every observation.
+The interval ball certificate supplies the stronger statement
+about subsequent exact-map trajectories.
+
+
+
+Across the three new photos, intermediate/terminal mean squared
+output distance decreases from $4.38157\cdot10^{-5}$ at 154 calls
+to $1.89053\cdot10^{-9}$ at 5000.
+Its RMS ratio is approximately $.00657$.
+No sampled floating-point distance exceeds its computed bound.
+This observation does not extend the interval theorem to all
+floating-point trajectories.
+The certificate treats exported binary64 coefficients and
+154-call states as exact inputs, leaves earlier propagation and
+future rounding open, and gives no probability guarantee for
+additional observations.
+
+The script \path{experiments/code/patch_independent_validation.py}
+exports the frozen plan with \texttt{--prepare} and runs each photo
+with \texttt{--photo} and \texttt{--data}.
+The interval verifier is
+\path{experiments/code/patch_terminal_interval.py}
+with \texttt{--adaptive-rho}.
+The per-photo risk, seed differences, proof constants and failures
+are retained in the corresponding result directories.
+Photo provenance is recorded in
+\path{experiments/results/patch_independent_data/provenance.md}.
+All comparisons and attribution controls remain available.
+The positive claim of an arbitrary-budget restricted-controller
+risk lower bound is still proved only for the structured family.
+This real-photo experiment validates terminal history loss for a
+finite batch and has not established positive photo-patch risk
+separation.

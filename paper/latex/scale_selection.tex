@@ -1,0 +1,171 @@
+\section{Scale selection before trajectory evaluation}
+\label{sec:selection_diagnostic}
+We use $d\in\{1.6,1.8,2,2.2,2.4\}$ and
+$h\in\{1.2,1.5,1.78,2.1,2.4\}$, with $a=1$, $r=1.29$,
+$\alpha=.001$, $\tau=\nu=\alpha^2$, $v_L=\tau^2+\alpha^2$,
+and $\lambda=1+\alpha^2$. The candidate grid is prespecified
+relative to this evaluation. We use the S4 tolerances on $E$
+and an allowance of $10^{-4}$ for the selection inequalities.
+The trajectory simulations use the original RED update in double
+precision.
+
+\paragraph{Selection.}
+We take the largest $V_-$ in $\{.08,.09,\dots,.30\}$ passing
+the low-scale bound of S5 and the smallest $V_+$ in
+$\{1.5,1.6,\dots,8\}$ passing its high-scale bound. Both bounds
+cover the full restricted ranges $[v_L,V_-]\cup[V_+,\infty)$.
+For the channel we take the first passing width-$.02$ band
+in increasing order of its center in $\{.40,.42,\ldots,1.10\}$.
+We check class-1 progress, transverse invariance, overshoot,
+and invariance of the prepared strip through call 25.
+The progress comparison starts from $\alpha-\alpha/4$.
+Classes 0 and 2 start in their terminal rectangles and use only
+$v_L$ under the observation-based preset. We take
+$G_2=[-1.1,.01]\times[d-.27,d+.27]$ and use the main-text
+$G_0,G_1$. We check the classifier, initialization, positive
+template gaps at all corners, and every terminal face inequality.
+The bound calculations use 45-digit outward-rounded interval
+arithmetic. They hold on $E$ for each certified grid model.
+The cases $(d,h)=(1.6,2.1)$ and $(1.6,2.4)$ do not pass a
+candidate band under these tests.
+
+\paragraph{Budget-based selection.}
+The first-pass rule selected $[.39,.41]$ at all 23 passing
+models. After that diagnostic we froze a second rule to
+study model-dependent selection. It extends the candidate
+centers down to $.24$, and among passing bands minimizes the
+first call at which the analytic lower comparison reaches
+$.53$, breaking ties by the smaller center. This uses the
+model inputs and the 25-call cap. The actual experimental
+prefix remains 25 calls for all policies. The new rule
+certifies the same 23 settings, with selected centers
+between $.36$ and $.60$ and upper bounds of 14 to 24 calls.
+It is evaluated on a new noise stream. We execute the
+shorter certified prefixes in the follow-up below.
+
+\paragraph{Frozen evaluation.}
+After writing each plan, we draw 32 independent pairs of
+within-component and measurement noise per class and model,
+using seed 20261112 for the first-pass rule and seed
+20261113 for the budget-based rule. All 2208 observations
+in each evaluation lie in $E$. All policies share their
+observations, backprojection, step, terminal variance and
+106-call budget. We use 25 prefix calls with alternating
+restricted cutoffs, 25 geometric variances from $V_+$ to
+$V_-$, or a constant platform at the selected center.
+The preset assigns the constant platform only when the
+observation classifier predicts class 1. Class labels enter
+evaluation and prior weighting. The original terminal map
+is then used for at least 81 calls. We retain first entry
+times, class counts at the common switch, and class and model
+squared errors. Model averages describe the certified grid
+subset. The other two models remain uncertified.
+
+Both designs yield the same class-entry counts in the
+main-text table. The first-pass mean errors in its four
+rows are $.32154626,.24926068,.24926068$ and
+$1.5293\cdot10^{-12}$. The table uses the new noise stream
+and the budget-based rule. Every class-1 draw under this
+rule reaches $G_1$ within its certified bound.
+
+The prespecified failure examples both use $(d,h)=(2,1.78)$.
+They hold $V_+=2.2$ for 12 calls and then use $V_-=.18$,
+with or without one call at the selected center at the start
+of the low stage. Both produce zero class-1 terminal entries
+in 106 calls. For the budget-based band $[.43,.45]$, one band
+call leaves class 1 at $s<.194$ at the switch. The shared
+geometric grid reaches the correct class-1 rectangle on this
+fixture at call 19 without using a variance in $[.43,.45]$.
+The experiment checks a sufficient prescription, and nearby
+successful schedules can use other intermediate variances.
+
+\subsection{Independent platform tuning and realized savings}
+We freeze an additional plan on the same 23 certified grid
+models. The shared and observation-gated platforms have
+identical model inputs. Each searches
+$v\in\{.20,.21,\ldots,1.10\}$ and prefix lengths $m=1,\ldots,25$
+independently, giving $91\times25=2275$ candidates per
+model and policy. For each candidate, run RED from all
+three noiseless backprojections $B\mu_z$ with 106 total calls.
+The gated policy uses the same classifier as the certified
+preset. A candidate passes when the maximum final squared
+distance to the corresponding template is at most $10^{-8}$.
+Select the shortest passing prefix and the lower median
+of its passing variances. Every search has a passing
+candidate. The shared choices have $v\in[.41,.85]$ and
+the gated choices $v\in[.47,.81]$. Both choose 11--14 calls.
+
+On the noiseless grid the shared search passes 9--25
+of the 2275 pairs per model, versus 428--1142 for gating.
+At fixed length 25, the counts are 0--2 of 91 for sharing
+and 48--86 of 91 for gating. These are discrete measures
+of sensitivity to the tuning choices on the model proxies.
+Only the frozen choices are carried to the noisy evaluation,
+apart from the explicit nominal comparison at $v=.25$.
+
+With seed 20261114 we draw new independent pairs of component
+and measurement noise, 64 per class and model, except for the
+nominal $(2,1.78)$ model where we draw 512 per class.
+All 5760 observations lie in $E$. The certified preset
+uses its selected center and analytic cap $m_{\rm cert}$.
+All main comparisons use the same 106 calls, observations,
+initialization, exact RED formula and terminal variance.
+The shorter-budget variant stops at $m_{\rm cert}+81$ on the
+same observations. The class labels are used for evaluation
+and prior weighting; the sample-specific gate sees only $b$.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{2.8pt}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Prefix policy & $G_1$ & All $G_z$ & Mode & Error\\
+\midrule
+Shared, same center & 23 & 0 & 0 & $.249$\\
+Preset, 25-call cap & 23 & 23 & 23 & $1.47\cdot10^{-12}$\\
+Preset, certified cap & 23 & 23 & 23 & $1.47\cdot10^{-12}$\\
+Shared, tuned & 0 & 0 & 23 & $1.47\cdot10^{-12}$\\
+Gated, tuned & 0 & 0 & 23 & $1.47\cdot10^{-12}$\\
+Preset, shorter budget & 23 & 23 & 23 & $1.47\cdot10^{-12}$\\
+\bottomrule
+\end{tabular}
+\caption{Frozen follow-up on 23 models. Columns $G_1$ and All
+$G_z$ count models whose indicated draws all lie in the named
+rectangles after the prefix window. Mode counts models with every
+draw's final nearest template correct. Error is prior-weighted
+squared error averaged across models.
+All rows use 106 total calls except the last (95--105 calls).}
+\label{tab:tuned_platforms}
+\end{table}
+
+The sufficient rectangles are stricter than the final nearest
+template test. On the nominal model, the shared 25-call platform
+at total variance $.25$ switches with horizontal coordinates
+near $.4961$ and $.5018$ for classes 0 and 1, outside $G_0$ and
+$G_1$. It still yields $1536/1536$ correct nearest templates and
+prior-weighted squared error $1.5020\cdot10^{-12}$, while the
+shared $.44$ prefix yields $1024/1536$ and $.24521$. The tuned
+shared choice $(v,m)=(.61,12)$ also yields $1536/1536$ and
+$1.5020\cdot10^{-12}$. The shared outcomes are numerical
+checks on the selected grid, without an interval guarantee.
+
+For the certified policy, the mean prefix cap drops from 25
+to 17.22. Averaging the actual intermediate calls first with
+the class priors and then over models gives 8.05 and 5.54 calls
+before and after this change. The shorter run saves a mean of
+7.78 total calls at the observed error in Table~\ref{tab:tuned_platforms}.
+
+\paragraph{Reproduction.}
+The two phases of
+\path{experiments/code/scale_selection_diagnostic.py}
+write a plan and evaluate it from a separate command.
+The frozen plans and per-model outputs are in
+\path{experiments/results/scale_selection} and
+\path{experiments/results/scale_selection_budget}.
+The follow-up uses \path{experiments/code/scale_selection_followup.py}
+with \texttt{plan} and then \texttt{evaluate}, both with
+\path{--out experiments/results/scale_selection_followup}
+when run in a new artifact tree without the reference outputs.
+The first command reads the frozen budget-based plan by default.
+The second reports the policy summaries in
+Table~\ref{tab:tuned_platforms} and writes the per-model output.

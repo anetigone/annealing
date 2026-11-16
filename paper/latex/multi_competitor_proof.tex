@@ -1,0 +1,186 @@
+\section{Several competing templates and a mass threshold}
+\label{sec:multi_competitor}
+This result extends the fixed-state three-template comparison.
+All components have the common isotropic covariance $\tau^2I$.
+Let $\mu_0=0$, $\mu_1=e$ with $\norm e=1$, and fix $x$ with
+$s=e^\top x\in(0,1/2)$ and $P=1/2-s$.
+For $M\ge1$ competitors $\nu_j$, suppose
+\begin{align}
+ e^\top\nu_j&=-a_j,\qquad a_j>0,\nonumber\\
+ Q_j&=\tfrac12(\norm{x-\nu_j}^2-\norm x^2)>P.
+ \label{eq:multi_geometry}
+\end{align}
+Their prior ratios are $1:r:hq_1:\cdots:hq_M$ where
+$r,h,q_j>0$ and $\sum_jq_j=1$.
+The internal composition $q$ remains fixed as the total ratio $h$
+varies. Define
+\begin{align}
+ \bar a&=\sum_jq_ja_j,\quad
+ \bar Q=\sum_jq_jQ_j,\quad
+ \overline{aQ}=\sum_jq_ja_jQ_j,\nonumber\\
+ C_s&=(1-s)r-s>0,\nonumber\\
+ h_{\max}&=\frac{C_s}{\bar a+s},\qquad h_0=\frac r{\bar a}.
+ \label{eq:multi_mass_range}
+\end{align}
+Let $z_L=1/v_L$ with
+\begin{equation}
+ v_L>\tau^2,\qquad r e^{-Pz_L}\le \frac{s}{1-s}.
+ \label{eq:multi_endpoint_conditions}
+\end{equation}
+For inverse variance $z$, put $l(z)=1-\tau^2z$ and
+\begin{align}
+ m_h(z)&=
+ \frac{r e^{-Pz}-h\sum_j a_jq_je^{-Q_jz}}
+      {1+r e^{-Pz}+h\sum_jq_je^{-Q_jz}},\nonumber\\
+ g_h(z)&=l(z)(m_h(z)-s).
+ \label{eq:multi_drift}
+\end{align}
+The projected RED displacement per unit step size is
+$e^\top(b-Bx)+\lambda g_h(z)$.
+Thus comparison of $g_h$ compares actual updates at this state,
+for the same $\lambda>0$, without alignment of $e$ and $B$.
+
+\begin{proposition}[Mass threshold with several competitors]
+\label{prop:multi_mass}
+Under \eqref{eq:multi_geometry}--\eqref{eq:multi_endpoint_conditions},
+for $0<h\le h_{\max}$, the infinite-variance endpoint
+$g_h(0)$ dominates the terminal endpoint $g_h(z_L)$.
+A finite intermediate variance strictly improves on both endpoints
+if and only if $D(h)>0$, where
+\begin{align}
+ D(h)={}&-Pr\nonumber\\
+ &+h[(1+r)\overline{aQ}+r\bar Q-Pr(1+\bar a)]\nonumber\\
+ &+h^2(\overline{aQ}-\bar a\bar Q)\nonumber\\
+ &-\tau^2[C_s-h(\bar a+s)](1+r+h).
+ \label{eq:multi_polynomial}
+\end{align}
+There is exactly one root $h_{\rm crit}\in(0,h_0)$.
+On $0<h\le h_{\max}$, improvement is equivalent to
+$h>h_{\rm crit}$. At fixed remaining scalar inputs, increasing
+any $Q_j$ strictly decreases $h_{\rm crit}$.
+\end{proposition}
+
+\begin{proof}
+The mass range gives
+\[
+ u:=g_h(0)=\frac{C_s-h(\bar a+s)}{1+r+h}\ge0.
+\]
+Without the competitors, the terminal right-template responsibility
+is at most $s$ by \eqref{eq:multi_endpoint_conditions}.
+Adding negative-projection templates decreases its horizontal mean,
+so $g_h(z_L)\le0$ and the high-variance endpoint is larger.
+
+Set
+\begin{align*}
+ A_u(z)&=(1-s)l(z)-u,\\
+ U_u(z)&=\frac{s l(z)+u}{A_u(z)},\\
+ W_{u,j}(z)&=\frac{(a_j+s)l(z)+u}{A_u(z)}.
+\end{align*}
+Since $u\le C_s/(1+r)<1-s$, $A_u(0)>0$.
+The set $I_u=\{z\in[0,z_L]:A_u(z)>0\}$ is an initial interval.
+On that interval, multiplication by the positive responsibility
+denominator gives the equivalence
+\begin{align}
+ g_h(z)>u
+ &\quad\Longleftrightarrow\quad J_u(z)<r,\nonumber\\
+ J_u(z)&=U_u(z)e^{Pz}
+     +h\sum_jq_jW_{u,j}(z)e^{-(Q_j-P)z}.
+ \label{eq:multi_convex_test}
+\end{align}
+In particular $J_u(0)=r$.
+The identities
+\begin{align*}
+ U_u&=\frac{s}{1-s}+\frac{u}{(1-s)A_u},\\
+ W_{u,j}&=\frac{a_j+s}{1-s}
+             +\frac{(1+a_j)u}{(1-s)A_u}
+\end{align*}
+show that each ratio is log-convex.
+Indeed a positive affine reciprocal is log-convex on its positive
+domain, and positive sums preserve log-convexity.
+Multiplication by an exponential preserves that property.
+Moreover $U_u>0$, $U_u',U_u''\ge0$ and $P>0$, so the first
+term in $J_u$ is strictly convex. Thus $J_u$ is strictly convex.
+
+No improvement is possible where $A_u(z)\le0$.
+All template projections are at most 1 and the weight on $\mu_0$
+is positive, giving $m_h(z)<1$. Since $l(z)>0$,
+\[
+ g_h(z)-u<(1-s)l(z)-u=A_u(z)\le0.
+\]
+Consequently an improvement anywhere in $(0,z_L)$ exists exactly
+when $J_u'(0)<0$. This argument does not require $A_u$ to remain
+positive all the way to $z_L$.
+
+On $I_u$ the exact identity
+\[
+ g_h(z)-u=
+ \frac{A_u(z)e^{-Pz}[r-J_u(z)]}
+      {1+r e^{-Pz}+h\sum_jq_je^{-Q_jz}}
+\]
+shows that the derivatives of $g_h$ and $J_u$ at zero have
+opposite signs. Direct differentiation of
+\eqref{eq:multi_drift} yields
+\[
+ g_h'(0)=\frac{D(h)}{(1+r+h)^2},
+\]
+which proves the improvement criterion.
+
+For uniqueness,
+$D(0)=-Pr-\tau^2C_s(1+r)<0$.
+At $h_0=r/\bar a$, $m_{h_0}(0)=0$ and
+\[
+ m_{h_0}'(0)=
+ \frac{r(\overline{aQ}/\bar a-P)}{1+r+h_0}>0.
+\]
+Hence $g_{h_0}'(0)=m_{h_0}'(0)+\tau^2s>0$ and $D(h_0)>0$.
+A polynomial of degree at most two with opposite signs at these
+endpoints has exactly one root inside, which is simple and crosses
+from negative to positive. Since $h_{\max}<h_0$, this proves the
+claimed threshold on the comparison range.
+Finally,
+\[
+ \frac{\partial D(h)}{\partial Q_j}
+ =h q_j[a_j(1+r+h)+(r-h\bar a)]>0
+ \quad(0<h<h_0).
+\]
+At the root $\partial_hD>0$, so implicit differentiation gives
+$\partial_{Q_j}h_{\rm crit}<0$.
+\end{proof}
+
+The comparison of a partial derivative in $Q_j$ keeps $a_j$
+and the other scalar inputs fixed. A geometric perturbation can
+change several of these inputs at once.
+For $M=1$, the covariance term in \eqref{eq:multi_polynomial}
+vanishes and the three-template polynomial is recovered.
+For $M>1$, $\operatorname{Cov}_q(a,Q)$ can be negative, so
+global uniqueness on the positive $h$ axis is not asserted.
+
+\paragraph{A realizable second positive root.}
+Take $x=(.3,3)$, $e=(1,0)$, $r=1.29$,
+$\tau^2=10^{-4}$, $v_L=.01$ and $q_1=q_2=1/2$, with
+\begin{align*}
+ \nu_1&=(-.1,3+\sqrt{28.93}),\\
+ \nu_2&=(-3,3+\sqrt{2.2}).
+\end{align*}
+Then $a=(.1,3)$ and $Q=(10,2)$ give
+\[
+ D(h)=-5.799815h^2+15.09746335h-.258138087.
+\]
+Its positive roots are approximately $.01721192$ and $2.58588204$,
+while $h_{\max}\simeq.32594595<h_0\simeq.83225806$.
+Only the first root belongs to the threshold interval.
+
+\paragraph{Scope and numerical checks.}
+The result is a fixed-state single-step comparison.
+It does not provide a channel, a terminal entrance, or a raw-output
+risk separation for arbitrary competitor configurations.
+Strict improvement over the infinite-variance endpoint persists
+against a sufficiently large finite high variance by continuity.
+The program \path{experiments/code/theory_extension_checks.py}
+checks the derivative identity and convex criterion on 128 finite
+cases, including 69 cases outside the former sufficient condition
+$C_s/(1+r)<(1-s)l(z_L)$.
+It also checks the explicit two-root geometry, the single-competitor
+reduction and 64 four-corner attribution identities.
+These checks are distinct from the external draft's reported
+1500-case batch and do not replace the analytic proof.

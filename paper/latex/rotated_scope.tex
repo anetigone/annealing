@@ -1,0 +1,69 @@
+\subsection{A certified range of sensing angles}\label{sec:sensing_angle}
+\begin{corollary}[Non-aligned risk separation]\label{cor:sensing_angle}
+Use the Gaussian model of Theorem~\ref{thm:ind_noise} and its
+template and mass box with $\alpha=10^{-3}$. In the same template
+coordinates, take $B_\varphi=R_\varphi\operatorname{diag}(\alpha,1)
+R_\varphi^\top=A^\top A$, with $R_\varphi$ a planar rotation.
+For exact RED from $x_0=A^\top y$, take $\lambda=1$ and $v_L=S$.
+As $\tau,\nu\to0$ independently, the restricted risk has limiting
+lower bound $.147$ uniformly over all finite budgets and histories,
+and the $0/25/0$ preset achieves $O(S^2)$ in $25+n$ calls with
+$n$ as in~\eqref{eq:fixed_geom}. Both bounds hold uniformly for
+$|\varphi|\le .020$ radians (about $1.15^\circ$), with the scale sets
+of Theorem~\ref{thm:ind_noise}.
+\end{corollary}
+
+For $e=b-B_\varphi\mu_Z$ compare with the aligned update at
+$b_0=B_0\mu_Z+e$. The update difference is
+$-\gamma(B_\varphi-B_0)(x-\mu_Z)$.
+The diagonal entries of $B_\varphi-B_0$ have magnitude at most
+$\varphi^2$ and the off-diagonal entries at most $|\varphi|$.
+Thus the perturbation can be bounded separately on each face.
+All rotated maps are nondecreasing in each output's own input
+coordinate, since $B_{\varphi,jj}\le1$ and
+$\partial_j\bar\mu_{v,j}\ge0$. These face tests imply invariance
+of the respective rectangles.
+
+\paragraph{Common barrier.}
+For class 1, the backprojection starts in
+$W=[-.5,.3]\times[-.027,.51]$ on $E$.
+On the right face, let $M$ bound $\bar\mu_{v,1}$ from above
+and $U$ bound $|t|$ on the part of the face under consideration.
+With $f=.020$, the displacement is at most
+\[
+ \gamma[.00095+.999(M-.3)+.7f^2+fU].
+\]
+At low scales use $(M,U)=(.287729,.51)$. At high scales,
+the negative competitor's odds increase with $t$.
+Splitting at $t=.15$ yields $(M,U)=(.29300,.15)$ and
+$(.25984,.51)$ on the lower and upper segments.
+All three bounds give an inward margin of more than $.00020$.
+The other three faces
+have margins above $.047$, $.0047$, and $.0030$ at the left,
+bottom, and top, respectively (Supplement S27). Hence $s\le.3$
+for any history using the restricted union.
+
+\paragraph{Entry and terminal risk.}
+The original observation classifier works on $E$. Class 1 uses
+a widened transverse strip $[-.027,.06]$. The uniform slope
+bound is $.564$ and the entrance surplus exceeds $.01563$.
+With horizontal rotation correction below $.000402$ per
+update, the lower comparison is
+\begin{align*}
+ \underline s_{k+1}&=\underline s_k+
+    \gamma(.999)[.01563+.436(.53-\underline s_k)]-.000402,\\
+ \underline s_0&=.00075,\qquad \underline s_{25}>.5306.
+\end{align*}
+The prepared region remains invariant through the switch.
+Classes 0 and 2 start in their terminal rectangles, with the
+class-2 right face widened to $s=.05$. The terminal
+distance gaps are still at least $.06$.
+For the actual center
+$m_\varphi=(B_\varphi+c_LI)^{-1}(b+c_L\mu_Z)$, the
+residual recursion has linear factor at most $.751$ and
+posterior leakage $O(e^{-.03/v_L})$.
+The noise covariance satisfies
+$\operatorname{Cov}(e)=\tau^2B_\varphi^2+\nu^2B_\varphi\preceq S^2I$.
+The resulting Gaussian tail and terminal estimate give the
+$O(S^2)$ upper bound uniformly in the angle range. The common
+barrier retains the $.147$ limiting lower bound.

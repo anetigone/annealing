@@ -1,0 +1,144 @@
+\section{Cross-geometry and photo-patch diagnostics}
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../../experiments/results/geometry_prediction_wide/geometry_prediction.pdf}
+\caption{Four tests on identical geometry coordinates. Dark means the
+test holds. The first two panels use 1200 logarithmically sampled
+variances between $v_L$ and 100, plus the analytic infinite-variance
+endpoint for the first panel. They concern the fixed class-1 corner
+$(.3,-.01)$ and noiseless data. The third panel checks the analytic
+class-1 channel conditions for $[.69,.71]$ and 25 calls, with
+$\delta=10^{-4}$. Light means unclassified by those sufficient
+conditions. The fourth panel checks exact 106-call iterates for all
+three noiseless template observations, with radius-$.1$ success.
+All panels fix $\alpha=.001,a=1,r=1.29$. The grid is logarithmic in
+$h$ and linear in $d$. It was widened after an initial narrower grid
+showed no negative points in the first two tests. The grid defines
+a diagnostic sample and supplies no continuous-parameter guarantee.}
+\end{figure*}
+The four masks have respectively 995, 1673, 1383 and 1248 positive
+points out of 1681. Every channel-certified point enters the class-1
+prepared rectangle. Only 1176 of these points recover all three
+classes. Other classes' entry, terminal distance gaps and available
+refinement budget require separate tests as specified in
+Theorem~\ref{thm:criterion}.
+
+\subsection{Matched risk illustrations}
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
+\toprule
+Model & $K$ & Preset & Restricted & Terminal\\
+\midrule
+Calibrated & 106 & $1.53\cdot10^{-12}$ & $.3163$ & $.3163$\\
+Separate noise & 58 & $1.28\cdot10^{-8}$ & $.3169$ & $.3169$\\
+Fine calibration & 154 & $1.47\cdot10^{-20}$ & $.3169$ & $.3169$\\
+\bottomrule
+\end{tabular}
+\caption{Prior-weighted squared error of the raw RED iterates on paired draws.
+All methods within a row share the observation, initialization, total
+budget and terminal variance.}
+\label{tab:risk_diagnostics}
+\end{table}
+We fix $a=1$, $d=2$, $r=1.29$ and $h=1.78$ in all three rows of
+Table~\ref{tab:risk_diagnostics}. The calibrated row uses
+$\alpha=10^{-3}$, $\tau=\nu=\alpha^2$ and $\theta=0$.
+The second row uses $\alpha=10^{-6}$, $\tau=10^{-4}$,
+$\nu=10^{-5}$, $v_L=(\tau^2+\nu^2)^{1/2}$ and $\lambda=1$.
+The preset uses $v=.70$ for its observation-selected intermediate calls.
+The restricted policy alternates $.17$ and $2.5$ for 25 calls, then
+uses $v_L$. The terminal comparator uses $v_L$ throughout.
+The fine row repeats the calibration at $\alpha=10^{-5}$.
+Budgets follow the respective refinement formulas.
+
+We draw 512 independent pairs per class per row using seed 20261109
+and weight class averages by $\pi$. All settings are prespecified.
+All draws satisfy the coordinate bounds in~\eqref{eq:ind_event}.
+In all three rows, mode accuracy and radius-$.1$ template-neighborhood success
+are both $1$ for the preset and $.683$ for the two comparators.
+We compute these metrics separately from squared error.
+The table illustrates the separation.
+The guarantees for the continuum of variances and arbitrary restricted
+switching follow from the common barrier proof.
+
+
+\paragraph{Fine excess risk.}
+For the fine row, the analytic oracle risk is $1.49999\cdot10^{-20}$.
+We estimate the excess risk directly as the prior-weighted mean of
+$\norm{\widehat x-m_Z(1)}^2$, which is $8.49\cdot10^{-32}$ in double precision. This is an implementation
+reading near numerical resolution, dominated by rounding. Its specific
+value does not measure agreement with the $5\cdot10^{-30}$ bound.
+Repeating the intermediate steps at 50 and 80 digits gives
+$3.48001\cdot10^{-34}$ at both precisions using exact decimal parameters
+and the same binary64 normal draws. After verifying terminal entry for
+every sample, we propagate the affine residual
+$[I-(B+I)/4]^n(x_h-m_Z(1))$.
+The omitted terminal leakage changes the output by at most
+$12e^{-.03/v_L}<10^{-130288343}$.
+Here $m_Z(1)=(B+I)^{-1}(b+\mu_Z)$; labels enter evaluation only. The ordinary empirical MSE fluctuates on a
+larger scale than this excess.
+
+\paragraph{Precision reference.}
+The program \path{experiments/code/precision_diagnostic.py} replays
+the saved normal draws at 50 and 80 decimal digits. Parameters are
+exact decimal constants; the standard-normal draws are the same
+binary64 numbers in the original sampling stream. For each of 1536
+samples it checks terminal entry before using the analytic affine
+recursion. The terminal error bound $12\exp(-.03/v_L)$ comes from
+the uniform distance gap $.06$ and rectangle invariance. Its
+base-10 logarithm is less than $-130288343$ here. Both precisions
+give excess risk $3.48001105532541\cdot10^{-34}$.
+This controls the omitted soft-template term but does not constitute
+an interval enclosure of the arbitrary-precision arithmetic.
+
+\paragraph{Initialization and weak-coefficient boundaries.}
+The least-squares start lies inside the correct terminal rectangle
+when $|e_1|\le .1\alpha$ and $|e_2|\le.005$.
+For exact updates with $\lambda=\alpha/4$, class-1 drift at $s=.3$
+is strictly outward on $E$ for every admissible scale, since
+$b_1-\alpha s\ge .45\alpha$ and
+$c(v)(m_v-s)\ge-(1.02+.3)\alpha/4$.
+Changing the data loss to a likelihood-normalized form would also
+change the drift and step-size conditions.
+
+\paragraph{Weak-regularization budget.}
+For noiseless observations of the three nominal templates,
+$\alpha=10^{-5}$ and $\lambda=\alpha/4$, terminal-only iteration
+from the backprojection has prior-weighted squared error $.75362$,
+$.74998$, $.71238$, $.42955$ and $.001932$ at budgets
+154, $10^3$, $10^4$, $10^5$ and $10^6$.
+The first radius-$.1$ entry times are 1, 828881 and 736823.
+These are observed trajectories at a changed coefficient, not
+uniform hitting-time guarantees. See
+\path{experiments/code/weak_budget_diagnostic.py}.
+
+\paragraph{Patch data and protocol.}
+The source images are the two photos distributed in
+\texttt{sklearn.datasets.load\_sample\_images}.
+They are converted to grayscale and divided into nonoverlapping
+$4\times4$ patches. A seed-20261110 subset of 2048 patches from
+\texttt{china.jpg} trains eight means with $k$-means (five starts);
+the masses are cluster frequencies and the common isotropic variance
+is the mean squared training residual per coordinate.
+A disjoint-photo subset of 256 patches from \texttt{flower.jpg}
+is evaluated. No labels are defined for these empirical truths.
+The exact MMSE denoiser of the fitted mixture uses total variance
+$\tau^2+\sigma^2$ and the RED residual is unnormalized.
+The blur applies periodic convolution by $[.25,.5,.25]$ on each
+patch axis. This is a patch-level degradation operator.
+All policies share the resulting noisy observations, backprojection,
+154 calls, $\lambda=.1$, $\gamma=.25$ and terminal $\sigma=.02$.
+Their mean squared Euclidean errors are respectively $.00990445$,
+$.00988671$ and $.00986463$ for terminal, intermediate, and low/high
+protocols. Per-pixel MSE divides these by 16. These are descriptive
+results on one image pair with no schedule search or fitted-model
+certificate. See \path{experiments/code/patch_diagnostic.py}.
+
+Reproduction uses the repository's Python environment and a fresh
+output directory for each of
+\path{experiments/code/geometry_prediction_diagnostic.py},
+\path{experiments/code/precision_diagnostic.py}, and
+\path{experiments/code/patch_diagnostic.py}, each with
+\texttt{--out <new-directory>}. Dependencies are NumPy, SciPy,
+Matplotlib, Pillow, scikit-learn and mpmath.

@@ -1,0 +1,43 @@
+\section{Preset and Perturbed Dynamics}\label{sec:stability_proof}
+This section uses the interval inequalities of Section~\ref{sec:certificate} and elementary comparisons. Put $d_*=10^{-4}$, $\gamma=1/4$, and write an implemented step as $T_v(x)+d_k$. All admissible scales satisfy $.999\le c(v)\le1.002$ and $\alpha+c(v)\ge1$. The exact map has positive own-coordinate derivatives. Face bounds for the exact map therefore extend to each corresponding coordinate extremum before the signed error $\pm d_*$ is applied. This argument uses values of the perturbed update and requires no regularity of its derivatives.
+
+\paragraph{Unbounded wrong region.}
+Use $s\le.3,\ t\ge-.01$, which contains the class-1 initialization. The low-variance responsibility bound on $m_s$ is independent of $t$. At high variance, extend the original bound from $t\ge-\alpha/500$ down to $-.01$. Since $|\partial_t m_s|=|C_{12}|/v\le9/4$ for $v\ge4$, the new upper bound is $.168215+(.01)(9/4)<.20$. At the $s=.3$ face, the outward step is bounded by $\gamma(.702\alpha-.1c)+d_*<0$. At the lower face $t=-.01$, the inward step is at least $\gamma((1+c).01-2\cdot10^{-6})-d_*>0$. Thus arbitrary restricted switching preserves this larger region. The same class-1 risk lower bound follows because its first-coordinate constraint is unchanged.
+
+\paragraph{Class 1 before and after first crossing.}
+In the channel of the main proof, at the upper face $t=.05$ the drift before multiplication by $\gamma$ is at most
+\[
+2\cdot10^{-6}-.05+c(2.01\cdot.041496-.05)<-.016.
+\]
+The lower face has the inward margin given above. The bound $m_s-s\ge.23-.4s$ up to $s=.53$ gives an inward left face and the comparison
+\[
+s_{k+1}\ge .9001s_k+.0574425-d_* .
+\]
+After 25 steps the certified unperturbed comparison lower bound $.533605$ loses at most $d_* /(1-.9001)<.001002$, so the first crossing occurs by step 25. At the crossing the upper envelope is $.648134+d_*<.65$. The rectangle $[.53,1.1]\times[-.01,.05]$ is invariant at intermediate scales. At $s=.53$ use $m_s(.53,.05)-.53>.018$ and $b_1-\alpha s>0$. At $s=1.1$ use $m_s\le1$ and $b_1-\alpha s<0$. The same transverse bounds apply because $w_2$ decreases in $s$. Each inward coordinate margin exceeds $d_*$. Hence the preset switch stays inside $G_1$ after first crossing.
+
+\paragraph{Class 2 before and after first crossing.}
+On $[-1.1,.01]\times[1.75,2.1]$, use $w_2>.78$, $-a\le m_s<-.68$ and $b=B\mu_2+e$. At $t=1.75$ the drift is greater than $1.99-2\cdot10^{-6}-1.75+1.002(1.99\cdot.78-1.75)>.04$. At $t=2.1$ use $b_2\le2.010002$ and $d w_2\le2.01$. At the left face use $m_s\ge-1.01$, and at either right face $s=.01$ or $s=-.5$ use $m_s<-.68$ and $b_1-\alpha s<0$. These margins exceed $d_*$ after multiplication by $\gamma$. Until crossing $s=-.5$, the upper comparison loses at most $d_* /(1-.75025)<.000401$ relative to the exact-step envelope, so step 5 suffices. The narrower rectangle with right face $-.5$ keeps the preset inside $G_2$. Class 0 starts in $G_0$ and has zero intermediate calls. The same reasoning with $d_*=0$ proves the exact-step preset.
+
+\paragraph{Terminal invariance and residual.}
+Work on the fixed boxes $G_Z\subset Q_Z$. The exact convex-combination target of each terminal coordinate is within $3\cdot10^{-6}$ of its template coordinate, by the observation bound and the leakage estimate in the main text. Each template is at least $.09$ from the faces of its box. The damping coefficient $\gamma(B_{jj}+c_L)\ge1/4$ then gives an inward face margin of at least $(.09-3\cdot10^{-6})/4>d_*$. The perturbed iterate remains in $G_Z$. The affine error recursion relative to $m_Z(c_L)$ has linear norm at most $3/4$ and added error norm at most $\sqrt2\delta_L$. Summing this error gives $4\sqrt2\delta_L$ in addition to $A_r$. This bound controls the terminal output even for perturbations that vary across calls.
+
+\paragraph{Exceptional observations.}
+For all observations, the convex-coordinate envelope in Section~\ref{sec:balanced_tail} enlarges by at most $4d_*$ since the damping is at least $1/4$ at each step. For $\alpha\le10^{-3}$ the scalar Gaussian $L^4$ norms of $u_j$ and $\eta_j/A_{jj}$ are at most $3^{1/4}\alpha^2$ and $3^{1/4}\alpha^{3/2}$. Thus
+\[
+\big\|\norm{\widehat x-m_Z(c_L)}\big\|_{L^4}
+\le\sqrt2[6+4d_*+2\,3^{1/4}(\alpha^2+\alpha^{3/2})]<9.
+\]
+This suffices for the original $T_\alpha$ by Cauchy--Schwarz. Conditional-mean orthogonality and the coefficient mismatch bound now give the perturbed risk inequality. For the exact preset the same argument uses $d_*=\delta_L=0$ and recovers the original budget and risk constant.
+
+\paragraph{Log-weight perturbations.}
+Let each denoiser log weight change by $\ell_i$ with $|\ell_i|\le10^{-4}$. Differentiating the posterior mean along the path of log tilts gives $\sum_i w_i(\mu_i-\bar\mu)\ell_i$. The diameter bound $3$ yields an update error at most $3\gamma c(v)10^{-4}<d_*$ globally. In $G_Z$ the tilted odds for each competitor increase by at most $\exp(2\cdot10^{-4})$. Both means are exponentially close to $\mu_Z$ by the terminal leakage bound, so the update error there is at most $7e^{-1/(33\alpha)}$. Use this sharper $\delta_L$ in the terminal recursion and the global $d_*$ on the exceptional event. This permits a fixed log-weight radius even for the asymptotic oracle ratio.
+
+\section{A Local Obstruction to Shared Short Platforms}
+\begin{proposition}\label{prop:shared_short}
+Fix $v=.70$ and $\alpha\in[9,11]\cdot10^{-6}$. Allow each of $a,d,\omega,v_0,\theta$ to vary within $10^{-5}$ of its nominal value $(1,2,.04,1,0)$. For each shared $h\in\{0,\ldots,25\}$, the exact RED iterates on the stated deterministic observation event have template error at least $.503$ for class 1 if $h\le12$, or class 0 if $h\ge13$, after any number of terminal calls.
+\end{proposition}
+\begin{proof}
+The shared-switch certificate propagates the backprojection rectangle for each class through 25 calls, using the two opposite corner evaluations of Section~\ref{sec:certificate}. It encloses both observation errors by $[-2.2,2.2]\cdot10^{-8}$. Each switching state is in $[-.1,1.1]\times[-.1,.15]$. For class 1 at $h\le12$ it verifies $s<.497$. For class 0 at $h\ge13$ it verifies $s>.503$.
+
+The resulting terminal rectangles are $[-.1,.497]\times[-.1,.15]$ and $[.503,1.1]\times[-.1,.15]$. Each is contained in the corresponding $Q_j$ for the incorrectly selected template $j$. The leakage bound uses only the current state and therefore holds for these observations. Relative to the incorrect template, $b-B\mu_j$ has coordinate error at most $\alpha+\alpha/500$. The exact convex-combination target then differs from that template by less than $.002$, while the template is at least $.1$ from the rectangle faces. Both rectangles remain invariant. Their horizontal boundaries give the stated error. The certificate uses the Decimal kernel of Section~\ref{sec:certificate}. From the repository root, run \texttt{experiments/code/shared\_switch\_certificate.py} with \texttt{--out} pointing to a fresh JSON path. It encloses a continuous parameter box at each integer $h$.
+\end{proof}

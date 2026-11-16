@@ -1,0 +1,133 @@
+\section{Scale Selection and Scope}\label{sec:scope}
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3.4pt}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+25-call prefix & Class 1 & All classes & Squared error\\
+\midrule
+Restricted switching & 0 & 0 & $.322$\\
+Shared geometric & 23 & 0 & $.249$\\
+Shared platform & 23 & 0 & $.249$\\
+Observation preset & 23 & 23 & $1.55\cdot10^{-12}$\\
+\bottomrule
+\end{tabular}
+\caption{Frozen scale-selection diagnostic on 23 certified models.
+The platform rows isolate allocation at the preset's selected center.
+Entry columns count models where all sampled draws for the named
+classes lie in their terminal rectangles at the switch. Squared error
+is prior-weighted within model and averaged across models.
+Each policy uses the same 106 calls.}
+\label{tab:selected_scales}
+\end{table}
+
+\paragraph{Choosing scales before running the solver.}
+We fix a $5\times5$ grid of heights and masses, with
+$a=1$, $r=1.29$, $\alpha=.001$, and $\tau=\nu=\alpha^2$.
+For each model we compute the largest certified low cutoff
+on the $.01$ grid from $.08$ to $.30$ and the smallest
+certified high cutoff on the $.1$ grid from $1.5$ to $8$.
+We screen width-$.02$ bands with outward-rounded evaluations
+of the barrier, full channel, other-class initialization, and
+terminal tests. The first-pass rule selected the same center,
+$.40$, on all 23 passing models. The second rule evaluates
+centers from $.24$ to $1.10$ at spacing $.02$ and minimizes
+the certified first-entry bound, breaking ties by smaller
+center (Supplement S28). The rule uses the prior geometry
+and prescribed noise tolerances. We freeze it before drawing
+32 new independent pairs of component and measurement noise
+per class and model.
+
+Figure~\ref{fig:selected_scales} shows the entire selection
+grid. The high cutoff varies from $1.5$ to $4.0$. At $h=1.78$,
+heights $1.6,2,2.4$ yield centers $.36,.44,.60$ and
+certified bounds $24,17,14$, respectively.
+For $d=1.6$ with $h=2.1$ or $2.4$, the channel tests certify
+no candidate band within 25 calls on the search grid.
+Across the 23 certified models, all 2208 observations fall in $E$.
+The observed class-1 first entries under the preset take
+14--18 calls. The certificate ranges from 14 to 24 calls.
+The difference between the bound and the largest observed
+entry call is 0--6, with a median of one call and equality
+in four models. The 25-call prefix matches the comparison
+budget and the prepared-strip test covers the remaining calls.
+
+We compare restricted switching, a geometric prefix, a shared
+platform at the selected center, and the $0/25/0$ preset.
+All use a 25-call switch window and 106 total calls on paired
+observations. At the preset's selected center, allocating its
+intermediate calls to every observation leaves class 0 outside $G_0$
+at the switch (Table~\ref{tab:selected_scales}).
+
+On the prespecified nominal fixture, holding the high endpoint
+for 12 calls and the low endpoint for 13 skips the candidate band.
+Replacing the first low call by one band call visits the band
+but still leaves class 1 at $s<.194$ at the switch. Neither prefix
+produces any class-1 terminal entries in 106 calls. Holding the
+selected center for the full prefix reaches $G_1$ at call 16 for
+all 32 class-1 draws. The shared geometric schedule reaches it at
+call 19 even though its grid misses this narrow certified band;
+the band gives a sufficient guarantee for the specified prefix.
+
+\paragraph{Dependence on the solver.}
+In the matched fine-calibration diagnostic, terminal-only RED
+from a least-squares start gives $1.47\cdot10^{-20}$ squared error
+in 154 calls, comparable to the preset from backprojection.
+The direct observation-based template estimator is also consistent.
+Changing the initial state or the data and regularization forces
+can remove the common barrier. Supplement S21 records the
+initialization, coefficient, and precision diagnostics.
+
+\paragraph{Independently tuned shared platforms.}
+Shared and gated platforms independently search the same
+2275 variance/length pairs on noiseless model observations.
+At 106 calls, both yield correct nearest templates on all 5760
+new noisy draws over 23 models, with prior-weighted squared
+error $1.47\cdot10^{-12}$. Both use 11--14 prefix calls.
+On the nominal model, a 25-call shared platform at $v=.25$
+recovers all 1536 draws despite switching outside $G_0,G_1$;
+the preset's center $.44$ yields 1024 correct draws when shared.
+On the noiseless grid, gating admits 428--1142 passing pairs
+per model versus 9--25 for sharing (Supplement S28).
+
+\paragraph{Executing the certified budget.}
+The analytic cap of 14--24 calls yields entry on all 23 models.
+Prior-weighted intermediate calls fall from $8.05$ to $5.54$
+per observation ($31\%$). Errors match to reported precision
+at 106 calls and with only 81 post-prefix calls (95--105 total,
+mean $98.2$; Supplement S28).
+
+\paragraph{When schedule history disappears.}
+We fit eight common-isotropic components to 2048 grayscale
+$4\times4$ patches and use periodic blur and Gaussian noise
+of standard deviation $.01$. Condition~\eqref{eq:ind_coeff}
+implies $\sigma_L/\tau\ge\sqrt{333}\approx18.25$ in the
+risk theorem. In the frozen patch model the ratio is $.208$,
+and changing $\sigma$ from $.1$ to $.02$ changes $c(v)$ from
+$.0520$ to $.00415$, a factor of about $12.5$.
+Holding $c$ at its terminal value while varying the posterior
+weights reduces the original flower diagnostic's 154-call
+mean squared output difference from $1.31\cdot10^{-5}$ to
+$1.49\cdot10^{-9}$. This modified update isolates the effect
+of changing weights (Supplement S23).
+
+In the frozen four-photo validation, the intermediate protocol
+changes 154-call squared error by $-.138\%,+.079\%,+.730\%$
+and $-.377\%$ relative to terminal only. Whole-ball covariance
+bounds certify that the three exported 154-call states share
+a contracting terminal region on each of the 3072 observations.
+These are local certificates constructed using later states.
+They cover subsequent exact terminal maps and the measured
+schedule differences decay (Supplement S25). On a selected
+development patch, two fixed-scale prefixes enter a higher-error
+region while low/high switching reaches the intermediate
+protocol's lower-error region at the same total budget
+(Supplement S26). This shows why a bound for arbitrary switching
+needs a common invariant region.
+
+\section{Conclusion}
+Intermediate scales can change the consistency of a fixed RED
+solver even when restricted policies have arbitrary finite
+budgets. Geometry certifies scale choices and entrance budgets;
+the photo tests show when terminal refinement erases schedule
+differences.

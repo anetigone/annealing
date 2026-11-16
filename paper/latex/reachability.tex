@@ -1,0 +1,63 @@
+\section{Proof Interface: Barrier, Channel, and Terminal Risk}
+\label{sec:criterion}
+To prove the risk separation, we verify three geometric tests.
+Write $\widetilde T_v$ for the implemented update, including any
+allowed error. The following tests apply uniformly over observations
+in an event $E$, conditional on the component under consideration.
+
+\begin{theorem}[Barrier, channel, and terminal tests]\label{thm:criterion}
+Let $s$ be a unit-direction coordinate and $Z=j$ a component of an
+isotropic Gaussian mixture of width $\tau$. Assume
+$s(\mu_j)=\xi+d$ with $d>0$ and the following tests hold.
+\begin{enumerate}
+\item A closed region $W\subseteq\{s\le\xi\}$ contains $x_0$ for
+$Z=j$ and satisfies $\widetilde T_v(W)\subseteq W$ for every
+restricted variance. This test is required for one component with
+$\pi_j>0$.
+\item For every component $z$ with $\pi_z>0$, an observation-based allocation reaches a terminal set $G_Z$
+within $H$ calls on $E$. A sufficient channel test for a class
+needing intermediate calls uses a strip $[s_-,s_E)\times J$
+containing its initial state. Each band update either stays in
+the strip or crosses into $G_Z$, and
+$s^+\ge q_Cs+(1-q_C)s_*$ with $0\le q_C<1$ and $s_*>s_E$.
+Then $s_*-(s_*-s_-)q_C^H\ge s_E$ suffices for entry.
+For a fixed holding time, the reached part of $G_Z$ must also
+be preserved by the remaining band calls.
+\item For every such component, the terminal map preserves $G_Z$,
+with common bounds $q,\ell,M$ below. For an analysis center $m$
+and $x\in G_Z$, it satisfies
+$\norm{\widetilde T_{v_L}(x)-m}\le q\norm{x-m}+\ell$ with
+$0\le q<1$. The distance to $m$ at switching is at most $M$.
+\end{enumerate}
+Write $R_m=\E\norm{m-x^\star}^2$, $p=\Prob(E^c)$,
+and let $U$ bound $\big(\E\norm{\widehat x-m}^4\big)^{1/2}$ uniformly
+in the budget for the policy in tests 2--3. Then
+\begin{align*}
+ R_{\rm bad}&\ge\pi_j[d\sqrt{\Prob(E\mid Z=j)}-\tau]_+^2,\\
+ R_{\rm band}^{1/2}&\le R_m^{1/2}+
+ \left[\left(q^n M+\frac{\ell}{1-q}\right)^2+U\sqrt p\right]^{1/2}.
+\end{align*}
+The first bound holds for any finite budget. The second uses a
+budget of $H+n$ with at least $n$ terminal calls on $E$.
+\end{theorem}
+
+\begin{proof}
+Induction keeps every restricted trajectory in $W$ on $E$ for class
+$j$, so its directional distance from $\mu_j$ is at least $d$ there.
+The reverse triangle inequality in conditional $L^2$ subtracts at
+most $\tau$ for the within-component displacement.
+The affine lower comparison forces the strip exit by $H$ calls.
+Iterating the terminal estimate bounds the distance to $m$ on $E$.
+Cauchy--Schwarz bounds its squared contribution on $E^c$ by
+$U\sqrt p$. The $L^2$ triangle inequality gives the upper bound.
+\end{proof}
+
+In a sensing eigenbasis, $1-\gamma(B_{ii}+c(v))\ge0$
+makes the exact map nondecreasing in its own coordinate, since
+$\partial_i\bar\mu_{v,i}=\operatorname{Var}_{w}(\mu_{Z,i})/v$.
+For rectangular regions, inward face tests with an error margin
+therefore suffice for the set inclusions above, including unbounded
+faces. With bounded templates and a positive lower bound on $c(v)$,
+the coordinate update gives a budget-uniform moment envelope.
+The criterion can be used with other geometries when these tests
+are verified. The structured application verifies these tests with explicit margins.

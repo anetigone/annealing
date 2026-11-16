@@ -1,0 +1,23 @@
+\subsection{An explicit structured family}
+The templates have distinct roles. Templates 0 and 1 differ along the weakly observed $s$ direction. Their observations remain distinguishable at the coupled low noise level, but the data force in the RED update is only of order $\alpha$. The third template lies to the left and above them: its responsibility contributes a negative horizontal mean and couples horizontal and vertical motion. Low scales suppress template 1 near initialization; high scales retain enough third-template competition to block rightward escape. An intermediate band reduces this competition and opens a rightward channel. The free-ratio theorem formalizes these roles for a larger parameter box.
+
+The balance construction below has an additional role. It places a virtual equilibrium exactly at $s=1/2$, so that a small scale offset can be compared to the order-$\alpha$ data separation. This reference is principally used to analyze the separate common-platform protocol; the observable controller does not solve for or track it. The computable criteria in Section S5 remove this balancing requirement; the construction below is retained for the platform comparison.
+Let $0<\alpha\le10^{-3}$ and set
+\begin{align}
+A&=\operatorname{diag}(\sqrt\alpha,1),&\gamma&=1/4,\\
+\mu_0&=(0,0),&\mu_1&=(1,0),&\mu_2&=(-a,d),
+\end{align}
+where $a\in[.99,1.01]$, $d\in[1.99,2.01]$, $\omega\in[.039,.041]$, $v_0\in[.99,1.01]$, and $\theta\in[-1,1]$. Couple the parameters by
+\begin{equation}\label{eq:coupling}
+\tau=\rho=\nu=\alpha^2,\quad\epsilon=\alpha,\quad
+\lambda=(1+\alpha^2)(1+\theta\alpha).
+\end{equation}
+Here $\rho$ is the true within-component standard deviation and $\nu$ the observation standard deviation. The terminal variance is $v_L=\alpha^4+\alpha^2$, and $c_L=1+\theta\alpha$.
+
+Put $c_0=c(v_0)$ and define
+\begin{align}
+q&=\left(\tfrac12,\frac{c_0d\omega}{1+c_0}\right),\\
+(\bar w_0,\bar w_1,\bar w_2)&=(\tfrac12-(a+1)\omega,\tfrac12+a\omega,\omega),\\
+\pi_i&=\frac{\bar w_i e^{\norm{q-\mu_i}^2/(2v_0)}}{\sum_j\bar w_j e^{\norm{q-\mu_j}^2/(2v_0)}}.\label{eq:weights}
+\end{align}
+Then $q$ is exactly fixed for virtual data $b_*=(\alpha/2,0)$ at variance $v_0$. This is an algebraic balance, not a numerical root assumption. Uniform bounds give $\pi_i>.23$ and $\pi_1>.30$. The templates remain bounded, noncollinear, and separated, and no component mass vanishes. The weights are nevertheless designed through~\eqref{eq:weights}; this construction is a subfamily of the free-ratio box, rather than a restriction needed by the geometric criterion.

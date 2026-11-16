@@ -1,0 +1,326 @@
+\subsection{Proofs of the geometric interfaces}
+\subsection{Posterior identities and monotonicity}
+For $C=\sum_iw_i(\mu_i-\overline\mu_v)(\mu_i-\overline\mu_v)^\top$, direct differentiation gives
+$D\overline\mu_v=C/v$. In particular,
+\begin{align}
+ C_{11}&=w_1(1-w_1)+a^2w_2(1-w_2)+2aw_1w_2
+ \le\tfrac14+a(a+2)w_2,\label{geo:eq:C11}\\
+ C_{12}&=-dw_2[a(1-w_2)+w_1]<0.\label{geo:eq:C12}
+\end{align}
+Thus $m_v$ is increasing in $s$ and decreasing in $t$. The third responsibility
+decreases in $s$ and increases in $t$, as also follows directly from its odds.
+The scalar function $(R-aH)/(1+R+H)$ increases in $R$ and decreases in $H$.
+Under \eqref{geo:eq:step}, each component of $T_v$ is nondecreasing in its own
+coordinate: its derivative is
+$1-\gamma(\beta_j+c(v))+\gamma c(v)C_{jj}/v\ge0$.
+These statements are for each fixed scale. No differentiation of an adaptive
+controller or a nonsmooth update perturbation is required.
+
+\begin{proof}[Proof of Proposition~\ref{geo:prop:barrier}]
+On $s\le\xi$, at low scales,
+$m_v\le R_v/(1+R_v)\le L(V_-)$. For $s\le\xi,t\ge-\eta_B$ and
+$v\ge V_+$, $R_v\le r$ and $H_v\ge H_B$, whence $m_v\le U(V_+)$.
+Both bounds cover the entire unbounded region and scale intervals.
+At $s=\xi$ the horizontal displacement, including its worst perturbation, is
+at most
+\[
+ \gamma\{\alpha(1-\xi)+\varepsilon+c_-(q_B-\xi)\}+\delta=0.
+\]
+Own-coordinate monotonicity extends this boundary bound to every $s\le\xi$.
+At $t=-\eta_B$ the vertical displacement is at least
+$\gamma[(1+c_-)\eta_B-\varepsilon]-\delta\ge0$, since $dw_2\ge0$.
+Again own-coordinate monotonicity extends the bound. The initial point belongs
+to $W$. Induction proves the claim uniformly over all permitted decisions.
+Solving the two scalar inequalities yields \eqref{geo:eq:lowcut} and
+\eqref{geo:eq:highcut}.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{geo:prop:channel}]
+On $C=[s_-,s_E]\times[-\eta_C,t_+]$, the odds obey $R_v\ge R_C$ and
+$H_v\le H_C$, so $w_2\le W_C$. To see the first inequality across $s=1/2$,
+note that the lowest negative exponent occurs at $s=s_-,v=v_-$; a nonnegative
+exponent is larger. The second uses $D_C>0$. Equation \eqref{geo:eq:C11} gives
+$\partial_s m_v\le\kappa$. At $(s_E,t_+)$, both odds have positive exponent
+gaps of the indicated signs: increasing $v$ decreases $R_v$ and increases
+$H_v$. Hence $m_v(s_E,t_+)\ge s_E+\Delta_E$ uniformly across the band.
+Integrating the derivative bound and using \eqref{geo:eq:C12} gives
+\begin{equation}\label{geo:eq:progress}
+ m_v(s,t)-s\ge\Delta_E+\zeta(s_E-s),\qquad(s,t)\in C.
+\end{equation}
+For class 1, $b_1-\alpha s\ge\alpha(1-s_E)-\varepsilon\ge0$. Therefore, until
+first crossing,
+\[
+ s_{k+1}\ge s_k+\gamma c_-\{\Delta_E+\zeta(s_E-s_k)\}-\delta
+ =q_Cs_k+(1-q_C)s_*.
+\]
+The lower horizontal face advances. The transverse bounds
+\eqref{geo:eq:Cbottom}--\eqref{geo:eq:Ctop} and own-coordinate monotonicity keep
+$t$ in its strip. Induction gives the comparison in \eqref{geo:eq:N}, so entry
+must occur by call $N$.
+
+At first crossing, use $m_v\le1$, $s\le s_E$, and
+$1-\gamma(\alpha+c(v))\ge0$ to obtain $s^+\le U_E$. The vertical strip
+is still preserved. For further intermediate calls in $P_1$, its left face
+points inward by the same surplus bound. Its right face points inward by
+\eqref{geo:eq:right} and $m_v\le1$. On $s\ge s_E\ge s_-$ the bound $w_2\le W_C$
+on the top face remains valid, so both transverse faces are safe. This proves
+invariance of $P_1$ and justifies preset switching after the first entrance.
+\end{proof}
+
+\begin{proof}[Proof of the mass window]
+Solving $U(V_+)\le q_B$ for $h$ gives its lower bound in
+\eqref{geo:eq:window}. Solving
+$(R_E-aH_E)/(1+R_E+H_E)\ge m_*$ gives $h\le h_E(r)$.
+Solving $H_C/(1+R_C+H_C)\le\bar w$ gives $h\le h_C(r)$.
+Finally, solving the low-scale inequality for $r$ gives its displayed upper
+bound. All transformations multiply by positive denominators.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{geo:prop:terminal}]
+On $G_z$, the odds imply $1-w_z\le\Lambda_z$, and consequently
+$\norm{\overline\mu_v-\mu_z}_p\le D_p\Lambda_z$ for $p=2,\infty$.
+Each terminal coordinate is a convex combination of its present value and
+\[
+ \mu_{zj}+\frac{e_j+c_L(\overline\mu_{v_L,j}-\mu_{zj})}
+ {\beta_j+c_L}.
+\]
+The weight of this second value is $\gamma(\beta_j+c_L)$.
+The endpoint slack after that convex combination absorbs the update
+perturbation by \eqref{geo:eq:terminaltest}; hence $G_z$ is invariant.
+Subtracting $m_z(c_L)$ from the update yields exactly
+\[
+ x^+-m_z(c_L)=[I-\gamma(B+c_LI)](x-m_z(c_L))
+ +\gamma c_L(\overline\mu_{v_L}(x)-\mu_z)+e_k^{\rm upd}.
+\]
+The linear operator has norm $q_L$. Summing the resulting geometric series
+proves \eqref{geo:eq:terminalres}.
+\end{proof}
+
+\subsection{Proof of the uniform application}
+\subsection{Barrier and intermediate entry}
+Over \eqref{geo:eq:box}, $c(v)\ge c_L\ge.999$ for $v\ge v_L$, and
+$c(v)\le\lambda\le(1+10^{-6})(1+.001)<1.002$.
+Also $\alpha+c(v)\ge1+(1+\theta)\alpha\ge1$.
+Use $\xi=.3$, $\eta_B=.01$, $c_-=.999$, $c_+=1.002$.
+In \eqref{geo:eq:qB}, replacing $\alpha,\varepsilon$ by $.001,2\cdot10^{-6}$ gives
+a uniform lower bound. For the high-scale bound replace $r,a,H_B$ by
+$1.31,.98,H_B^{\min}$, where
+\[
+ H_B^{\min}=1.60\exp\left[-\frac{1.02^2+2.02^2+.6(1.02)+.02(2.02)}{5}\right].
+\]
+The bounds in the table verify Proposition~\ref{geo:prop:barrier}.
+
+For the intermediate stage use
+\[
+ s_-=-.01,\quad s_E=.53,\quad s_U=1.1,\quad
+ \eta_C=.01,\quad t_+=.05,\quad I=[.69,.71].
+\]
+A uniform lower bound on $D_C$ is
+$.98^2+1.98^2-2(1.02)(.01)-2(2.02)(.05)$.
+A uniform lower bound on $D_E$ is
+$.98^2+1.98^2+2(.98)(.53)-2(2.02)(.05)$.
+Using $r\ge1.27$, $h\le1.96$, and $a\le1.02$ in the monotone odds formulas
+gives the table's bounds. They allow the simpler constants
+\[
+ W_C\le.044,\quad\kappa\le.56,\quad\zeta=.44,\quad\Delta_E\ge.016.
+\]
+With the global perturbation $10^{-4}$,
+\[
+ q_C=.89011,\qquad s_*=.53+
+ \frac{.016-10^{-4}/(.25\cdot.999)}{.44}>.565453.
+\]
+The comparison from $s_-=-.01$ exceeds $.534113$ at call 25.
+The transverse and right-face inequalities have strict slack, and the first
+crossing satisfies $s^+\le.647953$. Thus $P_1\subset G_1$ is reached and can
+be maintained until the preset call 25.
+
+\subsection{Terminal rectangles and the shorter preset}
+All template-to-face distances in \eqref{geo:eq:rectangles} are at least $.1$.
+Uniform squared-distance gaps are
+\begin{center}
+\setlength{\tabcolsep}{2pt}\small
+\begin{tabular}{@{}cccccc@{}}\toprule
+$\Delta_{01}$&$\Delta_{02}$&$\Delta_{10}$&$\Delta_{12}$&$\Delta_{20}$&$\Delta_{21}$\\\midrule
+$.2$&$4.0908$&$.06$&$5.3856$&$1.848$&$2.828$\\\bottomrule
+\end{tabular}
+\end{center}
+For example,
+$\Delta_{20}\ge-2(1.02)(.01)+2(2.02)(1.73)-1.02^2-2.02^2=1.848$;
+the dependence on $d$ decreases across this parameter interval. The other
+values follow by the corresponding affine endpoint evaluations.
+Every prior ratio between two components is below two and $D_2<3$, so
+\begin{equation}\label{geo:eq:leaknew}
+ \Lambda_z\le4e^{-.03/v_L}\le4e^{-1/(33\alpha)}.
+\end{equation}
+The last inequality follows from $\alpha(1+\alpha^2)\le.99$.
+At $\alpha=.001$, \eqref{geo:eq:terminaltest} has ample slack even with
+$\delta_L=10^{-4}$, using the conservative face distance $.09$;
+the leakage bound decreases for smaller $\alpha$.
+
+Under \eqref{geo:eq:obs}, class 0 starts in $G_0$, and class 2 starts in
+$\widetilde G_2$, since
+\[
+ b_1=-a\alpha+e_1\in[-.001022,.000002],\qquad
+ b_2=d+e_2\in[1.979998,2.020002].
+\]
+This proves the $0/25/0$ preset. The observation rule identifies all three
+labels correctly on this event. It remains defined for every observation.
+
+The initial distance to $m_z(c_L)$ at any of these terminal entries is below
+6 (a uniform bound below 2 also follows directly). Since
+$\alpha+c_L\ge1$, the linear residual factor is at most $3/4$. Furthermore,
+$c_L/(\alpha+c_L)\le1$, so \eqref{geo:eq:terminalres} and
+\eqref{geo:eq:leaknew} give
+\[
+ \norm{x_{k+n}-m_z(c_L)}\le6(3/4)^n+12e^{-1/(33\alpha)}+4\sqrt2\delta_L.
+\]
+Relaxing $33$ to $64$ yields \eqref{geo:eq:Ar}. If desired, uniqueness of an
+exact terminal fixed point in each rectangle follows from
+$\norm{C}\le D_2^2(1-w_z)<9\Lambda_z$ and
+$\norm{DT_{v_L}}\le.75+\gamma c_L9\Lambda_z/v_L<.751$.
+The function $e^{-.03/v}/v$ increases for $v<.03$, so its endpoint check covers
+all $0<\alpha\le.001$. The risk proof only needs the residual recursion.
+
+\subsection{Unconditional risk without substituting an estimator}
+Define
+\[
+ E_\alpha=\{\norm{u}_\infty,\norm{\eta}_\infty\le\alpha/1000\}.
+\]
+Gaussian tails and independence give
+$\Prob(E_\alpha^c)\le8e^{-1/(2\cdot10^6\alpha^2)}$.
+Since $e=Bu+A^\top\eta$, this event implies \eqref{geo:eq:obs}.
+
+For every observation and admissible scale the exact coordinate update is
+\[
+ x_j^+=(1-\gamma(\beta_j+c))x_j
+ +\gamma\beta_j\frac{b_j}{\beta_j}+\gamma c\overline\mu_{v,j}.
+\]
+Its coefficients are nonnegative and sum to one. Starting from $b$, the
+perturbed iterate therefore obeys the global envelope
+\begin{equation}\label{geo:eq:envelope}
+ |x_{k,j}|\le3+|u_j|+|\eta_j/A_{jj}|+4\delta,
+\end{equation}
+because $\gamma(\beta_j+c)\ge1/4$. The unperturbed linear center has the same
+bound without $4\delta$. Minkowski's inequality gives
+\[
+ \big\|\norm{\widehat x-m_Z(c_L)}\big\|_{L^4}
+ \le\sqrt2\{6+4\delta+2\,3^{1/4}(\alpha^2+\alpha^{3/2})\}<9.
+\]
+In particular its fourth moment is below $9^4<128^2$, uniformly in the call
+budget and all observation-dependent decisions. Cauchy--Schwarz yields
+\[
+ \E[\norm{\widehat x-m_Z(c_L)}^2\mathbf1_{E_\alpha^c}]
+ \le128\sqrt8\,e^{-1/(4\cdot10^6\alpha^2)}=T_\alpha.
+\]
+This bound uses the full observation law; it does not treat truncated or
+selected noise as Gaussian.
+
+Conditional on $(y,Z)$ and any independent controller seed, the true posterior
+mean is $m_Z(1)$ and the conditional covariance is
+$\alpha^4(B+I)^{-1}$. Orthogonality therefore gives exactly
+\begin{equation}\label{geo:eq:orthog}
+ R=R_{\rm oracle}+\E\norm{\widehat x-m_Z(1)}^2.
+\end{equation}
+For every fixed $c>0$, subtraction of the linear centers gives
+\begin{equation}\label{geo:eq:mismatch}
+ \E\norm{m_Z(c)-m_Z(1)}^2
+ =\alpha^4(c-1)^2\left[
+ \frac{\alpha}{(\alpha+c)^2(1+\alpha)}+
+ \frac1{2(1+c)^2}\right].
+\end{equation}
+Here $b-B\mu_Z$ has coordinate variance $\alpha^4\beta_j(1+\beta_j)$.
+Using $|c_L-1|\le\alpha$, the bracket is below one on the full box, so the
+$L^2$ center mismatch is at most $\alpha^3$. Combining the good-event
+residual, the global tail bound, Minkowski's inequality, and \eqref{geo:eq:orthog}
+proves \eqref{geo:eq:fullrisk}.
+
+At \eqref{geo:eq:ralpha}, $6(3/4)^n\le\alpha^3/2$. The endpoint checks at
+$\alpha=10^{-5}$ show $12e^{-1/(64\alpha)}\le\alpha^3/2$ and
+$2T_\alpha\le\alpha^6$. The ratios
+$e^{-1/(64\alpha)}/\alpha^3$ and
+$e^{-1/(4\cdot10^6\alpha^2)}/\alpha^6$ increase throughout this interval,
+as differentiation of their logarithms verifies. Thus $A_n\le\alpha^3$,
+and $(\sqrt{A_n^2+T_\alpha}+\alpha^3)^2\le4\alpha^6+2T_\alpha\le5\alpha^6$.
+For the bad controllers, on $Z=1,E_\alpha$, the horizontal error is at least
+$.7-\alpha/1000$. Since
+$\pi_1\ge1.27/(1+1.27+1.96)>.30$ and $Z$ is independent of $E_\alpha$,
+\eqref{geo:eq:badrisk} follows. This completes Theorem~\ref{geo:thm:main}.
+
+\subsection{Containment of the balanced subfamily's construction}
+The balanced subfamily uses
+$a\in[.99,1.01]$, $d\in[1.99,2.01]$, $\omega\in[.039,.041]$,
+$v_0\in[.99,1.01]$, $c_0=c(v_0)$, and
+\[
+ q=(1/2,c_0d\omega/(1+c_0)),\qquad
+ \overline w=(1/2-(a+1)\omega,1/2+a\omega,\omega),\qquad
+ \pi_i\ \propto\ \overline w_i e^{\norm{q-\mu_i}^2/(2v_0)}.
+\]
+Eliminating the virtual equilibrium gives
+\begin{align}
+ r&=\frac{1/2+a\omega}{1/2-(a+1)\omega},\label{geo:eq:oldr}\\
+ h&=\frac{\omega}{1/2-(a+1)\omega}
+ \exp\left[\frac{a^2+a+d^2(1-2c_0\omega/(1+c_0))}{2v_0}\right].
+ \label{geo:eq:oldh}
+\end{align}
+The first ratio increases in $a,\omega$. The second increases in $a,d,\omega$
+and decreases in $v_0,c_0$ on the original box. For the only potentially
+competing derivative,
+\[
+ \partial_\omega\log h
+ =\frac1\omega+\frac{a+1}{1/2-(a+1)\omega}
+ -\frac{d^2c_0}{v_0(1+c_0)}>0.
+\]
+Positivity follows even after dropping its middle positive term and bounding
+the last term by the original endpoints and $c_0\in[.999,1.002]$.
+The exponential numerator is positive, and
+$1-2c_0\omega/(1+c_0)>0$, giving the other signs. Outward-rounded endpoint
+evaluation proves
+\begin{align*}
+ 1.27514855&<r<1.29651094,\\
+ 1.61097793&<h<1.93714021.
+\end{align*}
+Thus every original mixture is contained in \eqref{geo:eq:box}. The new box is
+strictly larger, for example in its $a,d$ ranges, and admits freely specified
+prior ratios throughout its stated Cartesian product.
+
+This is not a claim that the original parameterization was a measure-zero
+family, nor that it had fewer independent degrees of freedom. The useful
+extension is a direct model-input test, a larger certified domain and scale
+union, and a proof of reachability/risk that does not depend on constructing a
+balanced scale. The original settled-platform calibration result is separate:
+it is not asserted for every mixture in the new box.
+
+
+\paragraph{Relation to restricted contraction.}
+Here the unit secant $e_1=\mu_1-\mu_0$ is attenuated by $\alpha$ under $B$.
+Even on the three template points, a normalization $\kappa B$ with
+restricted isometry constant $\delta<1$ must have $\kappa<2.13$ from
+the secant $\mu_2-\mu_0$. Hence $\delta\ge1-2.13\alpha$.
+Nearest-template projection has restricted Lipschitz constant
+$\beta\ge2$ by approaching the $0/1$ midpoint from class 1's side with
+class 0 as reference. Thus its sufficient condition $\delta\beta<1$
+fails in this regime.
+
+\paragraph{Certificate and arithmetic cross-check.}
+The standard-library program
+\path{experiments/code/scale_geometry/certificate.py}
+checks 56 scalar inequalities with outward-rounded Decimal arithmetic.
+The 60- and 90-digit runs reproduce all 56 inequalities.
+The \texttt{evidence/scale\_geometry/} folder in the companion archive
+includes both programs, expected outputs and commands. The barrier
+and channel checks correspond to the geometric tests in this section,
+the wider-noise margins to Section~S4, and the root brackets to
+Section~S7. The JSON check names identify the corresponding bound
+or root in these proofs. The separate
+program \path{experiments/code/scale_geometry/certificate_crosscheck.py}
+uses binary interval arithmetic in \texttt{mpmath.iv} at 70 digits
+and exact rational comparisons for the terminal gaps and equalities.
+It checks the same 56 inequalities, 12 margins for the wider-noise
+theorem, and 20 checks of the nominal mass threshold, root brackets,
+and convexity conditions. It evaluates the drift directly from
+Gaussian weights for the nominal root brackets.
+The cross-check recomputes scalar bounds using the analytic reductions
+above. These reductions handle the continuum of scales and states
+through monotonicity and bounds at extremal coordinates.
+The common-platform and shared-short-platform results retain their
+balanced-subfamily assumptions.

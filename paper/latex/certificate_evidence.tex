@@ -1,0 +1,51 @@
+\section{Balanced-Subfamily Certificate}\label{sec:certificate}
+\subsection{Domain and arithmetic}
+The certificates enclose the family $0<\alpha\le.001$, $a\in[.99,1.01]$, $d\in[1.99,2.01]$, $\omega\in[.039,.041]$, $v_0\in[.99,1.01]$, $\theta\in[-1,1]$. Algebraic definitions retain the prescribed coupling of weights, variance and coefficient; interval dependence may be discarded only to enlarge an enclosure. The interval implementation includes $\alpha=0$ as an enclosing endpoint in nonsingular auxiliary expressions. The original algorithm and asymptotic statements still require $\alpha>0$. Singular terminal expressions are handled analytically and by monotone endpoint estimates, not by division by an interval containing zero.
+
+Inputs are exact decimal strings, interpreted as rationals; binary floats are rejected by the interval constructor. Addition, subtraction, multiplication and division use 50-significant-digit Decimal contexts with downward/upward rounding. Division rejects denominators containing zero. Exponential and square root use Decimal's correctly rounded nearest result and enlarge it with the adjacent representable number on each side; square-root arguments are checked nonnegative. This relies on the Python Decimal implementation. It is an outward-rounded numerical certificate, not a rational formal proof or a separately verified arithmetic library.
+
+\subsection{Analytic reduction before interval evaluation}
+No parameter grid or adaptive subdivision is used by these two certificates. Each displayed formula is evaluated over its full enclosing box. Own-coordinate derivatives are positive. The cross covariance has sign
+\begin{equation}
+C_{12}=-dw_2[a(1-w_2)+w_1]<0,
+\end{equation}
+so rectangle images are controlled by the corresponding opposite corners. The five-step third-class entrance uses successive interval rectangle images; it does not enumerate successful floating-point trajectories. Absolute perturbations $|e_j|\le2\cdot10^{-6}$ enclose the deterministic event over the whole $\alpha$ range for the corner calculations. Sharper order-$\alpha$ perturbation comparisons used in the platform proof are analytic bounds with $|e_j|\le\alpha/500$, not an inference from that absolute enclosure.
+
+Unbounded state and scale sets are not truncated. With $r=\pi_1/\pi_0$ and $h=\pi_2/\pi_0$, on $s\le.3$, $t\ge-\alpha/500$, for $v\ge4$ the responsibility odds obey
+\begin{align}
+{w_1\over w_0}&\le r,\\
+{w_2\over w_0}&\ge h\exp[-(a^2+d^2+.6a+2d\alpha/500)/8].
+\end{align}
+The mean $(R-aH)/(1+R+H)$ increases in $R$ and decreases in $H$, yielding a bound for all such $s,t,v$. For $v\le.05$, $w_1-aw_2$ is at most $r e^{(s-.5)/v}/(1+r e^{(s-.5)/v})$, bounded at $s=.3$, $v=.05$. Monotonicity of the update in its own coordinate extends the boundary control to $s\to-\infty$ and $t\to+\infty$.
+
+Terminal estimates use positive squared-distance gaps, prior ratios below two and exponentially small leakage. The checks at $\alpha=.001$ verify inward displacement and contraction; the Gaussian-risk endpoint inequalities are checked at $\alpha=10^{-5}$. For example $e^{-1/(64\alpha)}/\alpha^3$ and $e^{-1/(4\cdot10^6\alpha^2)}/\alpha^6$ increase throughout the required interval, so their endpoint checks extend to smaller $\alpha$. The contraction correction also increases on the stated interval. These monotonicity facts are analytic interfaces, not conclusions of sampling.
+
+\subsection{Inequalities, outputs and logical use}
+Table~\ref{tab:certificate} rounds archived interval bounds conservatively for readability. The JSON files retain all digits. The structural certificate checks prior masses, common-window rectangle images and Hessian bounds, the restricted-scale barrier, terminal distance gaps, terminal contraction and risk endpoint inequalities. The calibration certificate checks the coarse-band channels, first-crossing envelopes, the small-noise probability bound and local fixed-point response. Neither file alone checks the complete analytic proof.
+
+\begin{table*}[t]
+\centering\small
+\begin{tabular}{p{.23\textwidth}p{.27\textwidth}p{.38\textwidth}}
+\toprule
+Interface & Conservative archived bound & Role in the argument\\
+\midrule
+Low/high restricted scales & $m_s<.023196$ / $m_s<.168215$ & Both imply negative outward drift at $s=.3$; used with monotonicity, not a bounded state scan.\\
+Class-1 intermediate channel & $w_2<.041496$, $m_s(.53,.05)-.53>.018736$ & Transverse control and $\partial_sm_s<.6$ give a uniform progress envelope.\\
+First exit, class 1 & Hypothetical $s_{25}>.533605$; first crossing $s^+\le.648134$ & Entry in at most 25 calls, with overshoot below $.65$.\\
+Class-2 intermediate channel & $w_2>.785419$, $m_s<-.693017$; $s_5<-.518363$ & Invariant transverse rectangle and entry in at most five calls.\\
+Terminal regions & Nonbinary gap $>1.89$; contraction $<.750001$ & Exponentially concentrated responsibilities, correct stable fixed point and raw residual recursion.\\
+Local common platform & $\lambda_{\min}(H)>.326902$; $-\partial_v(r_*)_1>.119760$ & Contraction and fixed-point response establish a scale-induced incorrect-side margin.\\
+Wrong side after settlement & Displacement coefficient $<1.571339$; margin $>.328661\alpha$ & Connects the local response to terminal incorrect-region invariance.\\
+\bottomrule
+\end{tabular}
+\caption{Auxiliary interval margins for the exact parameter family. The prose proof uses simpler bounds with slack. The first four rows distinguish an invariant barrier from a progress channel and controlled entrance; none asserts a phase diagram over all scales.}
+\label{tab:certificate}
+\end{table*}
+
+\subsection{Reproduction and archived evidence}
+The companion \texttt{evidence/} directory contains \texttt{baseline/code/interval.py}, \texttt{baseline/code/structural\_certificate.py}, and \texttt{code/calibration\_certificate.py}. From that directory, with Python 3.12 and assertions enabled, run
+\begin{flushleft}\scriptsize\ttfamily
+python baseline/code/structural\_certificate.py\\
+python code/calibration\_certificate.py
+\end{flushleft}
+Only the standard library is required. Do not run with \texttt{-O}: failed inequalities must stop execution. The structural JSON is written to \texttt{baseline/results/structural\_certificate.json}; the calibration JSON to \texttt{results/calibration\_certificate.json}. Both archived reruns have status \texttt{PASS}. Reproduction should use a fresh extracted copy so that archived evidence is preserved. The accompanying README gives working-directory and output details. Figure and risk diagnostics are generated by a separate NumPy/Matplotlib script with fixed parameters and fresh Gaussian samples; their successful execution is not part of the continuous-domain certificate.

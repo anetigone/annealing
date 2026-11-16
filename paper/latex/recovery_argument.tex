@@ -1,0 +1,100 @@
+\section{From a Scale Band to Recovery}\label{sec:recovery_argument}
+
+The corner test identifies variances that preserve the candidate
+barrier for a given observation. A recovery guarantee also needs
+a single band that works uniformly along the intermediate trajectory.
+We verify the geometric tests for Theorem~\ref{thm:ind_noise}.
+Supplementary Sections S4 and S5 certify the numerical margins over
+the full parameter box.
+
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=.91\textwidth]{figures/scale_selection.pdf}
+\caption{Frozen scale selection across the prespecified geometry grid.
+(a) Center of each selected width-$.02$ band.
+(b) Largest observed first-entry call for the 32 class-1 draws
+under the observation preset, followed by the certified upper bound.
+Gray marks settings where the candidate search yields no certificate.
+All runs use the common 25-call prefix and 106-call total budget.}
+\label{fig:selected_scales}
+\end{figure*}
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{.31\columnwidth}p{.64\columnwidth}@{}}
+\toprule
+Result & Guarantee\\
+\midrule
+Prop.~\ref{prop:two_endpoints} & Endpoint replacement before the midpoint for two aligned templates\\
+Props.~\ref{prop:mass_band}--\ref{prop:critical_mass} & Fixed-state mass, drift, or endpoint tests\\
+Channel tests below & Along-path progress and controlled terminal entry\\
+Thm.~\ref{thm:ind_noise} & Unconditional risk separation, with all classes checked for the upper bound\\
+\bottomrule
+\end{tabular}
+\caption{The scale tests answer different questions. One-step
+improvement, violation of a candidate barrier, and full recovery
+require separate checks.}
+\label{tab:test_scope}
+\end{table}
+
+\subsection{Selecting candidate bands}
+The barrier cutoffs come from upper bounds on the horizontal
+posterior mean at the right face. The low-variance bound drops
+the competitor; the high-variance bound retains a lower bound
+on its odds. In the channel, bound the competitor's responsibility
+uniformly by $\bar w$ and the posterior mean derivative by
+$[1/4+a(a+2)\bar w]/v_-$. A positive surplus at the entrance
+then gives the affine progress comparison of
+Theorem~\ref{thm:criterion}. The transverse faces and the first-step
+overshoot must be checked, as must preservation of the prepared
+strip through the scheduled switch. For every other class, check
+entry separately. At the terminal rectangles, minimum squared-distance
+gaps occur at corners and control the leakage terms in the
+invariance and refinement bounds. Supplement S5 gives the
+explicit inequalities used for selection.
+
+The critical-mass threshold in Proposition~\ref{prop:critical_mass}
+is a local endpoint comparison. Its nominal mass ceiling is
+$.46385$, while the risk theorem uses $h\in[1.60,1.96]$.
+We use the full drift and channel tests in that larger-mass regime.
+Table~\ref{tab:test_scope} summarizes the implications. In the
+earlier 1681-point diagnostic (Supplement S21), 1383 settings pass
+the class-1 channel test but only 1176 of those recover all classes.
+The other 207 illustrate the need for the remaining tests.
+
+\subsection{Certified instance}
+For \eqref{eq:recovery_box}, the barrier uses
+$\xi=.3,\eta_B=.01$, restricted cutoffs $.17,2.5$, and the
+channel uses $s_-=-.01,s_E=.53,s_U=1.1,\eta_C=.01,t_+=.05$
+and $[v_-,v_+]=[.69,.71]$.
+The wider event \eqref{eq:ind_event} uses separate coordinate
+tolerances, as detailed in Supplement S4.
+Uniform bounds $\partial_s m_v\le.56$ and entrance surplus
+$\Delta\ge.016$ imply the comparison
+\begin{align}
+ \underline s_{k+1}&=.89011\underline s_k+
+ (1-.89011)\left(.53+\frac{.016-\delta/(\gamma c_-)}{.44}\right),
+ \nonumber\\[-2pt]
+ \underline s_0&=-.01,\qquad \underline s_{25}>.5341 .
+ \label{eq:main_comparison}
+\end{align}
+The first coordinate at the crossing is below $.649$. Classes 0 and 2 start in their
+terminal rectangles. The rectangles
+$G_0=[-.1,.4]\times[-.1,.15]$,
+$G_1=[.53,1.1]\times[-.1,.15]$ and
+$G_2=[-1.12,.01]\times[1.73,2.27]$ have gaps at least $.06$,
+giving leakage at most $4e^{-.03/v_L}$.
+\subsection{Risk of the actual terminal iterate}
+The terminal center is
+$x_{\rm aff}=(B+c_LI)^{-1}(b+c_L\mu_Z)$.
+The preceding tests give on $E$ a residual at most
+$6q^n+12e^{-.03/v_L}+4\sqrt2\delta_L/c_-$ with $q=.751$.
+Its reference risk is
+$\sum_{\beta\in\{\alpha,1\}}(\beta\nu^2+c_L^2\tau^2)/(\beta+c_L)^2$.
+A budget-uniform fourth-moment envelope controls $E^c$ by
+Cauchy--Schwarz. Restricted iterates instead remain at directional
+distance at least $.7$ from $\mu_1$ on $E$.
+These estimates establish the risk interface; full tail and
+residual calculations are in Supplement S5.

@@ -1,0 +1,163 @@
+\section{Predicting the Intermediate Variance Band}\label{sec:geometry}
+Fix a state $(s,t)$ with $0<s<1/2$ in the three-template geometry
+and take $v_L>\tau^2$.
+For inverse variance $z=1/v$ and $z_L=1/v_L$, define the half squared-distance
+gaps relative to template 0:
+\begin{equation}\label{eq:band_gaps}
+ P=\tfrac12-s,\qquad Q=\tfrac12(a^2+d^2+2as-2dt).
+\end{equation}
+The responsibility odds relative to template 0 are $r e^{-Pz}$ and
+$h e^{-Qz}$. Write $m(z)$ for the first coordinate of the posterior
+template mean $\bar\mu_v$. Increasing inverse variance from zero suppresses template 2 faster than template 1 if $Q>P$.
+We give the precise threshold for that suppression to open a band.
+
+\begin{proposition}[Exact mass window at a fixed state]\label{prop:mass_band}
+Fix a posterior-mean target $\rho\in(0,1)$ and define
+\begin{equation}\label{eq:mass_capacity}
+ H_\rho(z)=
+ \frac{(1-\rho)r\,e^{(Q-P)z}-\rho e^{Qz}}{a+\rho}.
+\end{equation}
+If $Q\le P$, an interior variance cannot attain $m(z)>\rho$ when
+both endpoints fail to attain it. If $Q>P$, set
+\begin{equation}\label{eq:band_peak}
+ z_\rho=\left[\frac{1}{P}
+     \log\frac{(Q-P)(1-\rho)r}{Q\rho}\right]_{[0,z_L]},
+\end{equation}
+where the brackets clip to the specified interval.
+Both endpoints have $m\le\rho$ and some intermediate variance has
+$m>\rho$ exactly when
+\begin{equation}\label{eq:exact_mass_window}
+ \max\{H_\rho(0),H_\rho(z_L)\}\le h < H_\rho(z_\rho).
+\end{equation}
+The working band is the interval determined by $H_\rho(z)>h$, mapped
+back to variance by $v=1/z$.
+\end{proposition}
+
+Indeed, $m(z)>\rho$ is equivalent to
+\[
+ (1-\rho)r>\rho e^{Pz}+(a+\rho)h e^{-(Q-P)z}.
+\]
+The right side is nondecreasing if $Q\le P$ and strictly convex if
+$Q>P$. For the latter, the sign of $H_\rho'$ is the sign of
+$(Q-P)(1-\rho)r-Q\rho e^{Pz}$. Thus the upper mass threshold
+and the peak in~\eqref{eq:band_peak} are explicit. The lower threshold
+keeps the two endpoints below the target. For fixed $a$ and other
+inputs, raising $h$ shrinks the working interval, while increasing
+$Q$ expands it by weakening the competition at each $z>0$.
+At $\rho=s$, the result exactly detects whether the prior part
+of the RED update can point right when both endpoints fail to do so.
+It applies to positive Gaussian component widths.
+
+\subsection{From the mass window to an update threshold}
+A desired horizontal displacement per unit step size $d_*$ gives
+the normalized prior target $u=(d_*-b_1+\alpha s)/\lambda$.
+Set $l=1-\tau^2 z$, $A_u=(1-s)l-u$ and
+\begin{equation}\label{eq:update_ratios}
+ U(z)=\frac{s l+u}{A_u},\qquad
+ W(z)=\frac{(a+s)l+u}{A_u}.
+\end{equation}
+The exact RED displacement per unit step exceeds $d_*$ precisely when
+\begin{equation}\label{eq:update_band}
+ J_u(z):=U(z)e^{Pz}+hW(z)e^{-(Q-P)z}<r
+\end{equation}
+where $A_u>0$. This uses the full $c(v)$ and the actual data force.
+For $u=0$, it recovers Proposition~\ref{prop:mass_band} at $\rho=s$.
+
+\begin{proposition}[A convex test for the RED variance band]\label{prop:convex_band}
+Let $Q>P>0$, $v_L>\tau^2$, and assume $A_u(z_L)>0$ and
+$s l(z_L)+u>0$. If $u\ge0$, $J_u$ is strictly convex on $[0,z_L]$.
+For $u<0$ the same conclusion holds if
+\begin{align}
+ P^2U_L&>2P d_1+d_2,\nonumber\\
+ (Q-P)^2 W_L&>(a+1)d_2,\label{eq:band_convexity}
+\end{align}
+where $U_L,W_L,A_L$ denote the terminal values of $U,W,A_u$, and
+\[
+ d_1=|u|\tau^2/A_L^2,\qquad
+ d_2=2(1-s)\tau^2 d_1/A_L.
+\]
+Under these conditions, a nonempty band with both endpoints failing
+exists exactly when $\min J_u<r\le\min\{J_u(0),J_u(z_L)\}$.
+Its endpoints are the level roots of $J_u=r$.
+\end{proposition}
+
+The minimum is obtained by clipping the zero of the increasing
+derivative $J_u'$ to the inverse-variance interval, or by taking the
+appropriate endpoint if no zero exists. For a test of \emph{endpoint
+dominance itself}, choose $d_*$ as the larger endpoint displacement
+per unit step size. Whenever the hypotheses of
+Proposition~\ref{prop:convex_band} hold at that target, its test
+decides whether any intermediate step exceeds both endpoints.
+The convexity conditions are checked at the chosen target.
+
+\subsection{An explicit threshold for endpoint dominance}
+\begin{proposition}[Critical mass for endpoint improvement]\label{prop:critical_mass}
+Let $C_s=(1-s)r-s>0$, and assume
+\begin{equation}\label{eq:critical_regime}
+ r e^{-Pz_L}\le\frac{s}{1-s},\qquad
+ \frac{C_s}{1+r}<(1-s)l(z_L).
+\end{equation}
+For $0<h\le C_s/(a+s)$, the high-variance endpoint gives the larger
+of the two endpoint steps. Under $Q>P>0$, define
+\begin{align}
+ D(h)={}&-Pr+h[aQ+(1+a)(Q-P)r]\nonumber\\
+        &-\tau^2[C_s-(a+s)h](1+r+h).\label{eq:critical_mass}
+\end{align}
+It has exactly one positive root $h_{\rm crit}$. An intermediate
+variance strictly improves on both endpoint steps if and only if
+$h>h_{\rm crit}$ within the stated mass interval.
+At fixed $a,P,r,\tau$, increasing $Q$ decreases $h_{\rm crit}$.
+\end{proposition}
+
+The proof is in Supplement S7.
+
+With several negative-projection competitors, the corresponding
+quadratic gains a term $h^2\operatorname{Cov}_{q}(a,Q)$.
+Supplement S24 proves a unique threshold on $(0,r/\bar a)$,
+with endpoint improvement characterized on
+$0<h\le C_s/(\bar a+s)$.
+It also removes the terminal-denominator restriction in
+\eqref{eq:critical_regime}. This remains a single-step result.
+
+For example, use $a=1$, $d=2$, $r=1.29$, $(s,t)=(.3,-.01)$
+and $\tau=10^{-6}$, $v_L=10^{-6}+10^{-12}$. The endpoint comparison
+is decided by $h_{\rm crit}\simeq .02693$ up to $h\simeq .46385$.
+The choices $h=.01$ and $h=.10$ lie on opposite sides of the
+endpoint dominance boundary. Larger masses can block the high
+endpoint while allowing intermediate progress, as quantified by
+\eqref{eq:exact_mass_window} and the update threshold test.
+Raising $h$ shrinks the band for a fixed absolute target since it
+increases the competitor term. In Proposition~\ref{prop:critical_mass},
+the comparison target is the high-variance endpoint and itself
+decreases as $h$ increases. Thus a heavier competitor can make
+an intermediate scale comparatively better while reducing the
+scales that meet a fixed progress requirement.
+
+\paragraph{Safe scales for a candidate barrier.}
+Consider $s\le\xi,\ t\ge-\eta_B$ with $0<\xi<1/2$.
+At $(\xi,-\eta_B)$ use $d_*=-\delta/\gamma$, for coordinate
+update errors bounded by $\delta$. Provided the lower face is
+inward and each map is nondecreasing in its own coordinate,
+the variances with $J_u\ge r$ preserve the region. The other
+variances admit an outward update at its corner under the allowed
+error bound. Thus the roots predict where the common barrier loses
+invariance for a given observation. To certify a schedule, a
+separate channel argument checks progress and transverse
+invariance along the trajectory, as in Theorem~\ref{thm:ind_noise}.
+
+At the same state, the nominal recovery-box mass $h=1.78$ and
+noiseless class-1 data with $\alpha=10^{-3}$ give, at
+$\lambda=1+\alpha^2$ and $\delta=10^{-4}$, a corner-outward
+variance interval of approximately $(.18064,1.87551)$.
+Here $h=1.78$ is outside the critical-mass subfamily. The interval
+comes from the general update test~\eqref{eq:update_band}.
+With $\delta=0$, the positive-drift interval for the exact update
+is approximately $(.18095,1.87272)$. The larger interval above
+expresses failure of robust invariance. At each of its scales some
+allowed perturbation points outward from the corner. Reaching that
+corner and entering a correct terminal rectangle require separate
+trajectory arguments.
+The restricted union lies outside both intervals, and the certified
+working band $[.69,.71]$ lies inside. This calculation concerns a
+single model and the candidate barrier. The uniform risk theorem
+uses separate bounds across the parameter box and the channel.

@@ -1,0 +1,35 @@
+\section{Settled-Platform Trapping Details}\label{sec:platform_proof}
+For the virtual data $b_*=(\alpha/2,0)$, the platform map preserves $\mathcal R$ and is $.92$-Lipschitz. The implicit-function estimate and $\norm{\partial_vg_v}<4$ give
+\begin{equation}
+\norm{r_*(v)-q}\le12.5|v-v_0|\le.0125.
+\end{equation}
+Thus $r_*(v)$ lies in $[.48,.52]\times[.02,.06]$. Over this smaller box, the calibration certificate verifies $\partial_vg_1>.12$, $\partial_vg_2<-.16$. Since $H_{12}>0$ and $H$ is positive definite,
+\begin{equation}
+-\partial_v(r_*)_1\ge{\partial_vg_1\over H_{11}}
+\ge{.12\over\alpha+c}>.1.
+\end{equation}
+The actual fixed points differ by at most
+\begin{equation}
+\norm{r_Z(v,b)-r_*(v)}\le C_b\alpha,\qquad
+C_b={1/2+\sqrt2/500\over.32}<1.572.
+\end{equation}
+After $N_{\rm settle}$ steps the distance to the actual fixed point is at most $\alpha/10$. At $v-v_0\ge20\alpha$, class 1 therefore has $s<.5-.328\alpha$, inside the terminal half-space $s\le.5-\alpha/100$. This half-space is invariant for all $t$. At its boundary $w_1<.00006$, and the outward drift, divided by $\gamma$, is at most
+\begin{equation}
+\alpha(.502+\alpha/100)+.999(.00006-.49999)<0.
+\end{equation}
+The first-coordinate own derivative is positive, so this bound extends to the entire half-space.
+
+At $v_0-v\ge20\alpha$, class 0 has $s>.5+.328\alpha$. Its state remains in $\mathcal R$ at switching and lies in
+\begin{equation}
+W_0^{\rm wrong}=[.5+\alpha/100,1.1]\times[-.1,.15].
+\end{equation}
+In this rectangle,
+\begin{align}
+{w_0\over w_1}&\le e^{-1/[100\alpha(1+\alpha^2)]},\\
+{w_2\over w_1}&\le2e^{-5.32/[2\alpha^2(1+\alpha^2)]},
+\end{align}
+so $m_s>.9999$. At the left boundary the rightward drift is at least
+\begin{equation}
+-\alpha(.502+\alpha/100)+.999(.9999-.50001)>0.
+\end{equation}
+The other boundaries are preserved by coordinate convexity and the exponential bound on $dw_2$. Thus $W_0^{\rm wrong}$ is invariant. In either case the first-coordinate distance to the true template remains greater than $.5$, even with unlimited terminal calls. For a continuous signal on $E_\alpha$, the same conclusion holds because its displacement from the template is at most $\alpha/1000$, smaller than the separator margin.

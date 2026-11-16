@@ -1,0 +1,64 @@
+\section{Balanced-Subfamily Protocols}
+This section and the following platform comparisons retain the balanced family of Section~\ref{sec:balanced_family}, the original entrance $G_2$, and the narrower restricted union. They do not assert platform calibration or shared-short-platform failure on the full independent box. The free-ratio theorem and its shorter preset appear in S5.
+
+We first work on the deterministic observation event
+\begin{equation}\label{eq:event}
+b=B\mu_Z+e,\qquad\norm{e}_\infty\le\alpha/500.
+\end{equation}
+Define the available restricted scales by
+\begin{equation}\label{eq:bad}
+\bad=\{\sigma\ge\epsilon:v\le.05\}\cup\{\sigma:v\ge4\}.
+\end{equation}
+The terminal scale belongs to this set.
+
+\subsection{An observable controller}
+Compute the target-region index
+\begin{equation}\label{eq:classifier}
+\widehat Z(b)=\begin{cases}
+2&b_2>1,\\1&b_2\le1,\ b_1>\alpha/2,\\0&\text{otherwise}.
+\end{cases}
+\end{equation}
+This is an observation rule, not access to $Z$. Use the entrance sets
+\begin{align}
+G_0&=[-.1,.4]\times[-.1,.15],\\
+G_1&=[.53,1.1]\times[-.1,.15],\\
+G_2&=[-1.1,-.5]\times[1.5,2.1].
+\end{align}
+At each iteration before switching, check whether $x_k\in G_{\widehat Z}$. If so, switch permanently to $\sigma=\epsilon$. Otherwise use any $v_k\in[.69,.71]$ and check again. Force terminal switching after 25 updates, including on exceptional observations. Stop after exactly $K=25+r$ total updates. Thus early entrance yields additional terminal refinement. A deterministic implementation may simply take $v_k=.70$.
+
+\begin{theorem}[Scale availability and raw-output risk]\label{thm:main}
+Throughout the balanced family of Section~\ref{sec:balanced_family}, the following hold.
+\begin{enumerate}
+\item On~\eqref{eq:event}, for $Z=1$, every controller using only $\bad$ satisfies $x_{k,1}\le.3$ for every $k\ge0$. Scales may depend on observations and history.
+\item On~\eqref{eq:event}, the observable controller has $\widehat Z=Z$ and enters the correct terminal invariant region after respectively $0$, at most $25$, and at most $5$ intermediate calls for $Z=0,1,2$.
+\item Suppose $Z,u,\eta$ are mutually independent, with $Z\sim\pi$ and $u,\eta\sim N(0,\alpha^4I_2)$. Set $x^\star=\mu_Z+u$. Let
+\begin{equation}
+r_\alpha=\left\lceil\frac{\log(12/\alpha^3)}{\log(4/3)}\right\rceil,\quad K_\alpha=25+r_\alpha.
+\end{equation}
+For $0<\alpha\le10^{-5}$, the raw output obeys
+\begin{align}
+R_{\rm coarse}&\le R_{\rm oracle}+5\alpha^6,\label{eq:risk}\\
+R_{\rm oracle}&=\alpha^4\left(\frac1{1+\alpha}+\frac12\right),
+\end{align}
+and $R_{\rm coarse}/R_{\rm oracle}\to1$. Every restricted controller has $\liminf_{\alpha\to0}R_{\rm bad}\ge.147$.
+\end{enumerate}
+\end{theorem}
+
+The oracle knows the true component and returns its conditional mean; it is a risk benchmark only. Least squares has risk $\alpha^3+\alpha^4$. Hence the restricted algorithm's failure is compatible with informative observations. The controller deliberately uses this information to choose when to stop the intermediate stage, while all reconstruction steps remain~\eqref{eq:red}. No additional linear reconstruction is substituted for its output.
+
+
+\begin{table*}[t]
+\centering\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{p{.16\textwidth}p{.24\textwidth}p{.22\textwidth}p{.29\textwidth}}
+\toprule
+Protocol & Available intermediate scales & Switching rule & Current guarantee\\
+\midrule
+Restricted controller & $v\le.05$ with $\sigma\ge\epsilon$, or $v\ge4$ & Arbitrary observation- and history-dependent control & Class 1 remains in $\mathcal W_\alpha$ for all iterations; positive limiting risk (Theorem~\ref{thm:main}).\\[3pt]
+Intermediate band & $v\in[.69,.71]$, then $v_L$ & Observable target and entrance detection; 25-step cap & At most 25 calls to enter; logarithmic refinement gives asymptotically oracle raw-output risk (Theorem~\ref{thm:main}).\\[3pt]
+Settled common platform & One shared $|v-v_0|\le10^{-3}$, then $v_L$ & Hold at least $N_{\rm settle}$ before switching & Locally requires $|v-v_0|<20\alpha$ (Proposition~\ref{prop:calibration}); a narrower $\alpha/1000$ window is sufficient after $H_+$ calls (Proposition~\ref{prop:common}).\\
+\bottomrule
+\end{tabular}
+\caption{Protocols share the RED update, initialization, coefficient and terminal scale. Theorems use the stated deterministic observation event; unconditional risk additionally uses the coupled Gaussian model. The common-platform necessary and sufficient statements have their own holding-time conditions.}
+\label{tab:protocols}
+\end{table*}

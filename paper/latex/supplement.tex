@@ -1,0 +1,160 @@
+\documentclass[10pt,twocolumn,letterpaper]{article}
+\usepackage[review]{cvpr}
+\input{preamble}
+\usepackage[pagebackref,breaklinks,colorlinks,allcolors=blue]{hyperref}
+\def\confName{CVPR}\def\confYear{2027}
+\renewcommand{\thesection}{S\arabic{section}}
+\renewcommand{\thetheorem}{S\arabic{theorem}}
+\title{Scale-Controlled Reachability and Recovery Risk\\in Regularization by Denoising\\Supplementary Derivations}
+\author{Anonymous authors}
+\begin{document}\maketitle
+\section{Notation and Proof Interfaces}
+Sections S2--S5 follow the main recovery result from model and
+geometric criterion through the certified parameter box and noise bounds.
+Sections S6--S7 prove the two-template and three-template scale results.
+The balanced family and its platform comparisons follow in separate sections.
+
+\input{model}
+\input{reachability}
+\input{scope_extensions}
+\input{scope_proof}
+\input{scale_geometry_details}
+\subsection{Responsibility Calculus}
+For $C=\sum_iw_i(\mu_i-\bar\mu)(\mu_i-\bar\mu)^\top$,
+\begin{align}
+D_x\bar\mu_v&=C/v,\\
+H_v&=B+c(v)(I-C/v),\\
+DT_v&=I-\gamma H_v.
+\end{align}
+The variance derivative has the pairwise expression
+\begin{align}
+\partial_v\bar\mu_v={1\over2v^2}\sum_{i<j}w_iw_j(\mu_i-\mu_j)\nonumber\\
+{}\times[\norm{x-\mu_i}^2-\norm{x-\mu_j}^2].
+\end{align}
+In particular the Jacobian is symmetric for this exact denoiser; no analogous property is assumed for an arbitrary learned denoiser. The own-coordinate map derivatives are positive in the regions used in the main text. Since $C_{12}<0$, the transformed coordinates $(s,-t)$ make the platform dynamics order preserving.
+
+\input{scale_geometry_proof}
+\input{raw_risk_details}
+\twocolumn
+\input{two_endpoints}
+\input{endpoint_proof}
+\input{scale_geometry}
+\input{scale_band_proof}
+\input{variance_band_figure}
+\clearpage
+\section{Balanced family and supplementary protocols}\label{sec:balanced_family}
+\input{balanced_model}
+\section{Recovering the Balanced Scale from Known Weights}
+Let $r=\pi_1/\pi_0$. Because $q_1=1/2$ gives equal distances to templates 0 and 1,
+\begin{equation}
+\omega={r-1\over2[a+r(a+1)]}.
+\end{equation}
+Set
+\begin{align}
+f(v)&={a^2+a+d^2-2d^2\omega c(v)/(1+c(v))\over2v},\\
+\ell&=\log\left({\pi_2\over\pi_0}{\bar w_0\over\omega}\right).
+\end{align}
+The numerator of $f$ is positive and decreasing, so $f'<0$. If $f(1.01)\le\ell\le f(.99)$, there is a unique $v_0\in[.99,1.01]$ with $f(v_0)=\ell$. Known-parameter bisection finds order-$\alpha$ accuracy with logarithmically many scalar evaluations, without labels, trajectories, or fixed-point computation. This construction is used for the common-platform comparison; the coarse-band observable controller does not need it.
+
+\section{Shared Calibrated Platform}
+\begin{proposition}[A sufficient common window]\label{prop:common}
+On the deterministic observation event, if every intermediate variance satisfies $|v_k-v_0|\le\alpha/1000$ for at least
+\begin{equation}\label{eq:hplus}
+H_+(\alpha)=\left\lceil\frac{\log(64/\alpha)}{\log(25/23)}\right\rceil,
+\end{equation}
+all three classes enter their correct terminal regions. With $r_\alpha$ subsequent terminal calls, the same raw-output risk bound as in the main theorem holds for $\alpha\le10^{-5}$, with total budget $H_++r_\alpha$.
+\end{proposition}
+\begin{proof}
+On the deterministic event of the main text, suppose every intermediate step satisfies $|v_k-v_0|\le\alpha/1000$. For classes 0 and 1, the rectangle $\mathcal R=[-.1,.75]\times[-.1,.15]$ is invariant, and
+\begin{equation}
+H_v\succeq.32I,\quad H_v\preceq2.01I,\quad
+\norm{DT_v}\le.92,\quad\norm{\partial_vg_v}<4.
+\end{equation}
+For the noiseless actual-class data at $v_0$, order preservation around the known virtual equilibrium gives fixed points $r_0,r_1$ with
+\begin{equation}
+(r_0)_1\le.5-\alpha/8,\qquad(r_1)_1\ge.5+\alpha/8.
+\end{equation}
+Contraction comparison, including data perturbation and varying scales, gives
+\begin{equation}
+\norm{x_h-r_Z}\le2(.92)^h+
+{\sqrt2\alpha/500+4\alpha/1000\over.32}.
+\end{equation}
+The second term is below $\alpha/32$. Thus
+\begin{equation}
+H_+(\alpha)=\left\lceil{\log(64/\alpha)\over\log(25/23)}\right\rceil
+\end{equation}
+steps suffice to put the first coordinate on its correct side by at least $\alpha/16$. Class 2 enters its terminal rectangle within five steps and remains there throughout the platform. This proves a shared-platform sufficient result without requiring high-scale preheating. The terminal and risk interfaces of the main text apply unchanged after entry. At $\alpha=10^{-5}$, $H_+=188$ and $r_\alpha=129$, giving 317 calls.
+\end{proof}
+
+\subsection{Actual failure for short platforms}
+For a fixed $v$ with $|v-v_0|\le\alpha/100$, define
+\begin{align}
+\Delta(v)&={\sqrt2\alpha/500+4|v-v_0|\over.32},\\
+\Gamma(v)&={\alpha/2+\sqrt2\alpha/500+4|v-v_0|\over.32},\\
+M(v)&=3\alpha/32-\Delta(v).
+\end{align}
+\begin{proposition}[Window-specific crossing bounds]\label{prop:cross}
+For a fixed $|v-v_0|\le\alpha/100$, if $M(v)>0$, $N_{\rm cross}^+(v)$ below is sufficient for entry. If the platform has at most $N_{\rm fail}(v)$ calls below, class 1 has template error greater than $.5$ after arbitrarily many terminal calls. In the smaller window $|v-v_0|\le\alpha/1000$, these bounds both have logarithmic order in $1/\alpha$. The lower bound does not apply to the observable band controller.
+\end{proposition}
+\begin{proof}
+When $M(v)>0$, a sufficient crossing count is
+\begin{equation}
+N_{\rm cross}^+(v)=\max\left\{5,\left\lceil{\log(2/M(v))\over\log(25/23)}\right\rceil\right\}.
+\end{equation}
+For a lower bound compare to virtual data $b_*=(\alpha/2,0)$, initialized at $b_*$ and run at $v_0$. After two steps, $s_2^*<.20$ and the transformed state remains below the virtual equilibrium. Since $\partial_sT_s>.74$,
+\begin{equation}
+.5-s_h^*\ge .30(.74)^{h-2},\quad h\ge2.
+\end{equation}
+The actual class-1 trajectory is within $\Gamma(v)$ of this reference. Hence for
+\begin{equation}
+h\le N_{\rm fail}(v)=\left\lfloor2+
+{\log[.30/(\Gamma(v)+\alpha/100)]\over\log(1/.74)}\right\rfloor
+\end{equation}
+it satisfies $s_h\le.5-\alpha/100$. The terminal half-space with this upper boundary is invariant, uniformly in $t$: the correct-template responsibility at its boundary is below $.00006$, and the outward drift is negative. Arbitrarily long terminal refinement therefore still leaves template error greater than $.5$. This is a true failure result within the stated platform protocol. In its safe window, both lower and upper crossing bounds have logarithmic order; they do not apply to the observable coarse-band strategy.
+\end{proof}
+
+\section{Full-Observation Tail Control}\label{sec:balanced_tail}
+For any observation, each update coordinate is a convex combination of its previous value, a data coordinate $b_j/B_{jj}$, and template coordinates, since
+\begin{equation}
+x_j^+=(1-\gamma(B_{jj}+c))x_j+\gamma B_{jj}{b_j\over B_{jj}}+\gamma c\bar\mu_j.
+\end{equation}
+All coefficients are nonnegative and sum to one. Template coordinates have absolute value at most 3. Starting at $b$, this gives
+\begin{equation}
+|x_{k,j}|\le3+|u_j|+|\eta_j/A_{jj}|.
+\end{equation}
+The same envelope bounds $m_Z(c_L)$, and the Gaussian fourth moments yield $\E\norm{\widehat x-m_Z(c_L)}^4\le128^2$. Applying Cauchy--Schwarz to the exceptional event proves the $T_\alpha$ bound in the main text without truncating unbounded observations or conditioning a selected noise distribution as though it were Gaussian.
+
+\section{Terminal Complexity for the Observable Strategy}
+For $\alpha\le10^{-5}$, on the event $\norm{u}_\infty,\norm{\eta}_\infty\le1.5\alpha^2$ (probability greater than $.5$), class 1 switches with $1-s>.35$. With $q_L=[3-(1+\theta)\alpha]/4$, the terminal recursion gives
+\begin{equation}
+\norm{\widehat x-x^\star}\ge[.35q_L^n-2\alpha^2]_+,
+\end{equation}
+where $n$ is its terminal call count. Since $n\le K$ and $\pi_1>.30$,
+\begin{equation}
+R\ge.15[.35q_L^K-2\alpha^2]_+^2.
+\end{equation}
+Thus this strategy needs $K=\Omega(\log(1/\alpha))$ to reach order-$\alpha^4$ risk. This necessity concerns terminal accuracy in this strategy, not a universal complexity lower bound for arbitrary scale-control algorithms.
+\input{certificate_evidence}
+\input{platform_proof}
+\input{stability_proof}
+\begin{figure*}[t]
+
+\centering
+\includegraphics[width=\textwidth]{figures/mechanism.pdf}
+\caption{Illustration on the balanced subfamily. Geometry, drift and raw RED trajectories at nominal geometry and $\alpha=10^{-3}$, with noiseless template observations. (a) Templates (stars), backprojections (circles), entrances and the clipped class-1 incorrect region. (b) A drift slice at $t=.05$: low/high scales point inward at $s=.3$; $v=.70$ advances through the channel. (c) Matched 80-call trajectories: low/high policies use $v=.05/4$ for 25 calls then terminal refinement; the earlier entrance-feedback policy switches from $v=.70$ on entrance ($h=16$, circle). Diagnostics illustrate the mechanism; uniform coverage comes from the proof.}
+\label{fig:mechanism}
+\end{figure*}
+
+\input{results}
+\input{analysis}
+\input{stability}
+\input{platform}
+\input{additional_diagnostics}
+\input{terminal_history_proof}
+\input{multi_competitor_proof}
+\input{independent_patch_validation}
+\input{raw_patch_switching}
+\input{rotation_proof}
+\input{scale_selection}
+{\small\bibliographystyle{ieeenat_fullname}\bibliography{references}}
+\end{document}

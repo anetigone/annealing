@@ -1,0 +1,50 @@
+\section{Introduction}
+A precise observation can reveal which signal to recover while
+leaving a fixed iterative solver unable to reach it.
+For two unit-separated templates along an eigenvector of $A^\top A$
+with eigenvalue $\alpha$, their noiseless backprojections differ by
+$\alpha$, whereas their observation separation in noise standard
+deviations is $(\tau^2+\nu^2/\alpha)^{-1/2}$.
+We study how denoising-scale choices interact with this gap in RED
+gradient descent~\cite{romano2017}.
+
+Graduated optimization has long used smoothing to guide visual
+reconstruction~\cite{blake1987,mobahi2015,hazan2016}.
+Fernsel et al.~\cite{fernsel2024} prove terminal stationarity for an
+adaptive smoothing and line-search method and measure how initialization
+and initial smoothing affect attainment of the global minimum in a
+two-dimensional mixture. Hurault~\cite{hurault2026} proves terminal
+stationarity for annealed RED--GD with nonincreasing scales and a
+global Lipschitz step bound. Our comparison concerns recovery error of
+the actual iterates across an entire class of admissible controls,
+including arbitrary switching, and a finite-budget upper bound
+after granting access to an intermediate band.
+
+\paragraph{Can computation replace scale access?}
+Theorem~\ref{thm:ind_noise} fixes the observation geometry, RED update,
+and backprojection initialization. Across a positive-width box of
+three-template models, every controller restricted to the two
+specified variance ranges retains positive low-noise risk, uniformly
+over all finite budgets. An observation-based preset using a fixed-width
+intermediate band enters the correct terminal region in at most 25 calls
+and then reaches vanishing risk. Corollary~\ref{cor:sensing_angle}
+certifies the same separation for $|\varphi|\le.020$ radians at
+$\alpha=10^{-3}$, uniformly as the noise vanishes.
+Figure~\ref{fig:reachability} shows
+the mechanism for the difficult observation class.
+
+\paragraph{When do endpoints suffice?}
+For two templates aligned with a sensing eigenvector, the endpoint
+maps attain the maximum horizontal step before the midpoint.
+An endpoint policy matches any strict crossing up to that midpoint
+within the same budget.
+
+\paragraph{How can a controller select useful scales?}
+With three templates, prior mass and distance gaps predict local
+drift and identify variances that can violate a candidate barrier.
+Uniform channel and terminal checks then certify entry for all
+positive-mass classes. We choose scales using these tests before
+evaluating trajectories. Frozen photo-patch tests examine a
+complementary case where different trajectories enter a common
+terminal region and their differences decay.
+\input{related_work}

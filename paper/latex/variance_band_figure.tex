@@ -1,0 +1,23 @@
+\begin{figure*}[t]
+ \centering
+ \includegraphics[width=.91\textwidth]{figures/variance_band.pdf}
+ \caption{Two applications of the scale tests at the same state $(s,t)=(.3,-.01)$.
+ (a) In the mass range $0<h\le C_s/(a+s)$, the curve $h_{\rm crit}(Q)$
+ separates endpoint dominance from a strict intermediate improvement.
+ The plotted gaps satisfy $Q=.8+d^2/2+.01d>.8$ for $d>0$,
+ with $a=1$. The dotted line marks the nominal $Q=2.82$.
+ (b) With nominal $h=1.78$, the curve is the horizontal displacement
+ per unit step size with the largest allowed update error. Its positive
+ interval has endpoints $.18064$ and $1.87551$ and marks failure of
+ robust invariance for this candidate barrier. Blue shading is limited to the plotted portions of $[v_L,.17]\cup[2.5,\infty)$. The uniform channel analysis
+ certifies the narrower green band. Both panels evaluate the formulas
+ at a fixed state and use no trajectory search.}
+ \label{fig:variance_band}
+\end{figure*}
+
+Figure~\ref{fig:variance_band} shows why the local and uniform
+tests use different margins. At the nominal corner, a wide range
+of intermediate variances can break the barrier. A single
+variance band for the whole model box must also maintain the
+transverse strip and sustain progress at states nearer the
+terminal entrance. Those are separate checks.

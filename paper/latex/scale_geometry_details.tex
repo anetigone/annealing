@@ -1,0 +1,321 @@
+\onecolumn
+\section{Computable geometry: statements and complete proofs}\label{sec:geometry_full}
+\subsection{Free-ratio model}
+Let
+\begin{equation}\label{geo:eq:model}
+ B=\operatorname{diag}(\alpha,1),\qquad
+ \mu_0=(0,0),\quad\mu_1=(1,0),\quad\mu_2=(-a,d),\qquad a,d>0.
+\end{equation}
+Write $r=\pi_1/\pi_0$, $h=\pi_2/\pi_0$, so that
+$\pi=(1,r,h)/(1+r+h)$. These are free positive inputs. The letter $h$ denotes
+a prior ratio throughout this geometric criterion, never a holding time. For total denoising
+variance $v=\tau^2+\sigma^2$, the exact mixture-MMSE RED map is
+\begin{align}
+ w_i(x,v)&=\frac{\pi_i\exp[-\norm{x-\mu_i}^2/(2v)]}
+ {\sum_j\pi_j\exp[-\norm{x-\mu_j}^2/(2v)]},\qquad
+ \overline\mu_v(x)=\sum_iw_i(x,v)\mu_i,\label{geo:eq:weights}\\
+ T_v(x)&=x-\gamma\{Bx-b+c(v)[x-\overline\mu_v(x)]\},\qquad
+ c(v)=\lambda(1-\tau^2/v).\label{geo:eq:update}
+\end{align}
+Initialization is $x_0=b$. Each iteration is $x_{k+1}=T_{v_k}(x_k)+e_k^{\rm upd}$.
+The controller and the update perturbation may depend measurably on the
+observation, history, and an independent random seed. They do not receive $Z$.
+For deterministic analysis the observation event is
+\begin{equation}\label{geo:eq:obs}
+ b=B\mu_Z+e,\qquad \norm{e}_\infty\le\varepsilon.
+\end{equation}
+We first derive sufficient conditions for general $0<\alpha\le1$ and
+$0<c_-\le c(v)\le c_+$, assuming
+\begin{equation}\label{geo:eq:step}
+ 0<\gamma\le(1+c_+)^{-1},\qquad
+ \norm{e_k^{\rm upd}}_\infty\le\delta.
+\end{equation}
+All scale intervals in this geometric criterion refer to $v$, not $\sigma$.
+
+The numerical application uses the independent box
+\begin{equation}\label{geo:eq:box}
+\begin{gathered}
+0<\alpha\le10^{-3},\quad a\in[.98,1.02],\quad d\in[1.98,2.02],\\
+r\in[1.27,1.31],\quad h\in[1.60,1.96],\quad\theta\in[-1,1],\\
+\gamma=\tfrac14,\quad \tau=\alpha^2,\quad\sigma_L=\alpha,\quad
+v_L=\alpha^2+\alpha^4,\quad\lambda=(1+\alpha^2)(1+\theta\alpha).
+\end{gathered}
+\end{equation}
+For $v\ge v_L$, $c_L=c(v_L)=1+\theta\alpha$,
+$.999\le c(v)\le1.002$, and $\alpha+c(v)\ge1$.
+The observation tolerance is $\varepsilon=\alpha/500$ and the global update-error
+radius is $\delta=10^{-4}$. There is no balancing constraint
+in \eqref{geo:eq:box}.
+
+\subsection{Explicit geometric conditions}
+For $x=(s,t)$ define the odds
+\begin{align}
+ R_v(s)&=r\exp[(s-\tfrac12)/v],\label{geo:eq:oddsR}\\
+ H_v(s,t)&=h\exp[-(a^2+d^2+2as-2dt)/(2v)].\label{geo:eq:oddsH}
+\end{align}
+The horizontal posterior mean and third responsibility are
+\begin{equation}\label{geo:eq:mean}
+ m_v(s,t)=\frac{R_v-aH_v}{1+R_v+H_v},\qquad
+ w_2(s,t,v)=\frac{H_v}{1+R_v+H_v}.
+\end{equation}
+These identities turn all subsequent tests into direct scalar computations.
+
+\subsection{A common obstruction over two scale ranges}
+Choose $0<\xi<1/2$, $\eta_B\ge\varepsilon$, and set
+\begin{equation}\label{geo:eq:qB}
+ q_B=\xi-\frac{\alpha(1-\xi)+\varepsilon+\delta/\gamma}{c_-}.
+\end{equation}
+Assume $0<q_B<\xi$, $\alpha+\varepsilon\le\xi$, and
+\begin{equation}\label{geo:eq:bottomB}
+ \gamma[(1+c_-)\eta_B-\varepsilon]\ge\delta.
+\end{equation}
+For positive cutoffs $V_-<V_+$ define
+\begin{align}
+ L(V_-)&=\frac{r\exp[-(1/2-\xi)/V_-]}
+ {1+r\exp[-(1/2-\xi)/V_-]},\label{geo:eq:low}\\
+ D_B&=a^2+d^2+2a\xi+2d\eta_B,\qquad
+ H_B=h\exp[-D_B/(2V_+)],\label{geo:eq:highodds}\\
+ U(V_+)&=\frac{r-aH_B}{1+r+H_B}.\label{geo:eq:high}
+\end{align}
+
+\begin{proposition}[Computable barrier]\label{geo:prop:barrier}
+If \eqref{geo:eq:step}--\eqref{geo:eq:bottomB} hold and
+\begin{equation}\label{geo:eq:barriertest}
+ L(V_-)\le q_B,\qquad U(V_+)\le q_B,
+\end{equation}
+then, on \eqref{geo:eq:obs} with $Z=1$, every sequence of admissible scales in
+$(0,V_-]\cup[V_+,\infty)$ preserves
+\[
+ W=\{(s,t):s\le\xi,\ t\ge-\eta_B\}
+\]
+from $x_0=b$, including arbitrary adaptive or randomized switching and all
+perturbations satisfying \eqref{geo:eq:step}. The statement holds for every call
+budget. Any minimum admissible variance is intersected with this union.
+\end{proposition}
+
+The cutoffs are explicit. If $r>q_B/(1-q_B)$, the low-scale condition is
+equivalent to
+\begin{equation}\label{geo:eq:lowcut}
+ V_-\le\frac{1/2-\xi}{\log[r(1-q_B)/q_B]}.
+\end{equation}
+Otherwise it is automatic. Write
+$H_{\rm req}=[r(1-q_B)-q_B]/(a+q_B)$. If $H_{\rm req}>0$ and $h>H_{\rm req}$,
+the high-scale condition is equivalent to
+\begin{equation}\label{geo:eq:highcut}
+ V_+\ge\frac{D_B}{2\log(h/H_{\rm req})}.
+\end{equation}
+If $H_{\rm req}\le0$ it is automatic. When $H_{\rm req}>0$ and
+$h\le H_{\rm req}$, this particular high-scale test supplies no finite cutoff.
+
+\subsection{An intermediate progress channel and a safe switch}
+Choose $s_-<1/2<s_E<1<s_U$, $\eta_C\ge\varepsilon$, $t_+\ge\varepsilon$, and a band
+$I=[v_-,v_+]$. Require $\alpha-\varepsilon\ge s_-$, $\alpha+\varepsilon\le s_E$, and
+$\varepsilon\le\alpha(1-s_E)$. Define
+\begin{align}
+ D_C&=a^2+d^2+2as_--2dt_+>0,\nonumber\\
+ R_C&=r\exp[(s_--1/2)/v_-],\quad
+ H_C=h\exp[-D_C/(2v_+)],\quad
+ W_C=\frac{H_C}{1+R_C+H_C},\label{geo:eq:WC}\\
+ \kappa&=\frac{1/4+a(a+2)W_C}{v_-}<1,\qquad\zeta=1-\kappa,\label{geo:eq:kappa}\\
+ D_E&=a^2+d^2+2as_E-2dt_+>0,\nonumber\\
+ R_E&=r\exp[(s_E-1/2)/v_+],\quad H_E=h\exp[-D_E/(2v_+)],\nonumber\\
+ \Delta_E&=\frac{R_E-aH_E}{1+R_E+H_E}-s_E>\frac{\delta}{\gamma c_-}.
+ \label{geo:eq:surplus}
+\end{align}
+The transverse, overshoot, and prepared-region tests are
+\begin{align}
+ \gamma[(1+c_-)\eta_C-\varepsilon]&\ge\delta,\label{geo:eq:Cbottom}\\
+ \varepsilon-t_++\max_{c\in\{c_-,c_+\}}c(dW_C-t_+)+\delta/\gamma&\le0,\label{geo:eq:Ctop}\\
+ U_E:=s_E+\gamma[(\alpha+c_+)(1-s_E)+\varepsilon]+\delta&\le s_U,\label{geo:eq:exit}\\
+ \gamma[(\alpha+c_-)(s_U-1)-\varepsilon]&\ge\delta.\label{geo:eq:right}
+\end{align}
+Set
+\begin{equation}\label{geo:eq:comparison}
+ q_C=1-\gamma c_-\zeta,\qquad
+ s_*=s_E+\frac{\Delta_E-\delta/(\gamma c_-)}{\zeta}.
+\end{equation}
+Then $0<q_C<1$ and $s_*>s_E$.
+
+\begin{proposition}[Computable intermediate entry]\label{geo:prop:channel}
+Under the preceding tests, on \eqref{geo:eq:obs} for class 1, arbitrary successive
+scales in $I$ enter
+\[
+ P_1=[s_E,s_U]\times[-\eta_C,t_+]
+\]
+within $N$ calls whenever
+\begin{equation}\label{geo:eq:N}
+ s_*-(s_*-s_-)q_C^N\ge s_E.
+\end{equation}
+The first crossing cannot overshoot $P_1$, and $P_1$ remains invariant under
+further scales in $I$, with the same perturbation budget. Consequently both
+entrance-triggered switching and a preset of $N$ intermediate calls are valid.
+\end{proposition}
+
+The certificate may replace $\kappa$ by a larger number below one and
+$\Delta_E$ by a smaller positive number still satisfying
+\eqref{geo:eq:surplus}; this yields a simpler, weaker recurrence.
+
+\subsection{A prior-mass feasibility window}
+The tests expose the role of the third template without solving a trajectory.
+Fix a desired responsibility cap $0<\bar w<1$ and progress margin $\Delta>0$, and
+write $m_*=s_E+\Delta<1$. Define
+\begin{align}
+ h_B(r)&=\exp[D_B/(2V_+)]\,
+ \max\left\{0,\frac{r(1-q_B)-q_B}{a+q_B}\right\},\label{geo:eq:hB}\\
+ h_E(r)&=\exp[D_E/(2v_+)]\,
+ \frac{(1-m_*)r\exp[(s_E-1/2)/v_+]-m_*}{a+m_*},\label{geo:eq:hE}\\
+ h_C(r)&=\frac{\bar w}{1-\bar w}
+ \bigl(1+r\exp[(s_--1/2)/v_-]\bigr)\exp[D_C/(2v_+)].\label{geo:eq:hC}
+\end{align}
+For a given geometry, the explicit nonempty interval condition
+\begin{equation}\label{geo:eq:window}
+ h_B(r)\le h\le\min\{h_E(r),h_C(r)\},\qquad h>0,
+\end{equation}
+together with
+\[
+ r\le\frac{q_B}{1-q_B}\exp[(1/2-\xi)/V_-]
+\]
+implies both barrier tests, $W_C\le\bar w$, and $\Delta_E\ge\Delta$.
+The remaining channel tests then use $\bar w$ and $\Delta$ directly. If the
+right side of \eqref{geo:eq:window} is negative, this sufficient construction is
+infeasible. The lower mass bound makes the third component strong enough to
+oppose motion at high scales; the upper mass bounds keep it sufficiently
+suppressed in the intermediate channel. These are sufficient inequalities,
+not a characterization of every successful scale or mixture.
+
+\subsection{A terminal interface computed from distance gaps}
+Let $G_z=\prod_{j=1}^2[\ell_{zj},u_{zj}]$ contain $\mu_z$ strictly, with
+face distances
+$m_{zj}=\min\{\mu_{zj}-\ell_{zj},u_{zj}-\mu_{zj}\}>0$.
+For every $i\ne z$ let
+\begin{equation}\label{geo:eq:gaps}
+ \Delta_{zi}=\min_{x\in G_z}
+ \{\norm{x-\mu_i}^2-\norm{x-\mu_z}^2\}>0,
+ \quad
+ \Lambda_z=\sum_{i\ne z}\frac{\pi_i}{\pi_z}
+ e^{-\Delta_{zi}/(2v_L)}.
+\end{equation}
+The minimized expression is affine in $x$, so its minimum follows from the
+signs of two coefficients and the rectangle endpoints. Let $D_\infty$ and
+$D_2$ be the maximum template distances in the indicated norms, and set
+$\beta_1=\alpha$, $\beta_2=1$.
+
+\begin{proposition}[Terminal invariance and raw residual]\label{geo:prop:terminal}
+Suppose $c_L>0$, $\gamma(1+c_L)\le1$, and the terminal update error is at most
+$\delta_L$ in $\ell_\infty$ whenever the input state lies in $\bigcup_zG_z$.
+If, for both coordinates and each $z$,
+\begin{equation}\label{geo:eq:terminaltest}
+ \varepsilon+c_LD_\infty\Lambda_z+\delta_L/\gamma
+ \le (\beta_j+c_L)m_{zj},
+\end{equation}
+then $G_z$ is invariant for data satisfying \eqref{geo:eq:obs} with label $z$.
+With
+\[
+ m_z(c_L)=(B+c_LI)^{-1}(b+c_L\mu_z),\qquad
+ q_L=1-\gamma\min_j(\beta_j+c_L),
+\]
+an input in $G_z$ satisfying $\norm{x_0-m_z(c_L)}\le M$ obeys
+\begin{equation}\label{geo:eq:terminalres}
+ \norm{x_n-m_z(c_L)}
+ \le q_L^nM+\frac{\gamma c_LD_2\Lambda_z+\sqrt2\delta_L}{1-q_L}.
+\end{equation}
+The linear center is used only in analysis; the output is the actual iterate.
+\end{proposition}
+
+\subsection{Uniform application and risk separation}
+Use the terminal rectangles
+\begin{equation}\label{geo:eq:rectangles}
+\begin{aligned}
+ G_0&=[-.1,.4]\times[-.1,.15],\\
+ G_1&=[.53,1.1]\times[-.1,.15],\\
+ \widetilde G_2&=[-1.12,.01]\times[1.73,2.27].
+\end{aligned}
+\end{equation}
+Classify the observation once:
+\begin{equation}\label{geo:eq:classifier}
+ \widehat Z(b)=
+ \begin{cases}
+ 2,&b_2>1,\\
+ 1,&b_2\le1\text{ and }b_1>\alpha/2,\\
+ 0,&\text{otherwise}.
+ \end{cases}
+\end{equation}
+This is a controller input calculation, not a change to reconstruction.
+
+\begin{theorem}[Independent-box reachability and raw-output risk]\label{geo:thm:main}
+For the full box \eqref{geo:eq:box}, use the same exact denoiser, coefficient,
+initialization, and terminal scale for every controller.
+\begin{enumerate}
+\item On \eqref{geo:eq:obs} with $\varepsilon=\alpha/500$ and $Z=1$, every controller
+restricted to
+\begin{equation}\label{geo:eq:newbad}
+ [v_L,.17]\ \cup\ [2.5,\infty)
+\end{equation}
+satisfies $s_k\le.3$ for all $k$, under any adaptive switching and any
+global update perturbation of size at most $10^{-4}$.
+\item Compute \eqref{geo:eq:classifier} once. Allocate respectively $0,25,0$
+intermediate calls to predicted classes $0,1,2$, allowing any successive
+variances in $[.69,.71]$, and then use $v_L$ up to a common budget $K=25+n$.
+On \eqref{geo:eq:obs}, switching occurs in the correct rectangle
+\eqref{geo:eq:rectangles}; every observation receives at least $n$ terminal calls.
+This remains true with global update error at most $10^{-4}$.
+\item Let $A=\operatorname{diag}(\sqrt\alpha,1)$, $x^\star=\mu_Z+u$, $y=Ax^\star+\eta$,
+with $Z\sim\pi$ and $Z,u,\eta$ mutually independent, where
+$u,\eta\sim N(0,\alpha^4 I_2)$. Assume the terminal error is at most
+$\delta_L\le10^{-4}$ locally on the union of the correct rectangles, while
+the global error bound remains $10^{-4}$. For the raw output,
+\begin{align}
+ R-R_{\rm oracle}
+ &\le\left[\sqrt{(A_n+4\sqrt2\delta_L)^2+T_\alpha}+\alpha^3\right]^2,
+ \label{geo:eq:fullrisk}\\
+ A_n&=6(3/4)^n+12e^{-1/(64\alpha)},\qquad
+ T_\alpha=128\sqrt8\,e^{-1/(4\cdot10^6\alpha^2)},\label{geo:eq:Ar}\\
+ R_{\rm oracle}&=\alpha^4\left(\frac1{1+\alpha}+\frac12\right).
+ \label{geo:eq:oracle}
+\end{align}
+In particular, if terminal updates are exact, $0<\alpha\le10^{-5}$, and
+\begin{equation}\label{geo:eq:ralpha}
+ n=n_\alpha=\left\lceil\frac{\log(12/\alpha^3)}{\log(4/3)}\right\rceil,
+\end{equation}
+then $K=25+n_\alpha$ gives $R\le R_{\rm oracle}+5\alpha^6$.
+For restricted controllers as in (i), at any finite budget (possibly depending
+on $\alpha$),
+\begin{equation}\label{geo:eq:badrisk}
+ R_{\rm bad}\ge .30(.7-\alpha/1000)^2
+ \left[1-8e^{-1/(2\cdot10^6\alpha^2)}\right]_+.
+\end{equation}
+Thus $\liminf_{\alpha\downarrow0}R_{\rm bad}\ge.147$, whereas the successful
+protocol has oracle risk ratio tending to one.
+\end{enumerate}
+\end{theorem}
+
+The perturbed risk bound also gives oracle ratio for $\delta_L=o(\alpha^2)$,
+and excess risk $O(\alpha^6)$ for $\delta_L=O(\alpha^3)$ at the same budget.
+The constant $5$ is asserted for exact terminal updates, not for arbitrary
+nonzero $O(\alpha^3)$ errors. The global bound is needed outside the good
+observation event; the sharper terminal bound need only hold locally.
+
+\subsection{The numerical margins}
+The interval calculation uses the continuous parameter box, not a grid.
+Its conservative readable bounds are as follows.
+\begin{center}\small
+\begin{tabular}{@{}p{.48\linewidth}p{.43\linewidth}@{}}\toprule
+Quantity & Certified bound or value \\\midrule
+Class-1 prior mass & $\pi_1>.30023$ \\
+Barrier target $q_B$, using worst-case $\alpha,\varepsilon$ & $q_B>.298896$ \\
+Low/high posterior horizontal mean bounds & $L(.17)<.287729$, $U(2.5)<.289884$ \\
+Uniform sufficient cutoff bounds & $V_-\le.178160$, $V_+\ge2.416038$ suffice \\
+Intermediate third responsibility & $W_C<.043871<.044$ \\
+Horizontal mean derivative & $\partial_s m<.558172<.56$ \\
+Mean surplus at $(.53,.05)$ & $\Delta_E>.016303>.016$ \\
+Comparison value after 25 calls & $s_{25}^{\rm comp}>.534113$ \\
+First-crossing upper bound & $s^+\le.647953$ \\
+Top-face drift, including perturbation, divided by $\gamma$ & At most $-.01064024$ \\
+Minimum terminal squared-distance gap & At least $.06$ \\
+Global fourth-moment envelope & $\|\norm{\widehat x-m_Z(c_L)}\|_{L^4}<8.491<9$ \\
+\bottomrule\end{tabular}
+\end{center}
+The cutoff row reports sufficient thresholds from the tests, not sharp
+boundaries of actual success or failure. The theorem uses the safer cutoffs
+$.17$ and $2.5$.
+

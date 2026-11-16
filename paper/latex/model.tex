@@ -1,0 +1,48 @@
+\section{Model and Comparison Class}\label{sec:model}
+For $y=Ax^\star+\eta$, consider the unmodified update
+\begin{equation}\label{eq:red}
+ x_{k+1}=x_k-\gamma\{A^\top(Ax_k-y)+\lambda[x_k-D_{\sigma_k}(x_k)]\},
+\end{equation}
+with $x_0=A^\top y$. The data loss is $\norm{Ax-y}^2/2$, without observation-variance normalization; the denoising residual is not divided by $\sigma_k^2$. Risk means $\E\norm{\widehat x-x^\star}^2$, without dimension normalization.
+
+The risk framework in Section~\ref{sec:criterion} applies in any
+finite dimension and to any finite isotropic mixture. The explicit
+geometric application below specializes it to three components in two
+dimensions. The denoising prior is $\sum_{i=0}^2\pi_iN(\mu_i,\tau^2I_2)$. Writing $B=A^\top A$, $b=A^\top y$, and $v=\tau^2+\sigma^2$, exact MMSE denoising gives
+\begin{align}
+w_i(x,v)&=\frac{\pi_i e^{-\norm{x-\mu_i}^2/(2v)}}{\sum_j\pi_j e^{-\norm{x-\mu_j}^2/(2v)}},\\
+\bar\mu_v(x)&=\sum_iw_i(x,v)\mu_i,\quad c(v)=\lambda(1-\tau^2/v),\\
+T_v(x)&=x-\gamma\{Bx-b+c(v)[x-\bar\mu_v(x)]\}.\label{eq:map}
+\end{align}
+One update uses one denoiser call. Controllers share observations, initialization, and total budget; all comparisons use the same terminal scale. Labels appear in analysis and evaluation, never as controller inputs.
+
+\paragraph{The scalar potential at a fixed scale.}
+Let $p_v(x)=\sum_i\pi_i(2\pi v)^{-1}e^{-\norm{x-\mu_i}^2/(2v)}$. Since $D_\sigma(x)-x=\sigma^2\nabla\log p_v(x)$, the exact field in~\eqref{eq:map} is the gradient of
+\begin{equation}\label{eq:potential}
+F_v(x)=\tfrac12\norm{Ax-y}^2-\lambda\sigma^2\log p_v(x),
+\qquad\sigma^2=v-\tau^2.
+\end{equation}
+Thus $T_v=x-\gamma\nabla F_v$ at fixed $v$, and the terminal objective is $F_{v_L}$. Varying $v$ varies this potential, including its coefficient $\sigma^2$. This identity uses the exact denoiser; it does not identify a generic RED residual with the gradient of $x^\top(x-D(x))/2$.
+
+\begin{table}[t]
+\centering\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}p{.39\columnwidth}p{.56\columnwidth}@{}}
+\toprule
+Solver and scale access & Scope of the comparison\\
+\midrule
+Backprojection, restricted & Risk lower bound for arbitrary switching\\
+Backprojection, with band & Finite-budget consistency via the preset\\
+Least-squares start & Terminal-only succeeds in the matched diagnostic\\
+Change $\lambda$ or normalize data loss & Changes the vector fields and the barrier tests\\
+\bottomrule
+\end{tabular}
+\caption{Scope of the RED comparison. The two main policies may
+use all observation information when choosing scales.}
+\label{tab:solver_scope}
+\end{table}
+For the fixed positive-definite geometry below, least squares
+has risk $\nu^2(1+\alpha^{-1})$. Observations can also identify the
+component on the good event. The question is whether the
+specified iterates can reach its terminal region. Table~\ref{tab:solver_scope}
+separates this question from changes to the solver.

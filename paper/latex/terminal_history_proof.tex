@@ -1,0 +1,230 @@
+\section{Operator-aware terminal contraction for finite mixtures}
+\label{sec:terminal_history}
+This section retains the original RED update and permits any finite
+number of equal-width isotropic Gaussian components, any ambient
+dimension, and any linear observation operator.
+Write $m_v=\sum_iw_i\mu_i$ and
+$C_v=\sum_iw_i(\mu_i-m_v)(\mu_i-m_v)^\top$.
+This is the posterior covariance of the template means.
+It excludes the within-component covariance.
+Throughout, $v>\tau^2$, $c=\lambda(1-\tau^2/v)>0$ and $B=A^\top A$.
+Conditional mean--covariance derivative identities have an established
+foundation~\cite{dytso2023}. Our use is a model-input certificate for
+the original RED terminal map.
+
+\subsection{An exact local test using the sensing operator}
+Let $\mathcal S=\operatorname{span}\{\mu_i-\mu_0\}$ and let
+$U,V$ be orthonormal bases of $\mathcal S$ and its orthogonal
+complement. Define
+\begin{align}
+ G_c={}&U^\top BU+cI \nonumber\\
+ &-U^\top BV(V^\top BV+cI)^{-1}V^\top BU,\\
+ C_S&=U^\top C_vU,\qquad
+ \rho_v(x)=\frac cv\lambda_{\max}(G_c^{-1/2}C_SG_c^{-1/2}).
+\end{align}
+The term involving $V$ vanishes when $\mathcal S$ is the whole space.
+For coincident means set $\rho_v=0$.
+\begin{proposition}[Operator--posterior curvature test]\label{prop:operator_posterior}
+The Hessian of the exact RED potential is
+\[
+ H_v=B+cI-(c/v)C_v.
+\]
+At each state, $H_v\succ0$ if and only if $\rho_v(x)<1$.
+On a convex set where $\rho_v\le\bar\rho<1$,
+\[
+ (1-\bar\rho)(\lambda_{\min}(B)+c)I
+ \preceq H_v\preceq(\lambda_{\max}(B)+c)I.
+\]
+For $0<\gamma\le(\lambda_{\max}(B)+c)^{-1}$,
+the map is Lipschitz with factor
+$q=1-\gamma(1-\bar\rho)(\lambda_{\min}(B)+c)<1$ on that set.
+\end{proposition}
+\begin{proof}
+Differentiating the responsibilities gives $D_xm_v=C_v/v$.
+In the basis $[U,V]$, the lower-right block of $H_v$ is positive
+definite and its Schur complement is $G_c-(c/v)C_S$.
+Moreover $U^\top(B+cI)^{-1}U=G_c^{-1}$, so the nonzero eigenvalues
+in the definition of $\rho_v$ equal those of
+$(c/v)(B+cI)^{-1/2}C_v(B+cI)^{-1/2}$.
+The Loewner bounds follow.
+Integrating $I-\gamma H_v$ on a line segment in the convex set
+gives the stated Lipschitz factor.
+\end{proof}
+Constructing $G_c$ requires solves involving the actual operator.
+Only the final covariance eigenproblem has dimension at most $K-1$.
+Pairwise secant gains alone do not lower-bound $B$ on $\mathcal S$.
+For example, means $(0,0),(1,0),(2,1)$ under
+$B=\operatorname{diag}(1,0)$ have pair gains $1,4/5,1/2$ but
+span a null direction.
+
+\subsection{A common invariant terminal ball}
+Fix the terminal map and a ball
+$\mathcal B=\{x:\norm{x-\bar x}\le R\}$.
+For reference component $j$, set $d_{ij}=\mu_i-\mu_j$ and
+\begin{align}
+ \Delta_{ij}&=\norm{\bar x-\mu_i}^2-\norm{\bar x-\mu_j}^2,\\
+ \beta_{ij}&=\operatorname{logistic}\left(
+ \log\frac{\pi_i}{\pi_j}-\frac{\Delta_{ij}-2R\norm{d_{ij}}}{2v_L}\right),\\
+ \overline C_{\mathcal B}&=\sum_{i\ne j}\beta_{ij}d_{ij}d_{ij}^\top.
+\end{align}
+The affine distance-gap bound implies $w_i/w_j\le
+\exp(\operatorname{logit}\beta_{ij})$, hence $w_i\le\beta_{ij}$.
+Since
+$C_v=\sum_iw_id_{ij}d_{ij}^\top-(m_v-\mu_j)(m_v-\mu_j)^\top$,
+this is a valid covariance upper bound on the whole ball.
+
+\begin{proposition}[Common terminal ball]\label{prop:common_terminal_ball}
+Let $\overline C$ be any whole-ball covariance upper bound and put
+$M=B+c_LI$. Suppose $(c_L/v_L)\overline C\preceq\bar\rho M$
+for some $\bar\rho<1$, the step condition of
+Proposition~\ref{prop:operator_posterior} holds, and
+\[
+ \norm{T_{v_L}(\bar x)-\bar x}\le(1-q)R.
+\]
+Then the ball is invariant and contains a unique terminal fixed point.
+For any two starts in the ball at common time $H$,
+\[
+ \norm{x^{(a)}_{H+n}-x^{(b)}_{H+n}}
+ \le q^n\norm{x^{(a)}_H-x^{(b)}_H},\qquad n\ge0.
+\]
+\end{proposition}
+\begin{proof}
+Contraction gives
+$\norm{T(x)-\bar x}\le q\norm{x-\bar x}+\norm{T(\bar x)-\bar x}\le R$.
+The contraction mapping theorem applies on the closed ball.
+Iteration of the Lipschitz estimate proves the distance bound.
+\end{proof}
+If both updates have norm errors bounded by $\delta_a,\delta_b$
+and remain in the ball, the distance bound gains
+$(\delta_a+\delta_b)(1-q^n)/(1-q)$.
+For perturbed invariance add the corresponding error bound to the
+center residual.
+An almost-sure certificate with a uniform $q$ implies
+\[
+ |\sqrt{R_a(n)}-\sqrt{R_b(n)}|
+ \le q^n\big(\mathbb E\norm{x_H^{(a)}-x_H^{(b)}}^2\big)^{1/2}.
+\]
+A good-event-only certificate also needs an exceptional-event
+$L^2$ term. A finite batch does not imply a population risk guarantee.
+Neither common convergence nor a unique ball fixed point implies
+accurate recovery.
+
+\subsection{Sharper pairwise and global covariance bounds}
+For each pair let
+\begin{align}
+ t_{ij}&=\log(\pi_i/\pi_j)
+ -\frac{\norm{\bar x-\mu_i}^2-\norm{\bar x-\mu_j}^2}{2v},\\
+ L_{ij}&=t_{ij}-R\norm{\mu_i-\mu_j}/v,\nonumber\\
+ U_{ij}&=t_{ij}+R\norm{\mu_i-\mu_j}/v .
+\end{align}
+Let $\alpha_i=(\sum_k e^{L_{ki}})^{-1}$ and let $t^\circ_{ij}$
+be the projection of zero onto $[L_{ij},U_{ij}]$.
+Every state in the ball has $w_i\le\alpha_i$ and
+\[
+ w_iw_j\le\kappa_{ij}
+ =\min\left\{\alpha_i\alpha_j,
+ \frac1{(1+e^{t^\circ_{ij}})(1+e^{-t^\circ_{ij}})}\right\}.
+\]
+The second bound follows by maximizing the product at fixed pair
+odds and total mass at most one.
+The exact identity
+$C_v=\sum_{i<j}w_iw_j(\mu_i-\mu_j)(\mu_i-\mu_j)^\top$
+then gives a whole-ball bound by replacing $w_iw_j$ with $\kappa_{ij}$.
+One may choose the valid covariance envelope with smaller normalized
+spectral bound. An elementwise minimum of matrices is unjustified.
+
+A separate global sufficient bound uses the whitened diameter
+$D_M^2=\max_{i,j}(\mu_i-\mu_j)^\top M^{-1}(\mu_i-\mu_j)$.
+The directional bounded-variable variance inequality yields
+$\rho_v(x)\le cD_M^2/(4v)$ everywhere.
+If this bound is below one, the terminal map is globally contractive
+at the prescribed step size.
+Failing a sufficient bound leaves the global question open.
+
+\subsection{Certificate for the fixed patch batch}
+The template span in the photo-patch case has dimension seven.
+Its restricted sensing spectrum has minimum $.02509617$,
+compared with the pairwise secant minimum $.22752$.
+The whitened-diameter global bound is $1.21022$, so it is inconclusive.
+For each observation we compute a candidate center by ten Newton
+steps from its 5000-call terminal state.
+At common time 154 the radius is 1.01 times the maximum distance
+of the three saved outputs from this center, with floor $10^{-9}$.
+No truth patch is used in this construction.
+The original reference-component envelope passes 255 of 256 balls.
+The pairwise envelope passes all 256.
+
+The program \path{experiments/code/patch_terminal_interval.py}
+uses 60-digit outward-rounded interval arithmetic to check all 256.
+It verifies the Gram decomposition with exact rational arithmetic,
+proves positive definiteness of
+$.45(B+c_LI)-(c_L/v_L)\overline C_{\mathcal B}$ by interval LDL,
+and checks center residuals, coverage and step size.
+Since $B\succeq0$ and $\norm{B}=1$, it yields the uniform factor
+$q=1-\gamma(.55c_L)<.999429$.
+The certificate treats exported binary64 coefficients and snapshots
+as exact inputs to the subsequent exact terminal map.
+It does not enclose the earlier floating-point propagation or
+subsequent finite-precision perturbations.
+It proves neither a new-observation risk bound nor low error of the
+shared fixed points.
+
+\subsection{Related contraction and recovery results}
+Sinha et al.~\cite{sinha2025} study fixed linear kernel denoisers,
+including appropriately scaled PnP for nonsymmetric kernels.
+The present covariance varies with state and the update is residual-additive RED.
+Wolf et al.~\cite{wolf2026} jointly analyze denoising covariance
+and generalized backprojection in PnP forward--backward splitting.
+Their pointwise and distributional bounds use support and restricted
+conditioning assumptions. Their compact-support assumptions and
+update do not directly apply to our untruncated GMM RED model.
+The covariance identities, Schur complements and contraction tools
+are established mathematics. The present statements organize them
+as model-input checks and a batch-specific terminal certificate.
+
+\section{Coefficient and posterior changes in a scale update}
+\label{sec:coefficient_split}
+Write $T_{c,v}(x)=x-\gamma[Bx-b+c(x-m_v(x))]$.
+The original algorithm remains on $c=\lambda(1-\tau^2/v)$.
+For fixed $x$ the exact identity is
+\begin{align}
+ T_{c,v}(x)-T_{\tilde c,\tilde v}(x)
+ ={}&-\gamma(c-\tilde c)(x-m_v(x))\nonumber\\
+ &+\gamma\tilde c(m_v(x)-m_{\tilde v}(x)).
+\end{align}
+For $z=1/v$ and $E_i(x)=\norm{x-\mu_i}^2/2$,
+\begin{align*}
+ \partial_z m_{1/z}(x)&=-\operatorname{Cov}_{w}(\mu,E),\\
+ \norm{\operatorname{Cov}_w(\mu,E)}
+ &\le\sqrt{\lambda_{\max}(C_w)\operatorname{Var}_w(E)} .
+\end{align*}
+Both formulas follow by differentiating the normalized exponential
+weights and applying directional Cauchy--Schwarz.
+Integration bounds $\norm{m_v-m_{\tilde v}}$ by
+$|v^{-1}-\tilde v^{-1}|$ times the supremum of this covariance norm.
+On a region containing both trajectories, if the baseline map is
+$q_k$-Lipschitz, let
+$R_k=\sup_x\norm{x-m_{v_k}(x)}$ and
+$M_k=\sup_{x,z}\norm{\operatorname{Cov}_{w(x,1/z)}(\mu,E(x))}$.
+Then their distance satisfies
+\begin{align}
+ A_\ell&=|c_\ell-\tilde c_\ell|R_\ell+
+ \tilde c_\ell|v_\ell^{-1}-\tilde v_\ell^{-1}|M_\ell,\nonumber\\
+ e_n&\le\left(\prod_{k=0}^{n-1}q_k\right)e_0
+ +\gamma\sum_{\ell=0}^{n-1}
+ \left(\prod_{k=\ell+1}^{n-1}q_k\right)A_\ell .
+\end{align}
+This is the iterated one-step comparison.
+It permits cancellation of vector effects but does not identify
+unique statistical contributions from a single measured output difference.
+
+There is an explicit interaction when two separate ablations are
+both measured from the corner $(c_0,v_0)$.
+For $m_i=m_{v_i}(x)$,
+\begin{align}
+ &T_{c_1,v_1}-T_{c_1,v_0}-T_{c_0,v_1}+T_{c_0,v_0}\nonumber\\
+ &\hspace{18mm}=\gamma(c_1-c_0)(m_1-m_0).
+\end{align}
+Thus coefficient-only and posterior-only changes do not generally
+sum to the combined change. Its interaction norm is at most
+$\gamma|c_1-c_0|\norm{m_1-m_0}$, before state propagation.

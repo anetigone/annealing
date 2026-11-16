@@ -1,0 +1,24 @@
+\subsection{Related Work}
+PnP and RED use denoisers to express priors for inverse
+problems~\cite{venkatakrishnan2013,romano2017,kamilov2023}.
+Convergence has been studied for PnP with continuation, Lipschitz
+conditions, and MMSE denoisers~\cite{chan2017,ryu2019,xu2020}.
+Generic RED residuals may lack a scalar potential~\cite{reehorst2019}.
+The exact MMSE score identity~\cite{efron2011} and conditional
+covariance calculus~\cite{dytso2023} give one here.
+Near a terminal responsibility tie the RED Jacobian can grow as
+$v_L^{-1}$, so our fixed step lies outside Hurault's sufficient
+global step bound as $v_L\to0$.
+
+Gaussian mixture scale space and mean shift describe mode formation
+and tracking~\cite{carreira2003,carreira2007,carreira2015}.
+Mixture priors also underpin patch restoration~\cite{zoran2011,yu2012}.
+Leong and Traonmilin~\cite{leong2026} give schedule-dependent
+recovery guarantees for varying projections under restricted
+sensing and projection conditions. Our fixed RED update separates
+statistical identifiability from reachability in a weak sensing
+direction. Operator-linked PnP recovery~\cite{wolf2026} and
+fixed-linear-denoiser contraction~\cite{sinha2025} provide
+complementary perspectives. Annealed sampling, stochastic
+regularization, and flow-based reconstruction use other updates
+and objectives~\cite{song2019,kadkhodaie2021,laumont2022,renaud2024,martin2025}.

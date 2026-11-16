@@ -1,0 +1,33 @@
+\subsection{Risk of the actual terminal iterate}
+Write $c_L=c(v_L)$ and define the reference point
+\[
+ x_{\rm aff}=(B+c_L I)^{-1}(b+c_L\mu_Z).
+\]
+On the terminal rectangle, the update relative to $x_{\rm aff}$
+contracts its linear part by at most $q=.751$. The remaining
+term is the posterior leakage plus the local update error.
+Summing the resulting geometric series after at least $n$ terminal
+calls bounds $\norm{\widehat x-x_{\rm aff}}$ by
+$6q^n+12e^{-.03/v_L}+4\sqrt{2}\delta_L/c_-$ on $E$.
+The reference point has mean-squared error
+\[
+ \E\norm{x_{\rm aff}-x^\star}^2=
+ \sum_{\beta\in\{\alpha,1\}}
+ \frac{\beta\nu^2+c_L^2\tau^2}{(\beta+c_L)^2}=O(S^2).
+\]
+To bound the contribution from $E^c$, each exact coordinate update
+is a convex combination of its current value and
+$(b_j+c(v)\bar\mu_{v,j})/(\beta_j+c(v))$.
+The latter has absolute value at most $3+2|e_j|$. Because the new
+value receives weight at least $\gamma c_-$, bounded update errors
+increase the uniform envelope by at most $\delta/(\gamma c_-)$.
+Gaussian fourth moments and Cauchy--Schwarz then bound the squared
+residual contribution on $E^c$ by $O(p_E^{1/2})$ independently of the
+budget. Together these estimates yield~\eqref{eq:ind_upper} for
+the raw iterate.
+
+For restricted controllers, $1-\widehat s\ge .7$ on $E$ for class 1.
+The reverse triangle inequality in conditional $L^2$ subtracts
+at most $\tau$ for the within-component displacement and gives
+\eqref{eq:ind_lower}. The same lower bound applies to every budget
+because it comes from invariance at each step.
