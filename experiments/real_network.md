@@ -78,6 +78,39 @@ tail -f experiments/results/drunet_fast_run.log
 
 结果在 `drunet_fast_run/evaluation/summary.json`，实际调用在 `evaluation/completion.json`。`workflow` 在开始校准前检查全部图片可读，避免坏图在长校准后才暴露。原来两个已中止目录 `real_network_20261116`、`real_network_fast_20261116` 保留，不作为本次命令的输出目录。
 
+### 用已存开发分数冻结非零尺度历史
+
+首轮三个可调家族均选中终端候选时，使用 `history` 单列机制对照：终端参考保留；其余家族在原来已评估的候选中，按相同开发 MSE、容差和平局规则，选择**实际包含非终端调用的最佳前缀**。只读旧校准的 `plan.json`、`choices.json`、`calibration/scores.csv`，不读取测试误差来选参，也不重新运行开发网格。没有有效非零候选时直接报错，不回退到零前缀。
+
+原 `drunet_fast_run` 中允许零前缀的调优结果继续作为性能比较。新对照回答不同历史的输出/恢复差异，不声称在允许终端候选的家族内误差最优。BSD68 已经被查看，这批是相同观测上的后续配对诊断，不称新盲测。
+
+本轮按原开发分数冻结的处方如下，尺度均为标准差×255；各前缀之后保持终端 5：
+
+| 原预算 | 两端点 | 平台 | 等比退火 |
+| ---: | --- | --- | --- |
+| 16 | 前缀 8，低 5 做 4 次后高 10 做 4 次 | 10 做 4 次 | 10→5 共 4 次 |
+| 32 | 前缀 16，高 25/低 5 按 4 步分块，高端开始 | 25 做 8 次 | 10→5 共 8 次 |
+| 64 | 前缀 32，低 5/高 10 每步交替，低端开始 | 10 做 32 次 | 10→5 共 16 次 |
+
+三个预算各有四条不同的完整尺度序列（含终端参考）。默认保留 16/32/64 次读数，**只在原 64 次处方之后追加 32、64 次共同终端更新**，即再读总调用 96、128 次；不在 96/128 重新选择前缀，不能把延长读数称为新预算下调优后的最佳性能。
+
+完整 BSD68、同一原评价噪声种子需要 **47,872 次新前向、0 次新校准**。按已测 28 ms/次，纯推理约 22.3 分钟，含读写和统计约半小时。所有公共求解器参数、权重、核、图像顺序和噪声种子继承原计划，不扩大网络/核/噪声矩阵。
+
+仅检查冻结处方与调用量、无需本机权重或图像，可先执行：
+
+```bash
+/root/miniconda3/bin/python -B experiments/code/real_network/run.py history --source-calibration experiments/results/drunet_fast_run/calibration --out experiments/results/drunet_history_preview --plan-only
+```
+
+用户同步代码后，用一个**不同的新目录**完成冻结、评价和汇总；预览目录不必同步：
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 nohup /root/miniconda3/bin/python -u -B experiments/code/real_network/run.py history --source-calibration experiments/results/drunet_fast_run/calibration --images experiments/assets/dncnn/testsets/BSD68 --out experiments/results/drunet_history_run --extra-calls 32 64 > experiments/results/drunet_history_run.log 2>&1 &
+tail -f experiments/results/drunet_history_run.log
+```
+
+输出中 `selected_prefixes.csv` 给出每个预算/家族的非零处方及相对原无限制选择的开发代价；`calibration/plan.json` 与 `choices.json` 保存派生的冻结规则并保留原选择。`evaluation/records.csv`、`distances.csv`、`summary.json` 仍使用原格式，按 `budget=64, extra_calls=0/32/64` 检查共同终端阶段的输出 RMS、场范数与恢复误差。原结果目录不被修改；源校准也不需要重新运行。
+
 ### 完整配置与分阶段运行
 
 默认配置是 [DRUNet](configs/drunet_deblur.json) / [FFDNet](configs/ffdnet_deblur.json)，**是未经真实网络调优的起始配置**：步长 .25、λ=.1、终端 σ=5/255；预算 16/32/64；观测噪声 2.55/255、7.65/255；共同终端尾部至少为预算的 1/4。尾部读数从 K=64 再追加 64、256 次。所有标为 `_255` 的参数均采用 8 位强度单位，内部除以 255；它们都是标准差，不是方差。

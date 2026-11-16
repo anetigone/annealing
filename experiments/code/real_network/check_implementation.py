@@ -1,5 +1,7 @@
 """Small CPU checks using synthetic images and a linear denoiser, no downloads."""
 import argparse
+import copy
+import csv
 from pathlib import Path
 from unittest.mock import patch
 
@@ -15,6 +17,7 @@ from problem import CircularBlur, metrics
 from schedules import FAMILIES, candidate_families, schedule
 from summarize import summarize
 from workflow import estimate, workflow
+from history import history_workflow, select_choices
 
 
 class LinearDenoiser:
@@ -145,6 +148,42 @@ def check(out):
                  "custom", "cpu")
     assert (out / "single_command/workflow_complete.json").is_file()
     checks.append("exact trajectory reuse preserves paired errors; fast cost estimate and single-command workflow")
+    original_plan = (calibration / "plan.json").read_text(encoding="utf-8")
+    original_choices = (calibration / "choices.json").read_text(encoding="utf-8")
+    history_out = out / "history_diagnostic"
+    history_workflow(calibration, out / "evaluation", history_out, "custom", "cpu",
+                     denoiser=LinearDenoiser(), anchor=12, extra_calls=[4, 8])
+    restricted = read_json(history_out / "calibration/choices.json")
+    for condition in restricted["conditions"].values():
+        for family in FAMILIES[1:]:
+            assert condition[family]["candidate"]["prefix"] > 0
+            assert condition[family]["source_unrestricted_choice"]["candidate"]["prefix"] == 0
+    assert (calibration / "plan.json").read_text(encoding="utf-8") == original_plan
+    assert (calibration / "choices.json").read_text(encoding="utf-8") == original_choices
+    with (evaluation / "records.csv").open(newline="") as stream:
+        old_records = {(r["image"], r["budget"], r["extra_calls"]): r for r in csv.DictReader(stream)
+                       if r["family"] == "terminal"}
+    with (history_out / "evaluation/records.csv").open(newline="") as stream:
+        new_records = list(csv.DictReader(stream))
+    for row in new_records:
+        key = (row["image"], row["budget"], row["extra_calls"])
+        if row["family"] == "terminal" and key in old_records:
+            assert row["mse"] == old_records[key]["mse"]
+    sample = {int(r["extra_calls"]): float(r["output_rms_vs_terminal"]) for r in new_records
+              if r["image"] == "evaluation_0.png" and r["family"] == "geometric" and r["budget"] == "12"}
+    assert sample[0] > sample[4] > sample[8] > 0
+    costs = read_json(history_out / "cost_estimate.json")
+    assert costs["additional_calibration_forwards"] == 0
+    assert costs["actual_evaluation_forwards_if_finite"] == read_json(history_out / "evaluation/completion.json")["total_network_forwards"]
+    with (calibration / "calibration/scores.csv").open(newline="") as stream:
+        saved_scores = list(csv.DictReader(stream))
+    terminal_only = copy.deepcopy(frozen)
+    for groups in terminal_only["candidates"].values():
+        for family in FAMILIES[1:]:
+            groups[family] = groups[family][:1]
+    expect_error(ValueError, lambda: select_choices(terminal_only, read_json(calibration / "choices.json"),
+                                                   saved_scores, [8, 12]))
+    checks.append("saved-score nonzero selection, source immutability, shared observations/tail and no zero-prefix fallback")
     write_json(out / "checks.json", {"passed": checks, "scope": "Synthetic CPU plumbing and untrained layouts only; no pretrained weights or real datasets used."})
     print("PASS: " + "; ".join(checks), flush=True)
 
