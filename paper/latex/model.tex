@@ -14,7 +14,7 @@ w_i(x,v)&=\frac{\pi_i e^{-\norm{x-\mu_i}^2/(2v)}}{\sum_j\pi_j e^{-\norm{x-\mu_j}
 \bar\mu_v(x)&=\sum_iw_i(x,v)\mu_i,\quad c(v)=\lambda(1-\tau^2/v),\\
 T_v(x)&=x-\gamma\{Bx-b+c(v)[x-\bar\mu_v(x)]\}.\label{eq:map}
 \end{align}
-One update uses one denoiser call. Controllers share observations, initialization, and total budget; all comparisons use the same terminal scale. Labels appear in analysis and evaluation, never as controller inputs.
+One update uses one denoiser call. Controllers share observations, initialization, and total budget; all comparisons use the same terminal scale. Labels appear in analysis and evaluation, never as controller inputs. A scale band is an interval of available total variances $v$. A platform holds one variance for several calls. A controller selects variances and the time of switching to the terminal scale; the observation-gated preset below is one such controller. The terminal rectangles are sufficient entry sets, not complete basins of attraction.
 
 \paragraph{The scalar potential at a fixed scale.}
 Let $p_v(x)=\sum_i\pi_i(2\pi v)^{-1}e^{-\norm{x-\mu_i}^2/(2v)}$. Since $D_\sigma(x)-x=\sigma^2\nabla\log p_v(x)$, the exact field in~\eqref{eq:map} is the gradient of

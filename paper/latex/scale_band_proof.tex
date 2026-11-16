@@ -1,3 +1,47 @@
+\subsection{An explicit threshold for endpoint dominance}
+\begin{proposition}[Critical mass for endpoint improvement]\label{prop:critical_mass}
+Let $C_s=(1-s)r-s>0$, and assume
+\begin{equation}\label{eq:critical_regime}
+ r e^{-Pz_L}\le\frac{s}{1-s},\qquad
+ \frac{C_s}{1+r}<(1-s)l(z_L).
+\end{equation}
+For $0<h\le C_s/(a+s)$, the high-variance endpoint gives the larger
+of the two endpoint steps. Under $Q>P>0$, define
+\begin{align}
+ D(h)={}&-Pr+h[aQ+(1+a)(Q-P)r]\nonumber\\
+        &-\tau^2[C_s-(a+s)h](1+r+h).\label{eq:critical_mass}
+\end{align}
+It has exactly one positive root $h_{\rm crit}$. An intermediate
+variance strictly improves on both endpoint steps if and only if
+$h>h_{\rm crit}$ within the stated mass interval.
+At fixed $a,P,r,\tau$, increasing $Q$ decreases $h_{\rm crit}$.
+\end{proposition}
+
+The proof follows in this section.
+
+With several negative-projection competitors, the corresponding
+quadratic gains a term $h^2\operatorname{Cov}_{q}(a,Q)$.
+Supplement S24 proves a unique threshold on $(0,r/\bar a)$,
+with endpoint improvement characterized on
+$0<h\le C_s/(\bar a+s)$.
+It also removes the terminal-denominator restriction in
+\eqref{eq:critical_regime}. This remains a single-step result.
+
+For example, use $a=1$, $d=2$, $r=1.29$, $(s,t)=(.3,-.01)$
+and $\tau=10^{-6}$, $v_L=10^{-6}+10^{-12}$. The endpoint comparison
+is decided by $h_{\rm crit}\simeq .02693$ up to $h\simeq .46385$.
+The choices $h=.01$ and $h=.10$ lie on opposite sides of the
+endpoint dominance boundary. Larger masses can block the high
+endpoint while allowing intermediate progress, as quantified by
+\eqref{eq:exact_mass_window} and the update threshold test.
+Raising $h$ shrinks the band for a fixed absolute target since it
+increases the competitor term. In Proposition~\ref{prop:critical_mass},
+the comparison target is the high-variance endpoint and itself
+decreases as $h$ increases. Thus a heavier competitor can make
+an intermediate scale comparatively better while reducing the
+scales that meet a fixed progress requirement.
+
+
 \subsection{Convexity and exact safe scales}
 Write $l(z)=1-\tau^2 z$. The normalized prior contribution is
 $l(z)(m(z)-s)$, with

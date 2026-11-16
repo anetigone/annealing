@@ -1,4 +1,4 @@
-\section{Scale Selection and Scope}\label{sec:scope}
+\section{Experiments: Predictions and Scope}\label{sec:scope}
 \begin{table}[t]
 \centering\small
 \setlength{\tabcolsep}{3.4pt}
@@ -59,6 +59,18 @@ observations. At the preset's selected center, allocating its
 intermediate calls to every observation leaves class 0 outside $G_0$
 at the switch (Table~\ref{tab:selected_scales}).
 
+\paragraph{Independently tuned shared platforms.}
+Shared and gated platforms independently search the same
+2275 variance/length pairs on noiseless model observations.
+At 106 calls, both yield correct nearest templates on all 5760
+new noisy draws over 23 models, with prior-weighted squared
+error $1.47\cdot10^{-12}$. Both use 11--14 prefix calls.
+On the nominal model, a 25-call shared platform at $v=.25$
+recovers all 1536 draws despite switching outside $G_0,G_1$;
+the preset's center $.44$ yields 1024 correct draws when shared.
+On the noiseless grid, gating admits 428--1142 passing pairs
+per model versus 9--25 for sharing (Supplement S28).
+
 On the prespecified nominal fixture, holding the high endpoint
 for 12 calls and the low endpoint for 13 skips the candidate band.
 Replacing the first low call by one band call visits the band
@@ -77,18 +89,6 @@ The direct observation-based template estimator is also consistent.
 Changing the initial state or the data and regularization forces
 can remove the common barrier. Supplement S21 records the
 initialization, coefficient, and precision diagnostics.
-
-\paragraph{Independently tuned shared platforms.}
-Shared and gated platforms independently search the same
-2275 variance/length pairs on noiseless model observations.
-At 106 calls, both yield correct nearest templates on all 5760
-new noisy draws over 23 models, with prior-weighted squared
-error $1.47\cdot10^{-12}$. Both use 11--14 prefix calls.
-On the nominal model, a 25-call shared platform at $v=.25$
-recovers all 1536 draws despite switching outside $G_0,G_1$;
-the preset's center $.44$ yields 1024 correct draws when shared.
-On the noiseless grid, gating admits 428--1142 passing pairs
-per model versus 9--25 for sharing (Supplement S28).
 
 \paragraph{Executing the certified budget.}
 The analytic cap of 14--24 calls yields entry on all 23 models.
@@ -126,8 +126,13 @@ protocol's lower-error region at the same total budget
 needs a common invariant region.
 
 \section{Conclusion}
-Intermediate scales can change the consistency of a fixed RED
-solver even when restricted policies have arbitrary finite
-budgets. Geometry certifies scale choices and entrance budgets;
-the photo tests show when terminal refinement erases schedule
-differences.
+For a fixed RED solver initialized by backprojection, a common
+invariant region can prevent recovery under every restricted scale
+policy, regardless of its finite budget. Intermediate scales can
+open a channel that changes the limiting recovery risk. The
+geometric tests certify this mechanism and predict entrance budgets
+on the structured family. Independently tuned shared platforms
+show that successful allocation need not be unique; the photo tests
+identify a regime where terminal contraction erases schedule history.
+Extending the positive risk separation to broader sensing geometries
+and image priors remains open.

@@ -28,7 +28,7 @@ All runs use the common 25-call prefix and 106-call total budget.}
 Result & Guarantee\\
 \midrule
 Prop.~\ref{prop:two_endpoints} & Endpoint replacement before the midpoint for two aligned templates\\
-Props.~\ref{prop:mass_band}--\ref{prop:critical_mass} & Fixed-state mass, drift, or endpoint tests\\
+Props.~\ref{prop:mass_band}--\ref{prop:convex_band} & Fixed-state mass, drift, or endpoint tests\\
 Channel tests below & Along-path progress and controlled terminal entry\\
 Thm.~\ref{thm:ind_noise} & Unconditional risk separation, with all classes checked for the upper bound\\
 \bottomrule
@@ -55,11 +55,7 @@ gaps occur at corners and control the leakage terms in the
 invariance and refinement bounds. Supplement S5 gives the
 explicit inequalities used for selection.
 
-The critical-mass threshold in Proposition~\ref{prop:critical_mass}
-is a local endpoint comparison. Its nominal mass ceiling is
-$.46385$, while the risk theorem uses $h\in[1.60,1.96]$.
-We use the full drift and channel tests in that larger-mass regime.
-Table~\ref{tab:test_scope} summarizes the implications. In the
+Table~\ref{tab:test_scope} separates local drift from trajectory and risk guarantees. In the
 earlier 1681-point diagnostic (Supplement S21), 1383 settings pass
 the class-1 channel test but only 1176 of those recover all classes.
 The other 207 illustrate the need for the remaining tests.

@@ -1,4 +1,4 @@
-\section{Predicting the Intermediate Variance Band}\label{sec:geometry}
+\section{How Template Competition Opens a Scale Band}\label{sec:geometry}
 Fix a state $(s,t)$ with $0<s<1/2$ in the three-template geometry
 and take $v_L>\tau^2$.
 For inverse variance $z=1/v$ and $z_L=1/v_L$, define the half squared-distance
@@ -90,48 +90,12 @@ Proposition~\ref{prop:convex_band} hold at that target, its test
 decides whether any intermediate step exceeds both endpoints.
 The convexity conditions are checked at the chosen target.
 
-\subsection{An explicit threshold for endpoint dominance}
-\begin{proposition}[Critical mass for endpoint improvement]\label{prop:critical_mass}
-Let $C_s=(1-s)r-s>0$, and assume
-\begin{equation}\label{eq:critical_regime}
- r e^{-Pz_L}\le\frac{s}{1-s},\qquad
- \frac{C_s}{1+r}<(1-s)l(z_L).
-\end{equation}
-For $0<h\le C_s/(a+s)$, the high-variance endpoint gives the larger
-of the two endpoint steps. Under $Q>P>0$, define
-\begin{align}
- D(h)={}&-Pr+h[aQ+(1+a)(Q-P)r]\nonumber\\
-        &-\tau^2[C_s-(a+s)h](1+r+h).\label{eq:critical_mass}
-\end{align}
-It has exactly one positive root $h_{\rm crit}$. An intermediate
-variance strictly improves on both endpoint steps if and only if
-$h>h_{\rm crit}$ within the stated mass interval.
-At fixed $a,P,r,\tau$, increasing $Q$ decreases $h_{\rm crit}$.
-\end{proposition}
-
-The proof is in Supplement S7.
-
-With several negative-projection competitors, the corresponding
-quadratic gains a term $h^2\operatorname{Cov}_{q}(a,Q)$.
-Supplement S24 proves a unique threshold on $(0,r/\bar a)$,
-with endpoint improvement characterized on
-$0<h\le C_s/(\bar a+s)$.
-It also removes the terminal-denominator restriction in
-\eqref{eq:critical_regime}. This remains a single-step result.
-
-For example, use $a=1$, $d=2$, $r=1.29$, $(s,t)=(.3,-.01)$
-and $\tau=10^{-6}$, $v_L=10^{-6}+10^{-12}$. The endpoint comparison
-is decided by $h_{\rm crit}\simeq .02693$ up to $h\simeq .46385$.
-The choices $h=.01$ and $h=.10$ lie on opposite sides of the
-endpoint dominance boundary. Larger masses can block the high
-endpoint while allowing intermediate progress, as quantified by
-\eqref{eq:exact_mass_window} and the update threshold test.
-Raising $h$ shrinks the band for a fixed absolute target since it
-increases the competitor term. In Proposition~\ref{prop:critical_mass},
-the comparison target is the high-variance endpoint and itself
-decreases as $h$ increases. Thus a heavier competitor can make
-an intermediate scale comparatively better while reducing the
-scales that meet a fixed progress requirement.
+\paragraph{Additional local thresholds.}
+Supplement S7 derives an explicit critical competitor mass for
+improvement over the endpoint steps, and S24 treats several
+competitors. The risk family below uses the full drift test
+\eqref{eq:update_band}, which also applies outside that critical-mass
+subfamily.
 
 \paragraph{Safe scales for a candidate barrier.}
 Consider $s\le\xi,\ t\ge-\eta_B$ with $0<\xi<1/2$.
@@ -149,8 +113,7 @@ At the same state, the nominal recovery-box mass $h=1.78$ and
 noiseless class-1 data with $\alpha=10^{-3}$ give, at
 $\lambda=1+\alpha^2$ and $\delta=10^{-4}$, a corner-outward
 variance interval of approximately $(.18064,1.87551)$.
-Here $h=1.78$ is outside the critical-mass subfamily. The interval
-comes from the general update test~\eqref{eq:update_band}.
+The interval comes from the full update test~\eqref{eq:update_band}.
 With $\delta=0$, the positive-drift interval for the exact update
 is approximately $(.18095,1.87272)$. The larger interval above
 expresses failure of robust invariance. At each of its scales some

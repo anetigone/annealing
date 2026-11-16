@@ -1,11 +1,3 @@
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	(possibly more locale environment variables)
-	LANG = "C.UTF-8"
-    are supported and installed on your system.
-perl: warning: Falling back to the system default locale ("Chinese (Simplified)_China.936").
-Locale 'Chinese (Simplified)_China.936' is unsupported, and may crash the interpreter.
 Initial Win CP for (console input, console output, system): (CP936, CP65001, CP936)
 I changed them all to CP936
 Rc files read:
@@ -14,9 +6,9 @@ Latexmk: This is Latexmk, John Collins, 31 Jan. 2024. Version 4.83.
 Latexmk: applying rule 'pdflatex'...
 Rule 'pdflatex':  Reasons for rerun
 Changed files or newly in use/created:
-  rotation_proof.tex
+  scale_geometry.tex
 Category 'changed_user':
-  rotation_proof.tex
+  scale_geometry.tex
 
 ------------
 Run number 1 of rule 'pdflatex'
@@ -67,7 +59,8 @@ CVPR 8.5 x 11-Inch Proceedings Style `cvpr.sty'.
 (f:/texlive/2024/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
 (f:/texlive/2024/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)))
 (f:/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty)) (./preamble.tex
-(f:/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/needspace/needspace.sty))
 (f:/texlive/2024/texmf-dist/tex/latex/hyperref/hyperref.sty
 (f:/texlive/2024/texmf-dist/tex/generic/iftex/iftex.sty)
 (f:/texlive/2024/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
@@ -117,15 +110,15 @@ Package amsmath Warning: Foreign command \over;
 (./scale_geometry.tex [13]) (./scale_band_proof.tex [14])
 (./variance_band_figure.tex) [15] [16 <./figures/variance_band.pdf>]
 (./balanced_model.tex) [17] (./certificate_evidence.tex [18])
-(./platform_proof.tex [19]) (./stability_proof.tex [20] [21]) (./results.tex)
-(./analysis.tex [22] [23 <./figures/mechanism.pdf>]) (./stability.tex [24])
-(./platform.tex) (./additional_diagnostics.tex [25] [26 <../../experiments/resu
-lts/geometry_prediction_wide/geometry_prediction.pdf>])
+(./platform_proof.tex [19]) (./stability_proof.tex [20]) (./results.tex
+[21]) (./analysis.tex [22 <./figures/mechanism.pdf>] [23]) (./stability.tex
+[24]) (./platform.tex) (./additional_diagnostics.tex [25] [26 <../../experiment
+s/results/geometry_prediction_wide/geometry_prediction.pdf>])
 (./terminal_history_proof.tex [27] [28]) (./multi_competitor_proof.tex [29])
-(./independent_patch_validation.tex [30]) (./raw_patch_switching.tex [31]
-[32 <../../experiments/results/patch_independent_validation/risk_curves.pdf> <.
-./../experiments/results/patch_independent_validation/distance_curves.pdf>])
-(./rotation_proof.tex [33]) (./scale_selection.tex [34]) (./supplement.bbl
+(./independent_patch_validation.tex [30]) (./raw_patch_switching.tex [31])
+(./rotation_proof.tex [32 <../../experiments/results/patch_independent_validati
+on/risk_curves.pdf> <../../experiments/results/patch_independent_validation/dis
+tance_curves.pdf>] [33]) (./scale_selection.tex [34]) (./supplement.bbl
 (./supplement.brf)) [35] (./supplement.aux) )<f:/texlive/2024/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmbx10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/pub
 lic/amsfonts/cm/cmex10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfo
@@ -149,14 +142,178 @@ fb><f:/texlive/2024/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb><f:/texlive/
 2024/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb><f:/texlive/2024/texmf-dist
 /fonts/type1/urw/times/utmb8a.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/t
 imes/utmr8a.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on supplement.pdf (35 pages, 736279 bytes).
+Output written on supplement.pdf (35 pages, 744110 bytes).
 Transcript written on supplement.log.
 Latexmk: Getting log file 'supplement.log'
 Latexmk: Examining 'supplement.fls'
 Latexmk: Examining 'supplement.log'
 Latexmk: Found input bbl file 'supplement.bbl'
+Latexmk: Found input bbl file 'supplement.bbl'
+Latexmk: Found input bbl file 'supplement.bbl'
 Latexmk: Log file says output to 'supplement.pdf'
-Reverting Windows console CPs to (in,out) = (936,65001)
+Latexmk: Found bibliography file(s):
+  ./references.bib
+Latexmk: applying rule 'bibtex supplement'...
+Rule 'bibtex supplement':  Reasons for rerun
+Changed files or newly in use/created:
+  supplement.aux
+
+------------
+Run number 1 of rule 'bibtex supplement'
+------------
+------------
+Running 'bibtex  "supplement.aux"'
+------------
+This is BibTeX, Version 0.99d (TeX Live 2024)
+The top-level auxiliary file: supplement.aux
+The style file: ieeenat_fullname.bst
+Database file #1: references.bib
+Latexmk: applying rule 'pdflatex'...
+Rule 'pdflatex':  Reasons for rerun
+Changed files or newly in use/created:
+  supplement.aux
+
+------------
+Run number 2 of rule 'pdflatex'
+------------
+------------
+Running 'pdflatex  -interaction=nonstopmode -halt-on-error -recorder  "supplement.tex"'
+------------
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex)
+ restricted \write18 enabled.
+entering extended mode
+(./supplement.tex
+LaTeX2e <2023-11-01> patch level 1
+L3 programming layer <2024-02-20>
+(f:/texlive/2024/texmf-dist/tex/latex/base/article.cls
+Document Class: article 2023/05/17 v1.4n Standard LaTeX document class
+(f:/texlive/2024/texmf-dist/tex/latex/base/size10.clo)) (./cvpr.sty
+(f:/texlive/2024/texmf-dist/tex/latex/psnfss/times.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/tools/xspace.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/xcolor/xcolor.sty
+(f:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/color.cfg)
+(f:/texlive/2024/texmf-dist/tex/latex/graphics-def/pdftex.def)
+(f:/texlive/2024/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+(f:/texlive/2024/texmf-dist/tex/latex/graphics/dvipsnam.def)
+(f:/texlive/2024/texmf-dist/tex/latex/graphics/graphicx.sty
+(f:/texlive/2024/texmf-dist/tex/latex/graphics/keyval.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/graphics/graphics.sty
+(f:/texlive/2024/texmf-dist/tex/latex/graphics/trig.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/graphics-cfg/graphics.cfg)))
+(f:/texlive/2024/texmf-dist/tex/latex/amsmath/amsmath.sty
+For additional information on amsmath, use the `?' option.
+(f:/texlive/2024/texmf-dist/tex/latex/amsmath/amstext.sty
+(f:/texlive/2024/texmf-dist/tex/latex/amsmath/amsgen.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/amsmath/amsbsy.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/amsmath/amsopn.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/amsfonts/amssymb.sty
+(f:/texlive/2024/texmf-dist/tex/latex/amsfonts/amsfonts.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/booktabs/booktabs.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/natbib/natbib.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/silence/silence.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/etoolbox/etoolbox.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/caption/caption.sty
+(f:/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/caption/subcaption.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/url/url.sty)
+CVPR 8.5 x 11-Inch Proceedings Style `cvpr.sty'.
+(f:/texlive/2024/texmf-dist/tex/latex/lineno/lineno.sty
+(f:/texlive/2024/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+(f:/texlive/2024/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)))
+(f:/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty)) (./preamble.tex
+(f:/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/needspace/needspace.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/hyperref/hyperref.sty
+(f:/texlive/2024/texmf-dist/tex/generic/iftex/iftex.sty)
+(f:/texlive/2024/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
+(f:/texlive/2024/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+(f:/texlive/2024/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+(f:/texlive/2024/texmf-dist/tex/generic/infwarerr/infwarerr.sty)))
+(f:/texlive/2024/texmf-dist/tex/latex/hycolor/hycolor.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/auxhook/auxhook.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/hyperref/nameref.sty
+(f:/texlive/2024/texmf-dist/tex/latex/refcount/refcount.sty)
+(f:/texlive/2024/texmf-dist/tex/generic/gettitlestring/gettitlestring.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/hyperref/pd1enc.def)
+(f:/texlive/2024/texmf-dist/tex/generic/intcalc/intcalc.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/hyperref/puenc.def)
+(f:/texlive/2024/texmf-dist/tex/latex/hyperref/backref.sty
+(f:/texlive/2024/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+(f:/texlive/2024/texmf-dist/tex/latex/base/atveryend-ltx.sty)
+(f:/texlive/2024/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+(f:/texlive/2024/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty))))
+(f:/texlive/2024/texmf-dist/tex/generic/bitset/bitset.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/base/atbegshi-ltx.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/hyperref/hpdftex.def)
+(f:/texlive/2024/texmf-dist/tex/latex/cleveref/cleveref.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/psnfss/ot1ptm.fd)
+(f:/texlive/2024/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def)
+(./supplement.aux)
+(f:/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+) (f:/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+(f:/texlive/2024/texmf-dist/tex/latex/grfext/grfext.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg))
+ABD: EveryShipout initializing macros (./supplement.out) (./supplement.out)
+(f:/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd)
+(f:/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd) (./model.tex)
+(./reachability.tex (f:/texlive/2024/texmf-dist/tex/latex/psnfss/ot1phv.fd)
+[1{f:/texlive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{f:/texlive/202
+4/texmf-dist/fonts/enc/dvips/base/8r.enc}]) (./scope_extensions.tex [2])
+(./scope_proof.tex) (./scale_geometry_details.tex [3] [4] [5] [6] [7])
+
+Package amsmath Warning: Foreign command \over;
+(amsmath)                \frac or \genfrac should be used instead
+(amsmath)                 on input line 33.
+
+(./scale_geometry_proof.tex [8] [9] [10]
+(f:/texlive/2024/texmf-dist/tex/latex/psnfss/ot1pcr.fd))
+(./raw_risk_details.tex [11]) [12] (./two_endpoints.tex) (./endpoint_proof.tex)
+(./scale_geometry.tex [13]) (./scale_band_proof.tex [14])
+(./variance_band_figure.tex) [15] [16 <./figures/variance_band.pdf>]
+(./balanced_model.tex) [17] (./certificate_evidence.tex [18])
+(./platform_proof.tex [19]) (./stability_proof.tex [20]) (./results.tex
+[21]) (./analysis.tex [22 <./figures/mechanism.pdf>] [23]) (./stability.tex
+[24]) (./platform.tex) (./additional_diagnostics.tex [25] [26 <../../experiment
+s/results/geometry_prediction_wide/geometry_prediction.pdf>])
+(./terminal_history_proof.tex [27] [28]) (./multi_competitor_proof.tex [29])
+(./independent_patch_validation.tex [30]) (./raw_patch_switching.tex [31])
+(./rotation_proof.tex [32 <../../experiments/results/patch_independent_validati
+on/risk_curves.pdf> <../../experiments/results/patch_independent_validation/dis
+tance_curves.pdf>] [33]) (./scale_selection.tex [34]) (./supplement.bbl
+(./supplement.brf)) [35] (./supplement.aux) )<f:/texlive/2024/texmf-dist/fonts/
+type1/public/amsfonts/cm/cmbx10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/pub
+lic/amsfonts/cm/cmex10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfo
+nts/cmextra/cmex7.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/c
+mextra/cmex9.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmm
+i10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><f
+:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb><f:/texlive/
+2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><f:/texlive/2024/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmmi9.pfb><f:/texlive/2024/texmf-dist/font
+s/type1/public/amsfonts/cm/cmr10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/pu
+blic/amsfonts/cm/cmr5.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfon
+ts/cm/cmr6.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.
+pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb><f:/tex
+live/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><f:/texlive/2024
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb><f:/texlive/2024/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmsy6.pfb><f:/texlive/2024/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmsy7.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmsy9.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/
+symbols/msbm10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/courier/ucrr8a.p
+fb><f:/texlive/2024/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb><f:/texlive/
+2024/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb><f:/texlive/2024/texmf-dist
+/fonts/type1/urw/times/utmb8a.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/t
+imes/utmr8a.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
+Output written on supplement.pdf (35 pages, 744038 bytes).
+Transcript written on supplement.log.
+Latexmk: Getting log file 'supplement.log'
+Latexmk: Examining 'supplement.fls'
+Latexmk: Examining 'supplement.log'
+Latexmk: Found input bbl file 'supplement.bbl'
+Latexmk: Found input bbl file 'supplement.bbl'
+Latexmk: Found input bbl file 'supplement.bbl'
+Latexmk: Log file says output to 'supplement.pdf'
 Latexmk: Found bibliography file(s):
   ./references.bib
 Latexmk: All targets (supplement.pdf) are up-to-date

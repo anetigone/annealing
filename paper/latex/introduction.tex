@@ -20,31 +20,43 @@ the actual iterates across an entire class of admissible controls,
 including arbitrary switching, and a finite-budget upper bound
 after granting access to an intermediate band.
 
-\paragraph{Can computation replace scale access?}
-Theorem~\ref{thm:ind_noise} fixes the observation geometry, RED update,
-and backprojection initialization. Across a positive-width box of
-three-template models, every controller restricted to the two
-specified variance ranges retains positive low-noise risk, uniformly
-over all finite budgets. An observation-based preset using a fixed-width
-intermediate band enters the correct terminal region in at most 25 calls
-and then reaches vanishing risk. Corollary~\ref{cor:sensing_angle}
-certifies the same separation for $|\varphi|\le.020$ radians at
-$\alpha=10^{-3}$, uniformly as the noise vanishes.
-Figure~\ref{fig:reachability} shows
-the mechanism for the difficult observation class.
+\paragraph{Question and finding.}
+We ask whether additional iterations can compensate for restricted
+scale access while the update, observation, and initial state remain
+fixed. Theorem~\ref{thm:ind_noise} answers negatively on a
+positive-width family of three-template mixtures. Every controller
+using the specified low and high variance ranges remains separated
+from the correct template for one positive-mass class, uniformly
+over all finite budgets. Access to an intermediate band changes this
+outcome: an observation-based controller enters the correct terminal
+region within 25 calls and then attains vanishing recovery risk.
+The separation also persists over a certified nonzero sensing-angle
+range at fixed weak gain.
 
-\paragraph{When do endpoints suffice?}
-For two templates aligned with a sensing eigenvector, the endpoint
-maps attain the maximum horizontal step before the midpoint.
-An endpoint policy matches any strict crossing up to that midpoint
-within the same budget.
+\paragraph{Mechanism.}
+At low variance, the nearby wrong template dominates the denoiser.
+At high variance, a third template counteracts motion toward the
+correct one. Both ranges therefore preserve the same wrong region.
+An intermediate variance suppresses the third template while
+retaining enough weight on the correct template to create a channel
+out of that region (Figure~\ref{fig:reachability}). For two aligned
+templates, endpoint scales already match any strict crossing up to
+the midpoint. The additional competitor changes this local scale
+comparison. We connect that comparison to a full trajectory through
+three tests: a common barrier, a channel into a terminal region,
+and terminal refinement with controlled recovery error.
 
-\paragraph{How can a controller select useful scales?}
-With three templates, prior mass and distance gaps predict local
-drift and identify variances that can violate a candidate barrier.
-Uniform channel and terminal checks then certify entry for all
-positive-mass classes. We choose scales using these tests before
-evaluating trajectories. Frozen photo-patch tests examine a
-complementary case where different trajectories enter a common
-terminal region and their differences decay.
+\paragraph{Evidence and scope.}
+We use the tests to select intermediate bands and entrance budgets
+from model geometry before evaluating trajectories. Frozen
+experiments compare their predicted and observed entry times and
+separate scale access from the allocation of intermediate calls.
+Independently tuned shared platforms also recover successfully on
+the tested models; the geometric controller provides certified
+entry and is less sensitive on the discrete tuning grid.
+The result concerns the reachability of a fixed solver from
+backprojection. Other initializations can remove the obstruction.
+Frozen photo-patch experiments examine a complementary regime:
+different schedules reach a common contracting terminal region,
+so their differences disappear under refinement.
 \input{related_work}

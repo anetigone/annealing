@@ -14,9 +14,9 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 补充稿的机制图来自[小规模机制诊断](../../experiments/results/mechanism_review/analysis.md)。[随稿证书包](evidence_revision.zip)包含主参数盒、宽噪声裕量、名义方差根、平衡族和共同切换的脚本、依赖、复现命令及预期输出。请在新解压目录复跑。
 
 
-[风险分离主结果](scope_extensions.tex)、[非对齐范围](rotated_scope.tex)、[一般证明接口](reachability.tex)、[双模板端点结论](two_endpoints.tex)和[三模板尺度判据](scale_geometry.tex)按此顺序接入正文。补充 S4–S7 集中给出噪声、参数盒、端点和方差带证明，S8 起为平衡子族。[精细校准与敏感性诊断](../../experiments/results/scale_availability_revision/analysis.md)记录表格数据与复跑命令。
+[风险分离主结果](scope_extensions.tex)、[非对齐范围](rotated_scope.tex)、[一般证明接口](reachability.tex)、[双模板端点结论](two_endpoints.tex)和[三模板尺度判据](scale_geometry.tex)均接入正文；当前阅读顺序以 `main.tex` 为准。补充 S4–S7 集中给出噪声、参数盒、端点和方差带证明，S8 起为平衡子族。[精细校准与敏感性诊断](../../experiments/results/scale_availability_revision/analysis.md)记录表格数据与复跑命令。
 
-正文第 7 节的证明链见 [recovery_argument.tex](recovery_argument.tex)。主文图 1 由 [plot_reachability.py](../../experiments/code/plot_reachability.py) 生成，运行参数为 `--out paper/latex/figures/reachability.pdf`。补充中的名义角点尺度图由 [plot_variance_band.py](../../experiments/code/plot_variance_band.py) 生成，运行参数为 `--out paper/latex/figures/variance_band.pdf`。两条命令均从工作区根目录运行。
+正文的证明链见 [recovery_argument.tex](recovery_argument.tex)。主文图 1 由 [plot_reachability.py](../../experiments/code/plot_reachability.py) 生成，运行参数为 `--out paper/latex/figures/reachability.pdf`。补充中的名义角点尺度图由 [plot_variance_band.py](../../experiments/code/plot_variance_band.py) 生成，运行参数为 `--out paper/latex/figures/variance_band.pdf`。两条命令均从工作区根目录运行。
 
 补充 Figure 2 来自[跨几何诊断](../../experiments/results/geometry_prediction_wide/analysis.md)。新增的[精度参考](../../experiments/results/precision_revision/analysis.md)、[弱正则预算](../../experiments/results/weak_budget_revision/analysis.md)和[真实照片 patch 设置](../../experiments/results/patch_revision/analysis.md)分别记录命令与数值范围。
 

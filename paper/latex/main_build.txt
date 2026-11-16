@@ -1,11 +1,3 @@
-perl: warning: Setting locale failed.
-perl: warning: Please check that your locale settings:
-	LC_ALL = "C.UTF-8",
-	(possibly more locale environment variables)
-	LANG = "C.UTF-8"
-    are supported and installed on your system.
-perl: warning: Falling back to the system default locale ("Chinese (Simplified)_China.936").
-Locale 'Chinese (Simplified)_China.936' is unsupported, and may crash the interpreter.
 Initial Win CP for (console input, console output, system): (CP936, CP65001, CP936)
 I changed them all to CP936
 Rc files read:
@@ -14,9 +6,9 @@ Latexmk: This is Latexmk, John Collins, 31 Jan. 2024. Version 4.83.
 Latexmk: applying rule 'pdflatex'...
 Rule 'pdflatex':  Reasons for rerun
 Changed files or newly in use/created:
-  discussion.tex
+  scale_geometry.tex
 Category 'changed_user':
-  discussion.tex
+  scale_geometry.tex
 
 ------------
 Run number 1 of rule 'pdflatex'
@@ -67,7 +59,8 @@ CVPR 8.5 x 11-Inch Proceedings Style `cvpr.sty'.
 (f:/texlive/2024/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
 (f:/texlive/2024/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)))
 (f:/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty)) (./preamble.tex
-(f:/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/needspace/needspace.sty))
 (f:/texlive/2024/texmf-dist/tex/latex/hyperref/hyperref.sty
 (f:/texlive/2024/texmf-dist/tex/generic/iftex/iftex.sty)
 (f:/texlive/2024/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
@@ -101,12 +94,12 @@ CVPR 8.5 x 11-Inch Proceedings Style `cvpr.sty'.
 ABD: EveryShipout initializing macros (./main.out) (./main.out)
 (f:/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd)
 (f:/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd) (./abstract.tex)
-(./reachability_figure.tex) (./introduction.tex (./related_work.tex))
-(./model.tex (f:/texlive/2024/texmf-dist/tex/latex/psnfss/ot1phv.fd) [1{f:/texl
-ive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{f:/texlive/2024/texmf-di
-st/fonts/enc/dvips/base/8r.enc}]) (./scope_extensions.tex [2 <./figures/reachab
-ility.pdf>]) (./rotated_scope.tex [3]) (./reachability.tex)
-(./two_endpoints.tex [4]) (./scale_geometry.tex [5]) (./recovery_argument.tex
+(./reachability_figure.tex) (./introduction.tex (./related_work.tex
+(f:/texlive/2024/texmf-dist/tex/latex/psnfss/ot1phv.fd) [1{f:/texlive/2024/texm
+f-var/fonts/map/pdftex/updmap/pdftex.map}{f:/texlive/2024/texmf-dist/fonts/enc/
+dvips/base/8r.enc}])) (./model.tex) (./scope_extensions.tex [2 <./figures/reach
+ability.pdf>]) (./two_endpoints.tex [3]) (./scale_geometry.tex [4])
+(./reachability.tex) (./recovery_argument.tex [5]) (./rotated_scope.tex
 [6]) (./discussion.tex [7 <./figures/scale_selection.pdf>]) [8] (./main.bbl
 (./main.brf)) [9] (./main.aux) )<f:/texlive/2024/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmex10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/
@@ -126,7 +119,7 @@ type1/urw/helvetic/uhvb8a.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/helve
 tic/uhvr8a.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><f:
 /texlive/2024/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><f:/texlive/2024/texm
 f-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (9 pages, 335430 bytes).
+Output written on main.pdf (9 pages, 334517 bytes).
 Transcript written on main.log.
 Latexmk: Getting log file 'main.log'
 Latexmk: Examining 'main.fls'
@@ -204,7 +197,8 @@ CVPR 8.5 x 11-Inch Proceedings Style `cvpr.sty'.
 (f:/texlive/2024/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty)
 (f:/texlive/2024/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty)))
 (f:/texlive/2024/texmf-dist/tex/latex/enumitem/enumitem.sty)) (./preamble.tex
-(f:/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty))
+(f:/texlive/2024/texmf-dist/tex/latex/amscls/amsthm.sty)
+(f:/texlive/2024/texmf-dist/tex/latex/needspace/needspace.sty))
 (f:/texlive/2024/texmf-dist/tex/latex/hyperref/hyperref.sty
 (f:/texlive/2024/texmf-dist/tex/generic/iftex/iftex.sty)
 (f:/texlive/2024/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty)
@@ -238,12 +232,12 @@ CVPR 8.5 x 11-Inch Proceedings Style `cvpr.sty'.
 ABD: EveryShipout initializing macros (./main.out) (./main.out)
 (f:/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd)
 (f:/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd) (./abstract.tex)
-(./reachability_figure.tex) (./introduction.tex (./related_work.tex))
-(./model.tex (f:/texlive/2024/texmf-dist/tex/latex/psnfss/ot1phv.fd) [1{f:/texl
-ive/2024/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{f:/texlive/2024/texmf-di
-st/fonts/enc/dvips/base/8r.enc}]) (./scope_extensions.tex [2 <./figures/reachab
-ility.pdf>]) (./rotated_scope.tex [3]) (./reachability.tex)
-(./two_endpoints.tex [4]) (./scale_geometry.tex [5]) (./recovery_argument.tex
+(./reachability_figure.tex) (./introduction.tex (./related_work.tex
+(f:/texlive/2024/texmf-dist/tex/latex/psnfss/ot1phv.fd) [1{f:/texlive/2024/texm
+f-var/fonts/map/pdftex/updmap/pdftex.map}{f:/texlive/2024/texmf-dist/fonts/enc/
+dvips/base/8r.enc}])) (./model.tex) (./scope_extensions.tex [2 <./figures/reach
+ability.pdf>]) (./two_endpoints.tex [3]) (./scale_geometry.tex [4])
+(./reachability.tex) (./recovery_argument.tex [5]) (./rotated_scope.tex
 [6]) (./discussion.tex [7 <./figures/scale_selection.pdf>]) [8] (./main.bbl
 (./main.brf)) [9] (./main.aux) )<f:/texlive/2024/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmex10.pfb><f:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/
@@ -263,14 +257,13 @@ type1/urw/helvetic/uhvb8a.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/helve
 tic/uhvr8a.pfb><f:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><f:
 /texlive/2024/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><f:/texlive/2024/texm
 f-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (9 pages, 335449 bytes).
+Output written on main.pdf (9 pages, 334503 bytes).
 Transcript written on main.log.
 Latexmk: Getting log file 'main.log'
 Latexmk: Examining 'main.fls'
 Latexmk: Examining 'main.log'
 Latexmk: Found input bbl file 'main.bbl'
 Latexmk: Log file says output to 'main.pdf'
-Reverting Windows console CPs to (in,out) = (936,65001)
 Latexmk: Found bibliography file(s):
   ./references.bib
 Latexmk: All targets (main.pdf) are up-to-date
