@@ -27,14 +27,14 @@ def model_for(case):
     return model
 
 
-def gate(b):
-    return (b[..., 1] <= 1) & (b[..., 0] > ALPHA/2)
+def gate(b, alpha=ALPHA):
+    return (b[..., 1] <= 1) & (b[..., 0] > alpha/2)
 
 
-def search(model, gated):
+def search(model, gated, *, initial=None):
     b = model.mu @ model.B
-    use = gate(b)[:, None] if gated else True
-    x = np.broadcast_to(b, (len(V_GRID), *b.shape)).copy()
+    use = gate(b, model.alpha)[:, None] if gated else True
+    x = np.broadcast_to(b if initial is None else initial, (len(V_GRID), *b.shape)).copy()
     variance = V_GRID[:, None, None]
     scored, feasible = [], []
     for calls in range(1, PREFIX+1):

@@ -30,7 +30,7 @@ def rectangles(d, number):
     ]
 
 
-def select(d_value, h_value, rule):
+def select(d_value, h_value, rule, details=False):
     # Point intervals formed from exact decimal inputs. Require strict
     # inequalities so uncertain comparisons cannot certify a model.
     iv = mpmath.iv
@@ -41,43 +41,50 @@ def select(d_value, h_value, rule):
     left, exit_s, right, top = map(num, (-.01, .53, 1.1, .05))
     q_b = xi - (alpha*(1-xi)+e1+delta/gamma)/c_min
     gap_b = 1+d*d+2*xi+2*d*eta
-    assert 0 < q_b < xi and alpha+e1 < xi
-    assert gamma*(1+c_max) < 1
-    assert gamma*((1+c_min)*eta-e2) > delta
+    obstacle_checks = {"right_face_threshold_positive": q_b,
+                       "right_face_threshold_below_boundary": xi-q_b,
+                       "initialization_right": xi-alpha-e1,
+                       "transverse_nonovershoot": 1-gamma*(1+c_max),
+                       "transverse_face": gamma*((1+c_min)*eta-e2)-delta}
 
-    def low_safe(v):
+    def low_margin(v):
         odds = r * iv.exp(-(num(.5)-xi)/v)
-        return odds/(1+odds) < q_b
+        return q_b-odds/(1+odds)
 
-    def high_safe(v):
+    def high_margin(v):
         odds = h * iv.exp(-gap_b/(2*v))
-        return (r-odds)/(1+r+odds) < q_b
+        return q_b-(r-odds)/(1+r+odds)
 
     low = next((k/100 for k in range(30, 7, -1)
-                if low_safe(num(k)/100)), None)
+                if low_margin(num(k)/100) > 0), None)
     high = next((k/10 for k in range(15, 81)
-                 if high_safe(num(k)/10)), None)
+                 if high_margin(num(k)/10) > 0), None)
+    obstacle_checks.update(low_right_face=low_margin(num(low or .08)),
+                           high_right_face=high_margin(num(high or 8)))
+    obstacle = all(v > 0 for v in obstacle_checks.values())
     result = {"d": d_value, "h": h_value, "low": low, "high": high,
               "band": None, "reason": "no certified restricted cutoffs"}
-    if low is None or high is None:
+    if not obstacle and not details:
         return result
 
     mu = [(num(0), num(0)), (num(1), num(0)), (-num(1), d)]
     prior = [num(1), r, h]
     boxes = rectangles(d, num)
-    assert alpha-e1 > left and alpha+e1 < exit_s and e2 < top
-    assert alpha*(1-exit_s) > e1
-    assert gamma*((alpha+c_min)*(right-1)-e1) > delta
-    assert exit_s+gamma*((alpha+c_max)*(1-exit_s)+e1)+delta < right
-    assert e1 < alpha/2 and e2 < 1 < d-e2
+    channel_checks = {"initial_left": alpha-e1-left, "initial_right": exit_s-alpha-e1,
+                      "initial_top": top-e2, "drift_data_sign": alpha*(1-exit_s)-e1,
+                      "prepared_right_face": gamma*((alpha+c_min)*(right-1)-e1)-delta,
+                      "prepared_overshoot": right-exit_s-gamma*((alpha+c_max)*(1-exit_s)+e1)-delta,
+                      "vertical_bound_scope": 3-d}
+    classifier = min(alpha/2-e1, 1-e2, d-e2-1)
+    terminal = [{}, {}, {}]
     for z in (0, 2):
         for j, (lo, hi) in enumerate(boxes[z]):
             center = mu[z][j]*[alpha, num(1)][j]
             tol = [e1, e2][j]
-            assert lo < center-tol and center+tol < hi
+            terminal[z][f"initial_{j}"] = min(center-tol-lo, hi-center-tol)
     v_l = alpha**2 + alpha**4
     for z, box in enumerate(boxes):
-        leakage = num(0)
+        gaps_by_competitor = {}
         for j in range(3):
             if j == z:
                 continue
@@ -85,20 +92,33 @@ def select(d_value, h_value, rule):
                         for x, y, w in zip(corner, mu[j], mu[z]))
                     for corner in itertools.product(*box)]
             gap = min(gap.a for gap in gaps)
-            assert gap > 0
-            leakage += prior[j]/prior[z]*iv.exp(-gap/(2*v_l))
+            gaps_by_competitor[j] = gap
+            terminal[z][f"gap_vs_{j}"] = gap
+        if not all(gap > 0 for gap in gaps_by_competitor.values()):
+            continue
+        leakage = sum(prior[j]/prior[z]*iv.exp(-gap/(2*v_l))
+                      for j, gap in gaps_by_competitor.items())
         for j, (lo, hi) in enumerate(box):
             clearance = min(mu[z][j]-lo, hi-mu[z][j])
-            assert ([e1, e2][j]+c_max*3*leakage+delta/gamma
-                    < ([alpha, num(1)][j]+c_min)*clearance)
-    assert c_min <= 1 <= c_max and d < 3
+            terminal[z][f"face_{j}"] = (([alpha, num(1)][j]+c_min)*clearance
+                                        -([e1, e2][j]+c_max*3*leakage+delta/gamma))
+    channel_static = all(v > 0 for v in channel_checks.values())
+    terminal_ok = [all(v > 0 for v in row.values()) for row in terminal]
+    terminal_ready = classifier > 0 and all(terminal_ok) and c_min <= 1 <= c_max and d < 3
+    if not details:
+        assert channel_static and terminal_ready
 
     candidates = []
+    channel_candidates = []
+    best_budget_margin = None
+    stages = dict(geometry_pass=0, drift_pass=0, entry_pass=0)
     start = 40 if rule == "first" else 24
     for k in range(start, 111, 2):
         v0, v1 = num(k-1)/100, num(k+1)/100
-        if not num(low) < v0 < v1 < num(high):
+        within_cutoffs = obstacle and num(low) < v0 < v1 < num(high)
+        if not channel_static or (not details and not within_cutoffs):
             continue
+        stages["geometry_pass"] += 1
         rc = r*iv.exp((left-num(.5))/v0)
         hc = h*iv.exp(-(1+d*d+2*left-2*d*top)/(2*v1))
         w = hc/(1+rc+hc)
@@ -111,23 +131,49 @@ def select(d_value, h_value, rule):
         surplus = (re-he)/(1+re+he)-exit_s
         if not gamma*c_min*surplus > delta:
             continue
+        stages["drift_pass"] += 1
         rate = 1-gamma*c_min*(1-slope)
         lower = alpha-e1
         for call in range(1, PREFIX+1):
             lower = rate*lower + (1-rate)*exit_s + gamma*c_min*surplus-delta
             if rule == "budget" and lower > exit_s:
-                candidates.append((call, k, float(lower.a)))
+                stages["entry_pass"] += 1
+                entry = (call, k, float(lower.a))
+                channel_candidates.append(entry)
+                if within_cutoffs:
+                    candidates.append(entry)
                 break
-        if rule == "first" and lower > exit_s:
+        if call == PREFIX:
+            margin = float((lower-exit_s).a)
+            best_budget_margin = margin if best_budget_margin is None else max(best_budget_margin, margin)
+        if rule == "first" and lower > exit_s and within_cutoffs:
             result.update(band=[(k-1)/100, (k+1)/100], selected=k/100,
                           s25_lower=float(lower.a), reason="certified")
             return result
-    if candidates:
+    if details:
+        lower_ends = lambda row: {key: float(value.a) for key, value in row.items()}
+        best = min(channel_candidates, default=None)
+        result["checks"] = {
+            "obstacle": bool(obstacle), "obstacle_margins": lower_ends(obstacle_checks),
+            "channel": best is not None, "channel_margins": lower_ends(channel_checks),
+            "channel_candidates": stages,
+            "best_entry_margin_at_cap_among_full_runs": best_budget_margin,
+            "channel_only_choice": None if best is None else {"calls": best[0], "v": best[1]/100},
+            "compatible_bands": len(candidates),
+            "classifier_margin": float(classifier.a),
+            "terminal_pass": terminal_ok, "terminal_margins": [lower_ends(row) for row in terminal],
+        }
+    if candidates and terminal_ready:
         call, k, lower = min(candidates)
         result.update(band=[(k-1)/100, (k+1)/100], selected=k/100,
                       certified_calls=call, s_lower=float(lower), reason="certified")
         return result
-    result["reason"] = "no certified band on the prespecified grid"
+    if not obstacle:
+        result["reason"] = "no certified restricted cutoffs"
+    elif not terminal_ready:
+        result["reason"] = "classifier or terminal condition unverified"
+    else:
+        result["reason"] = "no certified band on the prespecified grid"
     return result
 
 
