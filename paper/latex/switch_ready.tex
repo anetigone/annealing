@@ -1,0 +1,217 @@
+\section{Switch Readiness and Budget-Matched Controls}
+\label{sec:switch_ready}
+
+\subsection{A terminal preimage as a switching target}
+The intermediate prefix need not reach the terminal rectangle itself.
+Let $\mathcal B_1$ be the class-1 backprojection box on $E$, and let
+$\delta$ bound each coordinate of the update error.
+A switch-ready set $S$ satisfies
+\begin{equation}\label{eq:ready_preimage}
+ T_{v_L}(S;b)+[-\delta,\delta]^2\subseteq G_1
+ \quad\text{for every }b\in\mathcal B_1.
+\end{equation}
+This is an inner approximation to the intersection of one-step
+terminal preimages. If a prefix reaches $S$ in $m$ calls, the first
+terminal call gives entry into $G_1$ by call $m+1$. Subsequent
+terminal invariance and error estimates apply after this entry.
+The extra call must be counted when comparing entrance budgets.
+
+\begin{proposition}[Order envelopes for switch readiness]
+\label{prop:ready_envelope}
+For the aligned three-template model with $a,d>0$, assume
+$c(v)\ge0$ and $\gamma(B_{ii}+c(v))\le1$ on a closed band $I$.
+Use the order
+$(s,t)\preceq(s',t')$ when $s\le s'$ and $t\ge t'$.
+Let $b^-\preceq b\preceq b^+$ cover $\mathcal B_1$, and put
+$\zeta^-=(-\delta,\delta)$, $\zeta^+=(\delta,-\delta)$.
+Starting with $L_0=b^-$ and $U_0=b^+$, choose envelopes satisfying,
+for every $v\in I$,
+\begin{align}
+ L_{k+1}&\preceq T_v(L_k;b^-)+\zeta^-,\nonumber\\
+ T_v(U_k;b^+)+\zeta^+&\preceq U_{k+1}.\label{eq:ready_envelope}
+\end{align}
+If the order interval $[L_m,U_m]_{\preceq}$ is contained in $S$
+and~\eqref{eq:ready_preimage} holds, every allowed prefix enters
+$G_1$ after one terminal call. Each prefix variance can depend on
+the observation and the entire previous history.
+\end{proposition}
+\begin{proof}
+The posterior covariance satisfies
+\[
+ C_{12}=-d w_2\{a(1-w_2)+w_1\}\le0.
+\]
+Thus the off-diagonal map derivatives are nonpositive, while
+$\partial_iT_{v,i}=1-\gamma(B_{ii}+c(v))+\gamma c(v)C_{ii}/v\ge0$.
+The map is order preserving in both the state and the
+backprojection, which enters additively as $\gamma b$.
+If $L_k\preceq x_k\preceq U_k$, applying these monotonicities
+and the error endpoints gives the bounds in~\eqref{eq:ready_envelope}
+for the actual $v_k$. Induction gives the prefix enclosure,
+including arbitrary band choices at every call. Its inclusion in
+$S$, followed by~\eqref{eq:ready_preimage}, proves terminal entry.
+\end{proof}
+
+\subsection{Certified bands at the selected geometries}
+The diagnostic uses $a=1$, $r=1.29$, $\alpha=10^{-3}$,
+$\tau=\nu=10^{-6}$, $\lambda=1+\alpha^2$, $\gamma=1/4$,
+and $v_L=\alpha^2+\alpha^4$. The observation tolerances are
+$(\alpha/4,.005)$ and $\delta=10^{-4}$.
+For
+\[
+ S=[.50001,.65]\times[-.02,.05],
+ \qquad G_1=[.53,1.1]\times[-.1,.15],
+\]
+the terminal image, including the observation and update errors,
+is enclosed by
+$[.62496,.73776]\times[-.01136,.02636]$ on all 16 checked models.
+The grid is
+$d\in\{1.30,1.43,1.62,1.85\}$ and
+$h\in\{1.55,2.05,2.45,3.0\}$.
+
+Candidate centers range from $.24$ to $1.10$ at spacing $.02$,
+with total-variance width $.02$ and a 25-call entrance cap.
+Each whole band is covered by five closed subintervals;
+45-digit outward-rounded odds bounds produce the envelopes.
+These bounds cover the continuous variance band, rather than
+only the sampled center or endpoint trajectories.
+
+The original all-class terminal conditions pass on 12 models.
+For these models the ready prefixes use 13--18 intermediate calls
+and guarantee terminal entry in 14--19 total calls. At each
+ready center, the identical band and enclosure tool require
+16--21 calls to certify direct entry into $G_1$.
+Switching earlier saves three intermediate calls on nine models
+and two on three models; after counting the terminal entry call,
+the sufficient entrance budgets improve by two and one,
+respectively. This compares sufficient certified budgets, not
+optimal actual hitting times.
+
+The four models at $d=1.30$ retain their original excluded status:
+their class-2 rectangle is not terminal invariant. A later
+narrower rectangle restores the checks, but is a separate
+post hoc result. None of these model-wise bands enlarges the
+continuous geometry box of Theorem~\ref{thm:ind_noise}.
+The fixed entry-error margin also does not replace the vanishing
+terminal-error assumptions in its asymptotic risk statement.
+
+\subsection{Fair controls and independent noise validation}
+The first short-budget comparison reused 576 observations on the
+12 selected models. Its shared platform had been selected for
+106 calls. A follow-up minimizes noiseless proxy error separately
+at 21, 25, 32, 40 and 106 calls and adds the same-center direct-entry
+control above. At 21 calls the ready, direct and retuned shared
+errors are $.00347145$, $.01535845$ and $.00711382$.
+The ready rule improves all-class error on 12/12 models at each
+short budget; at 106 calls the three errors are about
+$1.43\cdot10^{-12}$. These follow-up controls reuse observations
+and are not independent confirmation.
+
+The independent validation freezes these 12 geometries and both
+certified prescriptions. It adds platforms tuned using noisy
+calibration observations, with either a shared prefix or the
+same observation gate as the ready rule. Both search
+$v\in\{.20,.21,\ldots,1.10\}$ and
+$m=0,\ldots,\min(25,K-1)$, independently at each budget.
+The terminal-only candidate appears once. Selection minimizes
+prior-weighted calibration squared error, with ties resolved
+by shorter prefix and then smaller variance. The gate reads
+only $b_2\le1$ and $b_1>\alpha/2$; evaluation labels never
+choose a sample-specific prescription.
+
+Calibration uses 16 draws per class, model and noise setting;
+evaluation uses 32 new draws per class. The measurement noise
+standard deviations are $10^{-6}$, $.001$ and $.005$,
+with $\tau$ and the solver fixed. Separate SeedSequence streams
+use phase seeds 2026111601 and 2026111602, followed by noise
+and model indices. Choices are saved before evaluation.
+All observations, including those outside $E$, enter the risk.
+The budgets are 22, 25, 32, 40 and 106. The first readout is
+22 rather than the historical 21 because one frozen direct
+prefix uses 21 calls; every policy now executes at least one
+terminal call before every reported endpoint.
+
+\begin{table*}[t]
+\centering\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{@{}rr rrrr@{}}
+\toprule
+$\nu$ & Calls & Ready & Same-center direct & Noisy tuned shared & Noisy tuned gated\\
+\midrule
+$10^{-6}$ & 22 & $.00195139$ & $.00863327$ & $.00399882$ & $.00179408$\\
+ & 40 & $6.129\cdot10^{-8}$ & $2.711\cdot10^{-7}$ & $1.256\cdot10^{-7}$ & $5.635\cdot10^{-8}$\\
+ & 106 & $1.557\cdot10^{-12}$ & $1.557\cdot10^{-12}$ & $1.557\cdot10^{-12}$ & $1.557\cdot10^{-12}$\\
+$.001$ & 22 & $.00195170$ & $.00863362$ & $.00406876$ & $.00179438$\\
+ & 40 & $3.150\cdot10^{-7}$ & $5.251\cdot10^{-7}$ & $3.816\cdot10^{-7}$ & $3.100\cdot10^{-7}$\\
+ & 106 & $2.534\cdot10^{-7}$ & $2.534\cdot10^{-7}$ & $.000982881$ & $2.534\cdot10^{-7}$\\
+$.005$ & 22 & $.00282972$ & $.00950329$ & $.0155558$ & $.00468520$\\
+ & 40 & $.000880609$ & $.000880818$ & $.0123501$ & $.00319533$\\
+ & 106 & $.000880549$ & $.000880549$ & $.0112591$ & $.00397077$\\
+\bottomrule
+\end{tabular}
+\caption{Independent evaluation on the fixed 12 models, with 1152 observations
+per noise setting. Mean squared Euclidean error is prior-weighted within each
+model and then averaged equally across models. Every budget has its own
+calibrated platform choices; values in a row are paired on identical
+observations and all observations enter the means.}
+\label{tab:independent_budget_controls}
+\end{table*}
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{../../experiments/results/budget_control_validation/paired_error.pdf}
+\caption{Paired all-class error differences on the 12 fixed models.
+Calibration choices are frozen before drawing evaluation noise.
+Dots represent models and diamonds their means; negative values favor ready.
+The gray interval is the prespecified absolute threshold $10^{-10}$,
+not a statistical confidence interval. A few failures can dominate a mean.}
+\label{fig:independent_budget_controls}
+\end{figure*}
+
+\paragraph{Nominal noise and the same-gate control.}
+At $\nu=10^{-6}$, all 1152 new observations lie in $E$.
+The ready rule improves all-class error on 12/12 models relative
+to both direct entry and noisy tuned sharing at 22, 25, 32 and 40
+calls. The noisy tuned gated control instead improves over ready
+on 12/12 models at 22, 25 and 32 calls, and 11/12 at 40 calls
+(one difference is below $10^{-10}$).
+At 22 calls all four policies classify 1152/1152 nearest templates
+correctly, whereas their radius-$.1$ neighborhood counts are
+1056, 864, 1024 and 1088, respectively.
+This is an error and neighborhood improvement, not a mode-count
+improvement. At 106 calls all four have 1152/1152 neighborhood
+success and error about $1.56\cdot10^{-12}$. Their output RMS
+distances from ready are at most $1.49\cdot10^{-11}$.
+The tuned gated result rules out interpreting the certified
+ready prescription as optimal within these candidate controls.
+
+\paragraph{Noise adaptation and finite calibration.}
+At $\nu=.001$, all evaluation observations again lie in $E$.
+The short-budget comparisons have the same direction as at
+nominal noise. At 106 calls the noisy tuned shared policy
+misses two nearest templates on one model, while the ready,
+direct and tuned gated policies recover 1152/1152.
+The common-gate policies have error $2.53\cdot10^{-7}$.
+At $\nu=.005$, only 667/1152 observations lie in $E$, and
+the classifier is correct on 1151/1152. The ready rule misses
+that one classification and recovers the other 1151; its error
+at 106 calls is $.000880549$.
+The noisy tuned shared and gated policies give 1136/1152 and
+1147/1152 nearest-template successes, respectively.
+At 22 calls the tuned gated policy beats ready on ten models
+and loses on two, although its mean error is larger.
+The short-budget exceptions do not coincide with the two models
+responsible for the excess long-budget gated failures.
+This pattern does not establish a uniform
+noise-robustness advantage.
+
+The calibration sample has only 16 observations per class.
+An empirical minimizer can fail on unseen noise, and near-flat
+106-call scores can choose different prefixes based on tiny
+differences. These results do not establish failure of every
+shared or gated platform, or failure after more calibration.
+At 106 calls, small terminal field norms coexist with different
+errors on failed observations; numerical stationarity alone
+does not certify an accurate reconstruction.
+The paired Monte Carlo summaries are conditional on these fixed
+models and calibration choices. They do not measure uncertainty
+over other geometries or image populations.

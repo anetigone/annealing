@@ -31,3 +31,5 @@ latexmk -pdf -interaction=nonstopmode -halt-on-error supplement.tex
 主文图 2 从冻结的预算选带计划与逐模型结果生成。在工作区根目录运行 `& H:/anaconda3/envs/py312/python.exe experiments/code/plot_scale_selection.py --data experiments/results/scale_selection_budget --out paper/latex/figures/scale_selection.pdf`。
 
 补充 S27 给出[固定弱增益的非对齐证明](rotation_proof.tex)及标量复跑入口。补充 S28 记录[选带、独立调参和认证步数复验](scale_selection.tex)。[角度与平台证据包](scale_control_evidence.zip)包含脚本、冻结输入、结果和命令；见[复跑说明](../../experiments/results/rotation_certificate/reproduce.md)和[逐模型分析](../../experiments/results/scale_selection_followup/analysis.md)。
+
+补充 S29 的[就绪区、保序包络与公平预算对照](switch_ready.tex)对应[独立带噪校准和同门控验证](../../experiments/results/budget_control_validation/analysis.md)。其中配对图直接读取该结果目录的 `paired_error.pdf`；从工作区根目录按结果分析中的四步命令生成复跑输出，保留随稿原目录。

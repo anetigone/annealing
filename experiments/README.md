@@ -1,5 +1,9 @@
 # 实验
 
+[独立带噪调参与同门控预算对照](results/budget_control_validation/analysis.md)包含冻结计划、完整输出和复跑命令；入口为 `code/budget_control_validation.py`，汇总绘图为 `code/summarize_budget_control.py`。复跑必须指向新目录。
+
+[就绪差距与带噪选参失效的原因研究](results/budget_control_mechanism/analysis.md)链接原轨迹重放、校准影响、分界积分及其复算命令。
+
 正式稿三模板机制图与小规模配对诊断：
 
 ```powershell

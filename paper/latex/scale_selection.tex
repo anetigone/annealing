@@ -61,12 +61,16 @@ times, class counts at the common switch, and class and model
 squared errors. Model averages describe the certified grid
 subset. The other two models remain uncertified.
 
-Both designs yield the same class-entry counts in the
-main-text table. The first-pass mean errors in its four
-rows are $.32154626,.24926068,.24926068$ and
-$1.5293\cdot10^{-12}$. The table uses the new noise stream
-and the budget-based rule. Every class-1 draw under this
-rule reaches $G_1$ within its certified bound.
+Both designs yield the same class-entry counts: restricted
+switching has zero passing models, both shared geometric and
+shared-platform prefixes pass class 1 on 23 models but not all
+classes, and the observation preset passes all classes on all 23.
+The first-pass mean errors in this order are
+$.32154626,.24926068,.24926068$ and $1.5293\cdot10^{-12}$.
+Every class-1 draw under the budget-based rule reaches $G_1$
+within its certified bound. These are allocation ablations;
+the current main-text table instead reports the independent,
+budget-matched controls of S29.
 
 The prespecified failure examples both use $(d,h)=(2,1.78)$.
 They hold $V_+=2.2$ for 12 calls and then use $V_-=.18$,

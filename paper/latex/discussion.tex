@@ -4,21 +4,20 @@
 \setlength{\tabcolsep}{3.4pt}
 \begin{tabular}{@{}lrrr@{}}
 \toprule
-25-call prefix & Class 1 & All classes & Squared error\\
+Policy & 22 calls & 40 calls & 106 calls\\
 \midrule
-Restricted switching & 0 & 0 & $.322$\\
-Shared geometric & 23 & 0 & $.249$\\
-Shared platform & 23 & 0 & $.249$\\
-Observation preset & 23 & 23 & $1.55\cdot10^{-12}$\\
+Ready (certified) & $.001951$ & $6.13\cdot10^{-8}$ & $1.56\cdot10^{-12}$\\
+Same-center direct & $.008633$ & $2.71\cdot10^{-7}$ & $1.56\cdot10^{-12}$\\
+Tuned shared & $.003999$ & $1.26\cdot10^{-7}$ & $1.56\cdot10^{-12}$\\
+Tuned, same gate & $.001794$ & $5.63\cdot10^{-8}$ & $1.56\cdot10^{-12}$\\
 \bottomrule
 \end{tabular}
-\caption{Frozen scale-selection diagnostic on 23 certified models.
-The platform rows isolate allocation at the preset's selected center.
-Entry columns count models where all sampled draws for the named
-classes lie in their terminal rectangles at the switch. Squared error
-is prior-weighted within model and averaged across models.
-Each policy uses the same 106 calls.}
-\label{tab:selected_scales}
+\caption{Independent short-budget validation on 12 selected models,
+1152 new observations, $\nu=10^{-6}$. Errors are prior-weighted
+within model and averaged across models. Tuned platforms use separate
+noisy calibration and budget-specific choices. Their common terminal
+refinement removes these differences by 106 calls (Supplement S29).}
+\label{tab:budget_controls}
 \end{table}
 
 \paragraph{Choosing scales before running the solver.}
@@ -57,7 +56,8 @@ platform at the selected center, and the $0/25/0$ preset.
 All use a 25-call switch window and 106 total calls on paired
 observations. At the preset's selected center, allocating its
 intermediate calls to every observation leaves class 0 outside $G_0$
-at the switch (Table~\ref{tab:selected_scales}).
+at the switch. This is an allocation ablation, rather than an
+independently tuned shared baseline (Supplement S28).
 
 \paragraph{Independently tuned shared platforms.}
 Shared and gated platforms independently search the same
@@ -70,16 +70,6 @@ recovers all 1536 draws despite switching outside $G_0,G_1$;
 the preset's center $.44$ yields 1024 correct draws when shared.
 On the noiseless grid, gating admits 428--1142 passing pairs
 per model versus 9--25 for sharing (Supplement S28).
-
-On the prespecified nominal fixture, holding the high endpoint
-for 12 calls and the low endpoint for 13 skips the candidate band.
-Replacing the first low call by one band call visits the band
-but still leaves class 1 at $s<.194$ at the switch. Neither prefix
-produces any class-1 terminal entries in 106 calls. Holding the
-selected center for the full prefix reaches $G_1$ at call 16 for
-all 32 class-1 draws. The shared geometric schedule reaches it at
-call 19 even though its grid misses this narrow certified band;
-the band gives a sufficient guarantee for the specified prefix.
 
 \paragraph{Dependence on the solver.}
 In the matched fine-calibration diagnostic, terminal-only RED
@@ -96,6 +86,21 @@ Prior-weighted intermediate calls fall from $8.05$ to $5.54$
 per observation ($31\%$). Errors match to reported precision
 at 106 calls and with only 81 post-prefix calls (95--105 total,
 mean $98.2$; Supplement S28).
+
+\paragraph{Switch readiness and fair short budgets.}
+A prefix can target a set $S$ whose first terminal update enters
+$G_1$. On 12 selected models, continuous width-$.02$ bands certify
+13--18 prefix calls and entry in 14--19 total calls. At the same
+centers, direct-entry certificates require 16--21 calls.
+Table~\ref{tab:budget_controls} evaluates frozen prescriptions
+on independent noise. At each short budget, ready improves error
+on all 12 models versus direct entry and the tuned shared platform.
+However, the independently tuned platform with the same observation
+gate is more accurate on all 12 at 22 calls. Readiness provides a
+sufficient entrance guarantee, not error-optimal control.
+Supplement S29 gives the order-envelope proof, all budgets,
+and separate calibration/evaluation at larger noise, retaining
+observations outside $E$.
 
 \paragraph{When schedule history disappears.}
 We fit eight common-isotropic components to 2048 grayscale
