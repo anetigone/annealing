@@ -25,6 +25,8 @@ def plan(config, images, out):
                      "within the predeclared MSE tolerance tie by shorter prefix, lower sigma, "
                      "then pattern/block. Evaluation labels never choose a prescription.",
         "scope": "Empirical fixed RED schedule comparison. No GMM certificates transferred.",
+        "computation": "Exactly identical complete scale sequences share development scores; "
+                       "candidate sets, selection rules and logical budgets are unchanged.",
     })
     print(f"Plan saved: {target / 'plan.json'} ({len(files)} development images)", flush=True)
 
@@ -39,37 +41,47 @@ def calibrate(out, device_name, denoiser=None):
     settings = spec["settings"]
     device = configure_device(device_name)
     denoiser = denoiser or load_denoiser(settings["network"], device)
-    rows, choices, total_calls = [], {}, 0
+    rows, choices, total_calls, reused_candidates = [], {}, 0, 0
     terminal = settings["solver"]["terminal_sigma_255"] / 255
     for ki, kernel in enumerate(settings["kernels"]):
         for ni, noise in enumerate(settings["noise_sigma_255"]):
             for budget in settings["budgets"]:
                 groups = spec["candidates"][str(budget)]
                 choices_for_condition = {}
+                score_cache = {}
                 for family in FAMILIES:
                     scores = []
                     for ci, candidate in enumerate(groups[family]):
-                        errors, failures = [], 0
-                        calls_before = denoiser.calls
                         sigmas = schedule(candidate, budget, terminal)
-                        for ii, image in enumerate(spec["development_images"]):
-                            truth = load_image(image["path"], device, settings["gray_policy"])
-                            blur = CircularBlur(np.asarray(kernel["values"]), truth)
-                            for seed in settings["calibration_seeds"]:
-                                y = observation(truth, blur, noise, seed, ii, ki, ni)
-                                try:
-                                    snapshots = list(red_trajectory(denoiser, blur, y, sigmas,
-                                                                   settings["solver"], {budget}))
-                                    x = snapshots[0][1]
-                                    errors.append(float((x.double()-truth.double()).square().mean().item()))
-                                except FloatingPointError:
-                                    failures += 1
-                        calls = denoiser.calls - calls_before
-                        total_calls += calls
-                        mean = float(np.mean(errors)) if not failures else None
+                        cache_key = tuple(sigmas)
+                        reused_from = ""
+                        if cache_key in score_cache:
+                            mean, failures, reused_from = score_cache[cache_key]
+                            calls = 0
+                            reused_candidates += 1
+                        else:
+                            errors, failures = [], 0
+                            calls_before = denoiser.calls
+                            for ii, image in enumerate(spec["development_images"]):
+                                truth = load_image(image["path"], device, settings["gray_policy"])
+                                blur = CircularBlur(np.asarray(kernel["values"]), truth)
+                                for seed in settings["calibration_seeds"]:
+                                    y = observation(truth, blur, noise, seed, ii, ki, ni)
+                                    try:
+                                        snapshots = list(red_trajectory(denoiser, blur, y, sigmas,
+                                                                       settings["solver"], {budget}))
+                                        x = snapshots[0][1]
+                                        errors.append(float((x.double()-truth.double()).square().mean().item()))
+                                    except FloatingPointError:
+                                        failures += 1
+                            calls = denoiser.calls - calls_before
+                            total_calls += calls
+                            mean = float(np.mean(errors)) if not failures else None
+                            score_cache[cache_key] = (mean, failures, f"{family}:{ci}")
                         row = {"kernel": kernel["name"], "noise_255": noise, "budget": budget,
                                "family": family, "candidate_index": ci, "mse": mean,
-                               "failures": failures, "network_forwards": calls}
+                               "failures": failures, "network_forwards": calls,
+                               "reused_from": reused_from}
                         rows.append(row)
                         scores.append(mean)
                     eligible = [i for i, value in enumerate(scores) if value is not None]
@@ -90,6 +102,6 @@ def calibrate(out, device_name, denoiser=None):
     write_csv(score_dir / "scores.csv", rows)
     write_json(out / "choices.json", {
         "conditions": choices, "network_layout": denoiser.layout, "device": str(device),
-        "development_network_forwards": total_calls,
+        "development_network_forwards": total_calls, "reused_candidates": reused_candidates,
     })
     print(f"Choices frozen: {out / 'choices.json'}", flush=True)

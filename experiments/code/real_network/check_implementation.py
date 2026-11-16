@@ -1,6 +1,7 @@
 """Small CPU checks using synthetic images and a linear denoiser, no downloads."""
 import argparse
 from pathlib import Path
+from unittest.mock import patch
 
 import numpy as np
 from PIL import Image
@@ -13,6 +14,7 @@ from evaluate import check_split, evaluate
 from problem import CircularBlur, metrics
 from schedules import FAMILIES, candidate_families, schedule
 from summarize import summarize
+from workflow import estimate, workflow
 
 
 class LinearDenoiser:
@@ -118,9 +120,12 @@ def check(out):
     summarize(evaluation)
     complete = read_json(evaluation / "completion.json")
     assert complete["nonfinite_records"] == 0
-    assert complete["total_network_forwards"] == 2*4*(8+12+16)
+    assert complete["total_network_forwards"] == 2*(8+12+16)
+    assert complete["reused_trajectories"] == 12
     assert len(read_json(evaluation / "summary.json")["rows"]) == 16
     assert len(read_json(evaluation / "summary.json")["pairwise_comparisons"]) == 24
+    assert all(row["mean_mse_left_minus_right"] == 0
+               for row in read_json(evaluation / "summary.json")["pairwise_comparisons"])
     expect_error(FileExistsError, lambda: calibrate(calibration, "cpu", LinearDenoiser()))
     checks.append("plan -> calibration -> independent evaluation -> paired summary, no overwrite")
     failed = out / "nonfinite_run"
@@ -129,6 +134,17 @@ def check(out):
     assert read_json(failed / "completion.json")["nonfinite_records"] == 32
     assert all(row["means"] is None for row in read_json(failed / "summary.json")["rows"])
     checks.append("nonfinite trajectories retained with no misleading finite-only aggregate")
+    fast = read_json(root / "experiments/configs/drunet_fast.json")
+    assert estimate(fast, 12, 68)["total_calls_without_reuse"] == 56000
+    settings["network"] = {"name": "ffdnet", "weights": str((out / "random_ffdnet_kair.pth").resolve())}
+    flow_config = out / "workflow_config.json"
+    write_json(flow_config, settings)
+    with patch("workflow.calibrate", side_effect=lambda *args: calibrate(*args, denoiser=LinearDenoiser())), \
+            patch("workflow.evaluate", side_effect=lambda *args: evaluate(*args, denoiser=LinearDenoiser())):
+        workflow(flow_config, out / "development", out / "evaluation", out / "single_command",
+                 "custom", "cpu")
+    assert (out / "single_command/workflow_complete.json").is_file()
+    checks.append("exact trajectory reuse preserves paired errors; fast cost estimate and single-command workflow")
     write_json(out / "checks.json", {"passed": checks, "scope": "Synthetic CPU plumbing and untrained layouts only; no pretrained weights or real datasets used."})
     print("PASS: " + "; ".join(checks), flush=True)
 

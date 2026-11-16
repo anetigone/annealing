@@ -49,6 +49,37 @@ git -C experiments/assets/dncnn sparse-checkout set testsets/BSD68 testsets/Set1
 
 ## 先作开发侧预试，再冻结
 
+### 快速首轮与一条命令运行
+
+先用 [快速配置](configs/drunet_fast.json)：DRUNet、单个高斯核、观测噪声 2.55/255、一个评价种子、完整 BSD68；保留 16/32/64 次预算和四家族公平选参，暂不追加长终端尾部。12 张开发图时，重复计算未消除前共 56,000 次前向；启用精确复用后为 28,160–51,008 次，取决于冻结处方的重复程度。原完整配置每网络约 1,515,264 次。按 4090 上开发图实测约 28 ms/次估计，首轮约 30–60 分钟，具体取决于图像大小及复用数量。这一首轮只覆盖所列单一退化条件。
+
+代码将**完全相同的尺度序列**合并计算：开发侧复用同一候选的完整误差，评价侧在同一观测上复用相同的完整轨迹与指标。候选集合、选参规则、RED 向量场及每种方法的逻辑预算保持原定义，不对近似相同的序列作合并。`reused_from` 标记来源，`executed_network_forwards` 标记该轨迹截至本读数累计执行量（复用行取 0），`network_forwards` 仍描述这条恢复轨迹的预算；不同读数不可重复相加，`completion.json` 汇总真正执行的调用。复用轨迹的计时沿用来源轨迹，不解释为算法本身更快。
+
+在远程仓库根目录执行。非交互 SSH 的系统 `python3` 没装 PyTorch，应明确使用 `/root/miniconda3/bin/python`。已有开发目录 `experiments/assets/data/dev_div2k_12` 是原服务器 DIV2K_train_HR 的前 12 张，预先按名字选定、转灰并等比缩到 481×481 框内，来源记录保存在该目录；它们可能参与过预训练。测试集保持原始整图。
+
+先只估算调用量，不加载权重或图像：
+
+```bash
+/root/miniconda3/bin/python -B experiments/code/real_network/run.py estimate --config experiments/configs/drunet_fast.json --development-count 12 --evaluation-count 68
+```
+
+一条命令依次检查本地文件、冻结计划、开发选参、评价和配对汇总，使用新的输出目录：
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 /root/miniconda3/bin/python -u -B experiments/code/real_network/run.py workflow --config experiments/configs/drunet_fast.json --development-images experiments/assets/data/dev_div2k_12 --evaluation-images experiments/assets/dncnn/testsets/BSD68 --dataset bsd68 --out experiments/results/drunet_fast_run --device cuda
+```
+
+也可以自行放后台；日志文件和输出目录均换成没有使用过的名字：
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 nohup /root/miniconda3/bin/python -u -B experiments/code/real_network/run.py workflow --config experiments/configs/drunet_fast.json --development-images experiments/assets/data/dev_div2k_12 --evaluation-images experiments/assets/dncnn/testsets/BSD68 --dataset bsd68 --out experiments/results/drunet_fast_run --device cuda > experiments/results/drunet_fast_run.log 2>&1 &
+tail -f experiments/results/drunet_fast_run.log
+```
+
+结果在 `drunet_fast_run/evaluation/summary.json`，实际调用在 `evaluation/completion.json`。`workflow` 在开始校准前检查全部图片可读，避免坏图在长校准后才暴露。原来两个已中止目录 `real_network_20261116`、`real_network_fast_20261116` 保留，不作为本次命令的输出目录。
+
+### 完整配置与分阶段运行
+
 默认配置是 [DRUNet](configs/drunet_deblur.json) / [FFDNet](configs/ffdnet_deblur.json)，**是未经真实网络调优的起始配置**：步长 .25、λ=.1、终端 σ=5/255；预算 16/32/64；观测噪声 2.55/255、7.65/255；共同终端尾部至少为预算的 1/4。尾部读数从 K=64 再追加 64、256 次。所有标为 `_255` 的参数均采用 8 位强度单位，内部除以 255；它们都是标准差，不是方差。
 
 先在另存的小开发配置和少量开发图像上确认计时、显存和稳定性，再一次性决定公共求解器设置、预算、候选及独立开发/评价划分。不要把默认配置直接称为公平调优后的最终实验，也不要因测试某方法失败再扩大它的搜索。修改参数后新建输出目录，保留每次计划与选择来源。

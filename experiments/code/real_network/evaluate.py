@@ -49,11 +49,14 @@ def evaluate(calibration, images, out, dataset, device_name, save_states=False, 
         "metric_scope": "Float images, data_range=1, no border crop; 11x11 sigma=1.5 "
                         "population SSIM on valid centers. Clipped quality is separate. "
                         "Field norm is at the state before the last update, not at its output.",
+        "computation": "Within one observation/budget, exactly identical complete scale "
+                       "sequences share states/metrics. Reused rows retain logical budgets "
+                       "and source timing; completion.json records actual forwards.",
     })
     if save_states:
         (out / "states").mkdir()
     terminal = settings["solver"]["terminal_sigma_255"] / 255
-    total_forwards, failures = 0, 0
+    total_forwards, failures, reused_trajectories = 0, 0, 0
     writer = None
     with (out / "records.csv").open("x", encoding="utf-8", newline="") as stream, (out / "distances.csv").open("x", encoding="utf-8", newline="") as distance_stream:
         distance_writer = csv.DictWriter(distance_stream, fieldnames=[
@@ -74,19 +77,27 @@ def evaluate(calibration, images, out, dataset, device_name, save_states=False, 
                             choices = frozen["conditions"][condition_key(kernel, noise, budget)]
                             references = {}
                             paired_states = {k: {} for k in readouts}
+                            trajectory_cache = {}
                             for family in FAMILIES:
                                 choice = choices[family]
                                 sigmas = schedule(choice["candidate"], budget, terminal)
                                 sigmas = np.concatenate((sigmas, np.full(max(extra), terminal)))
-                                snapshots, reason = {}, ""
-                                before = denoiser.calls
-                                try:
-                                    for k, x, info in red_trajectory(denoiser, blur, y, sigmas,
-                                                                   settings["solver"], readouts):
-                                        snapshots[k] = (x.detach().cpu(), info)
-                                except FloatingPointError as error:
-                                    reason = str(error)
-                                total_forwards += denoiser.calls - before
+                                cache_key = tuple(sigmas)
+                                reused_from = ""
+                                if cache_key in trajectory_cache:
+                                    snapshots, reason, reused_from, metric_cache = trajectory_cache[cache_key]
+                                    reused_trajectories += 1
+                                else:
+                                    snapshots, reason, metric_cache = {}, "", {}
+                                    before = denoiser.calls
+                                    try:
+                                        for k, x, info in red_trajectory(denoiser, blur, y, sigmas,
+                                                                       settings["solver"], readouts):
+                                            snapshots[k] = (x.detach().cpu(), info)
+                                    except FloatingPointError as error:
+                                        reason = str(error)
+                                    total_forwards += denoiser.calls - before
+                                    trajectory_cache[cache_key] = (snapshots, reason, family, metric_cache)
                                 for additional in extra:
                                     k = budget + additional
                                     valid = k in snapshots
@@ -102,13 +113,16 @@ def evaluate(calibration, images, out, dataset, device_name, save_states=False, 
                                         "clipped_psnr": None, "output_rms_vs_terminal": None,
                                         "seconds": None, "logical_calls": None, "network_forwards": None,
                                         "field_rms_before_last_update": None, "peak_cuda_bytes": None,
+                                        "reused_from": reused_from, "executed_network_forwards": None,
                                     }
                                     if valid:
                                         cpu_x, info = snapshots[k]
                                         paired_states[k][family] = cpu_x
-                                        x = cpu_x.to(device)
-                                        row.update(metrics(x, truth, blur, settings["weak_gain"]))
+                                        if k not in metric_cache:
+                                            metric_cache[k] = metrics(cpu_x.to(device), truth, blur, settings["weak_gain"])
+                                        row.update(metric_cache[k])
                                         row.update(info)
+                                        row["executed_network_forwards"] = 0 if reused_from else info["network_forwards"]
                                         if family == "terminal":
                                             references[k] = cpu_x
                                         if k in references:
@@ -136,5 +150,6 @@ def evaluate(calibration, images, out, dataset, device_name, save_states=False, 
                             distance_stream.flush()
             print(f"Evaluated {ii+1}/{len(files)}: {image['id']}", flush=True)
     write_json(out / "completion.json", {"images": len(files), "nonfinite_records": failures,
-                                         "total_network_forwards": total_forwards})
+                                         "total_network_forwards": total_forwards,
+                                         "reused_trajectories": reused_trajectories})
     print(f"Evaluation saved: {out / 'records.csv'}", flush=True)
