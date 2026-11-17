@@ -194,6 +194,28 @@ OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
 & H:/anaconda3/envs/py312/python.exe -B experiments/code/real_network/analyze_cause.py --source experiments/results/drunet_history_run --preflight experiments/results/real_network_20261116/preflight/gpu_preflight.json --out experiments/results/drunet_history_run/cause_recheck
 ```
 
+## 求解器与尺度时机的定向修正
+
+[离线干预分析](results/drunet_solver_repair/analysis.md)已从保存的作用力标量计算减轻/增强 λ 的方向，并准备 `repair_solver.py` 检验完整轨迹。它先用前两张既有开发图校准公共 γ/λ/终端 σ，再固定公共求解器比较短尺度段早放/晚放，最后在第 3/4 张图和两组新噪声上确认。每条轨迹均 64 次调用，末尾至少 16 次共同终端更新。两端的误差变化分别对原终端和校准终端报告，便于区分求解器修正与尺度历史收益。
+
+默认总计 13,568 次前向，按旧计时约 6.33 分钟纯推理。先只生成计划和调用估算时加 `--plan-only`；该目录只作预览，正式运行另用新目录。用户同步代码后在远端运行：
+
+```bash
+cd /root/autodl-tmp/annealing
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/repair_solver.py \
+  --source-calibration experiments/results/drunet_fast_run/calibration \
+  --out experiments/results/drunet_repair_run
+```
+
+`plan.json` 先保存 27 个公共求解器候选、全部尺度历史构造、图像/噪声划分与调用估算。`solver_choices.json`、`history_choices.json` 在确认图加载前写出；`constant_fit.csv`、`history_fit.csv` 保留所有开发候选。`check_summary.csv` 是确认结果，包含相对原终端及校准终端的误差变化，配对时机对照为 `best_delayed` 与 `paired_early`；这两条使用完全相同的尺度用量。非零诊断策略保留，性能选择仍允许终端胜出。非有限轨迹保留为失败，不纳入掩盖失败的均值。
+
+相同状态上的 λ 干预与割线阈值可离线复算，无网络调用，输出到新目录：
+
+```powershell
+& H:/anaconda3/envs/py312/python.exe -B experiments/code/real_network/analyze_strength.py --source experiments/results/drunet_cause_probe --out experiments/results/drunet_strength_recheck
+```
+
 ## 必要的小规模实现检查
 
 只用本地生成的合成图像、线性假去噪器和随机初始化网络做 CPU 检查，不需要资源下载，不启动真实数据评价：
