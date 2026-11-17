@@ -216,6 +216,112 @@ OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
 & H:/anaconda3/envs/py312/python.exe -B experiments/code/real_network/analyze_strength.py --source experiments/results/drunet_cause_probe --out experiments/results/drunet_strength_recheck
 ```
 
+## 冻结处方在剩余开发图上的验证
+
+`validate_repair.py` 从已有 `performance_selection` 直接读取处方，在原开发顺序剩余 8 图上验证。默认新种子为 2026111713/2026111714；跨观测噪声幅度仍共享标准正态场。四条策略为原终端、校准终端、冻结历史、相同尺度用量换放置时机的对照。统一 64 次，不重新选参或按验证误差更换性能策略。
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/validate_repair.py \
+  --source experiments/results/drunet_repair_run \
+  --development-plan experiments/results/drunet_fast_run/calibration/plan.json \
+  --out experiments/results/drunet_frozen_validation
+```
+
+默认 8192 次前向，按 28 ms/次约 3.82 分钟纯推理。这些是既有开发资源中未参与本轮修正选择的剩余图，不是预训练未见数据或 BSD68 新盲测。输出 `plan.json` 先冻结所有处方和噪声；`records.csv`、`summary.csv` 保存固定预算结果，`paired_images.csv` 先在图内平均种子，`paired_comparisons.csv` 给配对误差、图像胜负及 2000 次图像重采样区间。重采样单位为图像，区间描述这批固定开发图的变动，不据此保证 BSD68 总体效果。复跑换新目录。
+
+[实际八图结果及采用的配置](results/drunet_frozen_validation/analysis.md)。同一入口可将冻结策略原样应用到标准集合；不会再次开发选参。已准备的 BSD68 处方采用新种子 2026111715，两个噪声档和四条策略，共 34,816 次前向。当前只生成过计划预览，正式运行使用新的输出目录：
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/validate_repair.py \
+  --source experiments/results/drunet_repair_run \
+  --development-plan experiments/results/drunet_fast_run/calibration/plan.json \
+  --images experiments/assets/dncnn/testsets/BSD68 --dataset bsd68 \
+  --seeds 2026111715 --out experiments/results/drunet_bsd68_frozen_run
+```
+
+只预览时增加 `--plan-only` 并另取目录名。原 BSD68 已在早期实验中查看，冻结配置和新噪声评价不称新盲测；源处方不会因本次八图结果改变。
+
+## 修正配置的共同终端延长
+
+`probe_terminal.py` 读取修正实验已冻结的公共求解器和性能历史，仅比较校准终端与冻结历史。沿用原确认图、种子、核、初值和两档同样本噪声；不重新选处方。若原端点未保存，只重放前 64 次，然后共同终端延长到 128/256/512/1024 次。
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/probe_terminal.py \
+  --source experiments/results/drunet_repair_run \
+  --out experiments/results/drunet_terminal_probe --max-calls 1024
+```
+
+默认 16,400 次前向。`records.csv` 给出实际输出状态的 MSE/SSE、PSNR、RED 场 RMS/最大分量及数据项、正则项范数；场范数对应输出本身。计算出的场复用于下一次更新，每条轨迹仅在最终端点多一次诊断调用。`pairs.csv` 给出历史与终端的距离、下一步距离比、割线方向系数及数据/正则/步长平方的距离变化项。网络未假定存在显式势，割线系数不作为整个邻域的稳定性证书。`states/` 保存起点和最终端点，可直接续算。
+
+若 1024 次仍有持续距离或方向放大，可从同一状态继续。下例保留两张图，只取原顺序第一个种子，分别追踪两档噪声至 4096 次；属于原观测上的机制诊断，不重新选调度或改写确认性能表：
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/probe_terminal.py \
+  --source experiments/results/drunet_repair_run \
+  --resume-from experiments/results/drunet_terminal_probe \
+  --out experiments/results/drunet_terminal_long --max-calls 4096 \
+  --image-count 2 --seed-count 1
+```
+
+续算两图两档共 24,584 次新前向，不重放前缀。输出目录必须未使用。离线汇总只读取保存表格，不加载网络：
+
+```powershell
+& H:/anaconda3/envs/py312/python.exe -B experiments/code/real_network/analyze_terminal.py --source experiments/results/drunet_terminal_probe --out experiments/results/drunet_terminal_probe/review
+```
+
+第一张高噪声图在 4096 次出现低残差、持续分离的近驻点候选。[局部返回探查](results/drunet_attraction_probe/analysis.md)从这些端点及其正负四分之一连接方向扰动、中点出发，继续相同终端更新；返回距离与同时推进的原端点比较。它使用 7203 次前向，包含五尺度同状态作用力测量：
+
+```bash
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/probe_attraction.py \
+  --source experiments/results/drunet_terminal_long \
+  --out experiments/results/drunet_attraction_probe --steps 1024 --noise-255 7.65
+```
+
+这是已查看观测上的机制探查；扰动不使用真值，不按误差或场范数在线选控制，不将离散返回起点当成完整区域证明。真实运行结果见 [共同尾部分析](results/drunet_terminal_probe/analysis.md)、[4096 次续算](results/drunet_terminal_long/analysis.md)。复跑更换新输出目录。
+
+## 一条命令运行本轮定向工作
+
+入口为 [run_directed.py](code/real_network/run_directed.py)。用户同步代码后自行运行；默认先做三尺度实际路径干预，再做 BSD68 冻结评价，两项串行，全部子计划在推理前写出。需要保留已有 `drunet_repair_run`、`drunet_fast_run/calibration`、`drunet_terminal_long`（含 `states/`）、原权重和图像。
+
+```bash
+cd /root/autodl-tmp/annealing
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/run_directed.py \
+  --out experiments/results/drunet_directed_run
+```
+
+默认实际前向合计 **47,073 次**，按 28 ms/次约 **21.97 分钟纯推理**，另加加载、指标和写盘开销。输出目录必须未使用；预览使用另外的目录名并加 `--plan-only`。可加 `--phase path` 或 `--phase quality` 只做一项，不同运行各用新目录。
+
+### 三尺度实际路径干预
+
+[probe_path.py](code/real_network/probe_path.py)使用原顺序第一张确认图、原第一个种子、观测噪声 7.65/255。先执行 32 次 σ10 得到唯一共享状态，然后各执行 16 次 σ10/25/49，再共同 σ10 直到总计 4096 次。γ、λ、观测、反投影初值和更新式均继承已冻结配置。只复用前 32 次相同调用；没有按真值挑分支、切换时机或停止点。
+
+三分支各有 4096 次逻辑恢复预算。共享前缀后恢复实际调用 12,224 次，额外场诊断 33 次，共 **12,257 次前向**，约 **5.72 分钟纯推理**。脉冲内每步保存路径指标，此时真正的终端场是额外诊断，实际更新仍由该分支的干预尺度驱动；脉冲结束后各分支都使用同一终端场。第 32 次的共同终端测量也精确复用。
+
+`path_probe/` 输出：
+
+- `records.csv`：逐路径读数的 MSE/SSE、真实终端场、实际更新方向、相对两个已存端点的距离、投影坐标和正交位移。投影只描述轨迹，不单独作为跨区证据。
+- `pairs.csv`：三对分支的距离和共同终端割线分解；脉冲期间的下一步终端距离比明确标为反事实，脉冲结束后才与实际下一步一致。
+- `summary.csv`、`final_pairs.csv`：相同最终预算下的三分支与三对比较。`closest_reference` 仅表示更近的已存端点；应同时查看距离比例与场残差，不能把任意远处状态强行归到某个吸引域。
+- `states/`：共同第 32 次状态，各分支第 48/64/4096 次状态，可供后续分析。已有 4096 次端点是距离参考，不用于选择控制或替代新分支的推进。
+
+单独运行路径干预也可使用：
+
+```bash
+/root/miniconda3/bin/python -u -B experiments/code/real_network/probe_path.py \
+  --source experiments/results/drunet_terminal_long \
+  --out experiments/results/drunet_path_probe --max-calls 4096
+```
+
+### BSD68 固定质量评价
+
+`bsd68/` 使用完整 68 图、两档观测噪声、新种子 2026111715，保留原终端、校准终端、冻结历史、同量换时机四条策略，各 64 次，共 **34,816 次前向**，约 **16.25 分钟纯推理**。不使用路径干预结果重新选择尺度历史。评价记录按图实时写出，非有限记录保留；正常结束后生成 `summary.csv`、`paired_images.csv`、`paired_comparisons.csv`。根目录 `completion.json` 表示两项均完成，各子目录也有自己的完成记录。
+
 ## 必要的小规模实现检查
 
 只用本地生成的合成图像、线性假去噪器和随机初始化网络做 CPU 检查，不需要资源下载，不启动真实数据评价：
