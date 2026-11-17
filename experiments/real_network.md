@@ -322,6 +322,37 @@ OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
 
 `bsd68/` 使用完整 68 图、两档观测噪声、新种子 2026111715，保留原终端、校准终端、冻结历史、同量换时机四条策略，各 64 次，共 **34,816 次前向**，约 **16.25 分钟纯推理**。不使用路径干预结果重新选择尺度历史。评价记录按图实时写出，非有限记录保留；正常结束后生成 `summary.csv`、`paired_images.csv`、`paired_comparisons.csv`。根目录 `completion.json` 表示两项均完成，各子目录也有自己的完成记录。
 
+## 三个新种子的尺度强对照
+
+[validate_scales.py](code/real_network/validate_scales.py)读取已完成的 `drunet_directed_run/bsd68/plan.json`，只读取冻结处方与图像顺序，不读取其评价分数。固定完整 BSD68、两档噪声、三个新种子 **2026111716/2026111717/2026111718**，比较三个策略：
+
+- `tuned_terminal`：沿用校准终端，γ=.75、λ=.1，低/高噪声终端 σ2.5/10。
+- `history_25`：沿用原先已选历史，低噪声前 16 次 σ25 后回终端，高噪声为 32 次 σ10、16 次 σ25 后回终端。
+- `history_49`：只将上述脉冲尺度从 25 换成 49，位置、次数、公共求解器和终端完全相同。
+
+每条轨迹仍为 64 次。同一图/种子跨方法和观测噪声幅度共享标准正态场，保留原图像索引。更新、数据项与残差口径不变，不重新调参、按图选择或按误差提前停止。此轮不增加新核、第二网络或长终端尾部。
+
+用户同步 `experiments/code/real_network/` 后，在远端仓库根目录运行；沿用已有 BSD68、权重及 `drunet_directed_run/bsd68`，不需要重新准备数据：
+
+```bash
+cd /root/autodl-tmp/annealing
+OMP_NUM_THREADS=4 MKL_NUM_THREADS=4 OPENBLAS_NUM_THREADS=4 \
+/root/miniconda3/bin/python -u -B experiments/code/real_network/validate_scales.py \
+  --out experiments/results/drunet_scale_repeat
+```
+
+默认 **78,336 次前向、1224 条评价记录**，按 28 ms/次约 **36.56 分钟纯推理**，另加加载、指标和写盘开销。输出目录必须未使用。仅查看计划时加 `--plan-only`，并另用 `drunet_scale_repeat_preview` 等新目录；预览不会加载网络或图像。
+
+输出说明：
+
+- `plan.json`：源计划、全部三条处方、图像顺序、新种子及调用量，在推理前冻结。
+- `records.csv`：逐图、种子、噪声、策略的原始结果，按图落盘。
+- `seed_summary.csv`、`seed_comparisons.csv`：每个新种子的均值、三个配对比较、逐图胜负与配对图像重采样区间。
+- `summary.csv`、`paired_images.csv`、`paired_comparisons.csv`：先在每图内平均三个种子，再等权汇总 68 图。比较为 σ25 对终端、σ49 对终端、σ25 对 σ49；同时给出每种子改善幅度的最小/最大值。
+- `completion.json`：实际调用量、记录数、失败轨迹数及运行计时。
+
+合并区间使用 2000 次配对图像重采样，保留每张图的三个噪声结果，不把 204 个图像/种子组合当成 204 张独立图像。各种子结果另外报告。若出现非有限轨迹，原始记录保留，完整均值汇总不掩盖失败。BSD68 已在此前查看，本轮是固定处方的新噪声复验，不声明新盲测或预训练未见数据。
+
 ## 必要的小规模实现检查
 
 只用本地生成的合成图像、线性假去噪器和随机初始化网络做 CPU 检查，不需要资源下载，不启动真实数据评价：
